@@ -71,6 +71,9 @@ class Config:
         self.PORT = int(os.environ.get("PORT", "8080"))
         self.DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
         self.DEMO_MODE = _env_bool("DEMO_MODE")
+        # 部署在反向代理（Zenith 的 HTTPS 入口）后面时设为 1：按代理传来的 X-Forwarded-Host / -Proto
+        # 判断网址，否则"来源校验"可能把每个表单提交都当成跨站而拒绝。只在真的有代理时打开（Dockerfile 里默认打开）
+        self.TRUST_PROXY = _env_bool("TRUST_PROXY")
 
         # 温柔传话：每座小岛每天最多软化 100 次；调用 DeepSeek 超时 20 秒
         self.SOFTEN_DAILY_LIMIT = 100

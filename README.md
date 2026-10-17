@@ -2,7 +2,7 @@
 
 两个人的小岛：温柔传话、约会选选选、初见森林、回忆小屋。完整需求见 `USLAND_SPEC.md`，开发进度见 `PROGRESS.md`。
 
-> 完整的运行、部署和目录说明会在 M8 补充。
+> 完整的目录说明会在 M8 补充。
 
 ## 本地运行
 
@@ -13,6 +13,27 @@ python app.py
 ```
 
 打开 http://localhost:8080 。
+
+## 部署到 Zenith
+
+项目根目录已经准备好 `Dockerfile`、`.dockerignore` 和 `zenith-compose.yml`（`zenith check` 已通过）。
+Zenith 会用 `Dockerfile` 构建镜像，用 gunicorn 在 8080 端口运行；数据库、上传的照片和自动生成的
+`SECRET_KEY` 都放在持久卷 `usland_data`（容器里的 `/app/data`）。不需要配置任何环境变量。
+
+需要 Node.js 20.10 以上。在项目根目录：
+
+```powershell
+npm install -g @zenith-hosting/cli
+zenith auth login          # 会打开浏览器登录并授权
+zenith check --upload-size # 本地检查，不上传
+zenith up                  # 上传当前文件夹，构建一个约 20 分钟的临时网址用来测试
+zenith logs --source runtime
+zenith down                # 测完关掉
+```
+
+正式上架（提交审核）用 `zenith publish`：它从 **GitHub 上的公开仓库**里指定的提交构建，需要你对仓库有
+所有者或管理员权限、在 https://app.zenith.hosting/publish 连接 GitHub、同意开发者协议，并准备至少一张截图。
+上架前请给仓库加一个 `LICENSE` 文件，并把 `zenith-compose.yml` 里的 `license` 改成同一个许可证。
 
 ## 声音
 

@@ -20,10 +20,20 @@
 - 人类追加修改（2026-10-17）：温柔传话改写不稳定（人称反了、中文变英文）：**已完成待验证**（分支 `fix/soften-prompt-stability`，还需要用真实 key 跑 `scripts/try_soften.py` 确认）
 - 人类追加修改（2026-10-17）：去掉点初见森林时弹出的小动物 + 长凳五子棋：**已完成待验证**（分支 `feat/gomoku-bench`）
 - 人类追加修改（2026-10-17）：五子棋道具互动（卡布奇诺 / 番茄 / 鸡蛋）+ 结算画面：**已完成待验证**（同一分支）
+- 人类追加修改（2026-10-17）：Zenith 部署文件（Dockerfile、.dockerignore、zenith-compose.yml）：**已完成，`zenith check` 通过，还没上传 / 发布**
 - 下一个：M8 打磨与部署准备（等人类确认后开始）
 - 美术方向：**明亮午后黏土风**（第三版，配色以 `static/usland/tokens.css` = `docs/ui-v3/integration/tokens.css` 为准）；素材在 `static/usland/assets/`，说明在 `docs/ui-v3/`；代码里不绘制任何动物插画
 
 ## 已完成
+- **Zenith 部署准备（2026-10-17）**（人类要求：先不要上传或发布）
+  - Zenith 怎么部署自己的应用（读了 zenith.hosting 的指南、开发者页，以及 GitHub `zenith-hosting/skills`、`zenith-hosting/docs`）：仓库根目录放 `Dockerfile` + `zenith-compose.yml`（Compose 格式 + `x-zenith` 区块：catalog 简介 / expose 端口）；`zenith up` 上传本地文件夹做约 20 分钟的临时部署测试；`zenith publish` 从**公开 GitHub 仓库的指定提交**构建并提交审核（需要仓库所有者 / 管理员权限、连接 GitHub、同意开发者协议、至少一张截图），审核通过才进应用目录
+  - `requirements.txt` 从 UTF-16 转成 UTF-8（内容不变）
+  - `Dockerfile`：python:3.12-slim，非 root 用户，`DATA_DIR=/app/data`、`PORT=8080`、`TRUST_PROXY=1`，gunicorn 1 进程 8 线程（SQLite、启动时建表 / 生成密钥只适合单进程），超时 60 秒（温柔传话最多两次 20 秒的 DeepSeek 调用），日志到 stdout
+  - `.dockerignore`：排除 `.env*`、`data/`、`.venv/`、`.git/`、测试、文档、交接说明
+  - `zenith-compose.yml`：一个服务 `usland`（`build: .`，8080，`web: true`）、持久卷 `usland_data:/app/data`、healthcheck；为了兼容 `zenith up` 的临时部署规则，没有用 `x-zenith.env` / `x-zenith.storage`（也不需要：SECRET_KEY 自动生成存在卷里，DeepSeek key 用户在网页上填）。**`license` 暂时写 `Proprietary`，仓库还没有 LICENSE 文件，上架前团队要定**
+  - 代码：`config.TRUST_PROXY` + `app.py` 在打开时套 `ProxyFix(x_for=1, x_proto=1, x_host=1)`——在 Zenith 的 HTTPS 代理后面，表单来源校验要按公开域名判断；默认关闭（本地运行不受影响）。测试 `tests/test_app.py` +2
+  - `README.md` 新增"部署到 Zenith"；`.gitignore` 加 `.env.local`（Zenith 临时部署用它传测试用的密钥）
+  - 验证：`npx @zenith-hosting/cli check --upload-size` 通过（只在本地检查，没有上传）；本机没有 Docker，镜像还没真正构建过——第一次 `zenith up` 时会在 Zenith 上构建。**291 个测试全部通过**
 - **五子棋：道具互动 + 结算画面（2026-10-17）**
   - **贴图**：微软 Fluent Emoji 3D（MIT 许可，立体圆润的风格和黏土小岛统一），8 张缩到 128px 放在 `static/usland/assets/ui/fun/`（coffee、tomato、egg、splash、trophy、tear_smile、handshake、sparkles）；署名写进 `docs/credits.md`，许可证原文 `docs/licenses/fluent_emoji_MIT.txt`。没有用 GIF：动画全部用 CSS / Web Animations 做，清晰、体积小、能跟随"减少动态效果"
   - **道具互动**（像斗地主）：玩家面板下方三个按钮"给阿姨倒一杯卡布奇诺 / 扔番茄 / 扔鸡蛋"（需要 JS，默认 hidden）。点击后道具沿抛物线从自己头像飞到对方头像：番茄爆开 + 红色汁水四溅下流，鸡蛋砸成煎蛋贴在头像上滑下，咖啡杯稳稳放下冒热气 + 星星；被砸的头像晃一下，顶部浮出提示（"小雨 朝你扔了一个番茄！"）。新表 `gomoku_props`，`POST /game/prop {"kind"}`，冷却 1～2 秒（`too_fast`，按钮锁 2 秒）；`/api/game/state` 带最近 20 个道具，页面只播 id 比打开页面时大的、对方扔的（自己扔的点击时就播了）。动画结束和计时器兜底二选一触发砸中效果（后台标签页浏览器会暂停动画）
@@ -178,6 +188,7 @@
 （暂无）
 
 ## 下一步
+- **Zenith**：① 团队定许可证（加 LICENSE，改 zenith-compose.yml 的 license）；② 有人安装 CLI、`zenith auth login`，运行 `zenith up` 临时部署，测登录、温柔传话、上传照片、五子棋；③ 确认 WilYip/hackathon 由谁（所有者 / 管理员）来 `zenith publish`，以及用哪个分支的提交
 0. 人类按"如何运行和验证 → 第三版美术素材"在 375 / 768 / 1280 / 1920 检查；队友交付海岛姿态 / 石像 / 和好姿态 / 海浪视频后放进对应路径刷新即可（见"视觉待办"）；石像和海岛姿态到位后按真实脚底再微调一次 `content/scene_anchors.json`（交付 README 也这么要求，改完同步回 `docs/ui-v3/integration/`）
 1. 安装 ffmpeg（`winget install Gyan.FFmpeg`，重新打开终端）后运行 `.venv\Scripts\python.exe scripts\compress_bgm.py`，再试听一遍首页和回忆小屋的音乐有没有明显变差
 2. 等人类验证 2026-10-17 的修改（情绪状态修复、初见森林互动）以及 M7，确认后开始 **M8 打磨与部署准备**（`USLAND_SPEC.md` 第 12、13 节）
@@ -234,7 +245,7 @@
 - `static/img/animals/`（第二版动物图）和 `static/img/favicon.svg` 已不再使用，没有删除，确认后可由人类删除
 - 根目录的 `test_ai.py` 会真实调用 DeepSeek，已通过 `pytest.ini` 的 `testpaths = tests` 排除
 - gunicorn 在 Windows 上无法运行（只在 Docker/Linux 中使用），本地请用 `python app.py`
-- 来源校验用的是 `request.host`；部署到 Zenith 时如果前面有反向代理，可能需要加 `ProxyFix`，M8 确认
+- 来源校验用的是 `request.host`；部署到 Zenith 时由 `TRUST_PROXY=1`（Dockerfile 默认）+ ProxyFix 按代理传来的公开域名判断。还没在 Zenith 上实测过，第一次 `zenith up` 后要试一次登录（POST）
 - 忘记 PIN：需要另一半帮忙生成重置码；小岛上只有一人时只能在服务器上运行 `scripts/reset_pin.py`
 - 默认形象是从人类给的效果图里抠出来的（背景和小人颜色很接近，轮廓是半手动校准的），边缘放大看可能有 1–2 像素不完美；以后有队友交付的透明原图时直接覆盖那三个 PNG 即可
 - `requirements.txt` 是 UTF-16 编码（pip 能读，但有的编辑器 / 工具会显示乱码），以后可以转成 UTF-8
@@ -358,6 +369,7 @@ python app.py
   6. 切换 EN：Happy / Hurt / Need space / Calm
 
 ## 更新日志
+- 2026-10-17 Zenith 部署准备：Dockerfile、.dockerignore、zenith-compose.yml（zenith check 通过，未上传），requirements.txt 转 UTF-8，TRUST_PROXY + ProxyFix，README 部署说明，291 个测试通过
 - 2026-10-17 五子棋道具互动（卡布奇诺 / 番茄 / 鸡蛋，Fluent Emoji 3D 贴图 + 代码动画，对方实时看到）和结算画面（胜 / 负 / 平、手数、用时、总战绩、再来一局），289 个测试通过，浏览器实测
 - 2026-10-17 去掉初见森林探头小动物；长凳五子棋（地图长凳入口、竖版补长凳、两人轮流实时同步、无 JS 可用）；修复模板改动要重启才生效，282 个测试通过，浏览器实测
 - 2026-10-17 温柔传话第二轮：先写说话人的情绪再改写（JSON 输出）、新增骂人示例、检测"你这样说让我难受"这类人称反转并重试，272 个测试通过

@@ -8,6 +8,7 @@ import logging
 from urllib.parse import urlparse
 
 from flask import Flask, abort, flash, g, redirect, request
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 import db
 from config import Config
@@ -30,6 +31,10 @@ def create_app(test_config=None):
     app.config.from_object(Config())
     if test_config:
         app.config.update(test_config)
+
+    # 在 Zenith 这类反向代理后面：信任前面一层代理传来的客户端地址、协议和主机名
+    if app.config.get("TRUST_PROXY"):
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     # 日志：记录 INFO 级别（例如 DeepSeek 调用的结果类型和耗时；从不记录聊天内容）
     app.logger.setLevel(logging.INFO)

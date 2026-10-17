@@ -40,3 +40,30 @@ def test_post_from_other_site_is_rejected(raw_client):
 def test_lang_redirect_stays_on_site(client):
     resp = client.post("/lang", data={"lang": "zh", "next": "//evil.example"})
     assert resp.headers["Location"] == "/"
+
+
+# ---------- 部署在反向代理后面（Zenith） ----------
+
+
+def test_proxy_headers_ignored_by_default(app):
+    """默认不信任 X-Forwarded-Host：本地运行时别人不能伪造来源。"""
+    c = app.test_client()
+    resp = c.post("/lang", data={"lang": "en", "next": "/"},
+                  headers={"Origin": "https://usland.zh.run", "X-Forwarded-Host": "usland.zh.run"})
+    assert resp.status_code == 403
+
+
+def test_proxy_headers_used_when_trusted(tmp_path, monkeypatch):
+    """TRUST_PROXY=1（Dockerfile 默认）：代理把公开域名放在 X-Forwarded-Host 里，表单来源校验按公开域名判断。"""
+    from app import create_app
+
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("SECRET_KEY", "test-secret")
+    monkeypatch.setenv("TRUST_PROXY", "1")
+    app = create_app({"TESTING": True})
+    c = app.test_client()
+    headers = {"Origin": "https://usland.zh.run", "X-Forwarded-Host": "usland.zh.run", "X-Forwarded-Proto": "https"}
+    assert c.post("/lang", data={"lang": "en", "next": "/"}, headers=headers).status_code == 302
+    # 来源和公开域名不一致仍然拒绝
+    bad = {"Origin": "https://evil.example", "X-Forwarded-Host": "usland.zh.run"}
+    assert c.post("/lang", data={"lang": "en", "next": "/"}, headers=bad).status_code == 403

@@ -1,0 +1,51 @@
+# Zenith 部署清单（Compose 格式 + x-zenith 区块）。说明：https://zenith.hosting/developers
+#
+# 这份文件同时满足两种用法：
+#   - zenith up       临时部署（约 20 分钟）测试：只能有一个用 build: . 构建的服务，
+#                     不能用 x-zenith.env / x-zenith.storage，所以这里都没有用
+#   - zenith publish  提交审核上架：Zenith 从 GitHub 上指定的提交构建同一个 Dockerfile
+#
+# 不需要任何环境变量：
+#   - SECRET_KEY 第一次启动时自动生成，存在数据卷里（重启、更新后不变，登录状态不会丢）
+#   - DeepSeek API key 由用户在网页上填写，存在数据库里
+x-zenith:
+  catalog:
+    name: Usland
+    description: A tiny island for two — gentle whispers, date quests, forest animals, shared memories and gomoku on the bench.
+    detail: >-
+      Usland is a cosy shared space for a couple. Rewrite a sharp message into a gentler one before it is sent,
+      pick a date idea together, discover each other's forest animal through a short personality quiz, keep a
+      timeline of shared memories with photos, and play gomoku on the island bench while throwing tomatoes or
+      pouring cappuccinos. Everything stays on your own instance; only the message you choose to soften is sent
+      to DeepSeek with your own API key.
+    authors:
+      - Usland team
+    tags:
+      - couples
+      - relationships
+      - games
+    source: https://github.com/WilYip/hackathon
+    # 仓库里还没有 LICENSE 文件：上架前团队要定一个许可证（例如 MIT），并在这里和仓库根目录同时写上
+    license: Proprietary
+  expose:
+    - service: usland
+      port: 8080
+      web: true
+
+services:
+  usland:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      # SQLite 数据库、上传的照片、自动生成的 SECRET_KEY
+      - usland_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  usland_data:

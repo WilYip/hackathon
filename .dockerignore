@@ -1,0 +1,24 @@
+# 不放进镜像（也不会被 zenith up 上传）的文件
+#   机密和本地数据：绝对不能进镜像
+.env
+.env.*
+data/
+#   本地开发环境和缓存
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.vscode/
+.claude/
+.git/
+#   测试、文档、交接说明：运行时用不到
+tests/
+docs/
+test_ai.py
+PROGRESS.md
+CLAUDE.md
+AGENTS.md
+USLAND_SPEC.md
+VISUAL_DESIGN.md
+requirements-dev.txt
+pytest.ini
