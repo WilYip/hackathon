@@ -3,8 +3,10 @@
 - 两套构图：横版 desktop（2560×1440）和竖版 mobile（1440×2560，屏幕宽度 ≤700px 时使用）
 - 坐标全部来自 content/scene_anchors.json（底图像素），这里换算成百分比：
   场景容器保持底图原比例，所有东西用百分比定位，所以任何屏幕大小下都和底图对齐
-- 底图上叠一段 5 秒循环视频（固定机位，map.js 交叉淡入淡出循环，藏住首尾接缝）
-- 五个入口：HTML 热区（可以 Tab 聚焦）+ 悬停 / 聚焦时放大的场景元素（小船、信箱、小屋、告示牌、两个石台）
+- 底图上叠一段 5 秒循环视频（固定机位，map.js 交叉淡入淡出循环，藏住首尾接缝），
+  视频上再盖一层高清小岛（只盖不动的陆地），所以画面清晰、海浪和烟还在动
+- 五个入口：沿场景元素（小船、信箱、小屋、告示牌、两个石台）轮廓的 HTML 热区（可以 Tab 聚焦），
+  悬停 / 聚焦时元素四周和脚下亮起一圈光
 - 两只动物站在野餐垫上：做过测试 → 海岛姿态（有的话）或结果立绘；没做测试 → 默认形象（白色黏土小人，左睁眼、右眯眼笑）
 - 森林里的两座石像：做过测试并且石像图片存在时才显示，下面先垫一层接触阴影；否则保持空底座
 
@@ -127,10 +129,14 @@ def _statues(mode, canvas, members):
         statue = assets.character_image("statues", code)
         if not statue:
             continue  # 保持空底座
+        box = foot_box(anchors[side], statue["pivot"], canvas)
         result.append({
             "side": side,
             "src": statue["src"],
-            "box": foot_box(anchors[side], statue["pivot"], canvas),
+            "box": box,
+            # 石像本身也能点进初见森林：取图片中间 60% 宽、去掉上面一点空白
+            "hit": {"left": round(box["left"] + box["width"] * 0.2, 4), "top": round(box["top"] + box["height"] * 0.05, 4),
+                    "width": round(box["width"] * 0.6, 4), "height": round(box["height"] * 0.88, 4)},
             "shadow": shadow,
             # 阴影只显示这一边：左边裁掉中线右侧，右边裁掉中线左侧
             "clip": f"inset(0 {round(100 - middle, 4)}% 0 0)" if side == "left" else f"inset(0 0 0 {middle}%)",
@@ -142,19 +148,23 @@ def _statues(mode, canvas, members):
 # ---------- 五个入口 ----------
 
 
-def _element(mode, canvas, region_id, r):
-    """悬停时放大的场景元素：图片网址、位置（百分比），以及放大的原点（元素底边中点，百分比）。
-    图片不存在时返回 None（那就只有标签抬起，没有放大效果）。"""
-    src = assets.url_if_exists(assets.fill(r.get("element"), mode=mode))
-    rect = _cfg()["island"].get("elements", {}).get(mode, {}).get(region_id)
-    if not src or not rect:
+def _shape(mode, canvas, region_id, r):
+    """一个入口的场景元素：悬停时的光圈图（位置是百分比），以及沿元素轮廓的点击范围。
+    点击范围 = 轮廓多边形的外接矩形（热区 <a> 的位置）+ clip-path 多边形（相对这个矩形的百分比）。
+    配置里没有轮廓时返回 None，热区退回 scene_anchors.json 里的矩形。"""
+    shape = _cfg()["island"].get("shapes", {}).get(mode, {}).get(region_id)
+    if not shape:
         return None
-    x1, y1, x2, y2 = rect
+    xs = [x for x, _ in shape["hit"]]
+    ys = [y for _, y in shape["hit"]]
+    x1, y1, x2, y2 = min(xs), min(ys), max(xs), max(ys)
+    points = ", ".join(f"{round((x - x1) / (x2 - x1) * 100, 2)}% {round((y - y1) / (y2 - y1) * 100, 2)}%"
+                       for x, y in shape["hit"])
+    halo = assets.url_if_exists(assets.fill(r.get("halo"), mode=mode))
     return {
-        "src": src,
-        "box": rect_box(rect, canvas),
-        "origin_x": _pct((x1 + x2) / 2, canvas[0]),
-        "origin_y": _pct(y2, canvas[1]),
+        "hit_box": rect_box([x1, y1, x2, y2], canvas),
+        "clip": f"polygon({points})",
+        "halo": {"src": halo, "box": rect_box(shape["halo"], canvas)} if halo else None,
     }
 
 
@@ -166,12 +176,15 @@ def _regions(mode, canvas, regions):
     for region_id, info in regions.items():
         r = island["regions"][region_id]
         lx, ly = labels[region_id]
+        shape = _shape(mode, canvas, region_id, r)
         items.append({
             **info,
-            "box": rect_box(hotspots[r["anchor"]], canvas),
+            # 点击范围只在元素本身：温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台
+            "box": shape["hit_box"] if shape else rect_box(hotspots[r["anchor"]], canvas),
+            "clip": shape["clip"] if shape else None,
             "label": {"x": _pct(lx, canvas[0]), "y": _pct(ly, canvas[1])},
-            # 悬停 / 聚焦时放大的场景元素：温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台
-            "element": _element(mode, canvas, region_id, r),
+            # 悬停 / 聚焦时元素四周和脚下亮起的光圈
+            "halo": shape["halo"] if shape else None,
         })
     return items
 
@@ -187,6 +200,8 @@ def _layout(mode, regions, members, current_user_id):
         # 5 秒循环视频（和底图同构图）；scale 让视频画面和底图对齐
         "video": assets.url_if_exists(assets.fill(island.get("loop_video"), mode=mode)),
         "video_scale": island.get("loop_video_scale", 1),
+        # 叠在视频上的高清小岛（只盖不动的陆地）
+        "video_detail": assets.url_if_exists(assets.fill(island.get("loop_detail"), mode=mode)),
         "regions": _regions(mode, canvas, regions),
         "animals": _players(mode, canvas, members, current_user_id),
         "statues": _statues(mode, canvas, members),

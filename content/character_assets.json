@@ -46,7 +46,7 @@
     "pathPattern": "assets/animals/statues/{code}.png",
     "pivotNormalized": [
       0.5,
-      0.9395
+      0.9375
     ],
     "material": "matte warm-light-gray stone; no colored clothing",
     "status": "included",
@@ -54,7 +54,7 @@
       512,
       512
     ],
-    "note": "tone-matched to the island pedestals from usland_animals2/*_stone.png"
+    "note": "tone-matched to the island pedestals from usland_animals2/*_stone.png; body centre moved to the canvas centre"
   },
   "reconcile": {
     "pathPattern": "assets/animals/reconcile/{code}.png",

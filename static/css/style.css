@@ -500,10 +500,10 @@ body.logged-in.page-map .main {
   pointer-events: none;
 }
 
-/* 和底图一样大的图层：底图、循环视频、可放大的元素组、石像阴影 */
+/* 和底图一样大的图层：底图、循环视频（含高清小岛）、石像阴影 */
 .scene-base,
 .scene-video,
-.scene-pop,
+.scene-detail,
 .statue-shadow {
   position: absolute;
   inset: 0;
@@ -514,7 +514,7 @@ body.logged-in.page-map .main {
 }
 
 /* 5 秒循环视频：两段 <video> 叠在一起交叉淡入（map.js）。
-   视频画面比底图多拍了一圈边，放大 --video-scale 倍后和底图逐像素对齐（见 content/scene.json） */
+   视频画面比底图大约 2%，缩放 --video-scale 倍后和底图逐像素对齐（见 content/scene.json） */
 .scene-video {
   z-index: 1;
   overflow: hidden;
@@ -535,6 +535,17 @@ body.logged-in.page-map .main {
   opacity: 1;
 }
 
+/* 高清小岛：盖在视频上（只盖不动的陆地，透明边缘已经羽化），视频开始播放后才显示 */
+.scene-detail {
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.6s linear;
+}
+
+.scene-video.is-playing .scene-detail {
+  opacity: 1;
+}
+
 /* 减少动态效果：只显示静态底图 */
 .reduce-motion .scene-video {
   display: none;
@@ -546,51 +557,35 @@ body.logged-in.page-map .main {
   }
 }
 
-/* 悬停 / 聚焦时放大的场景元素：整组以元素底边中点（--ox, --oy）为原点放大。
-   平时元素图是透明的（看到的是视频里的样子），放大时才显示，并带一点抬起的阴影 */
-.scene-pop {
-  z-index: 6;
-  --pop: 1.08;
-  transform-origin: var(--ox, 50%) var(--oy, 50%);
-  transition: transform var(--fast) ease;
-}
-
-/* 小的元素放大得多一点，才看得出来 */
-.scene-pop[data-region="mailbox"] {
-  --pop: 1.3;
-}
-
-.scene-pop[data-region="whisper_pier"],
-.scene-pop[data-region="quest_board"],
-.scene-pop[data-region="first_meet_forest"] {
-  --pop: 1.12;
-}
-
-.scene-element {
+/* 悬停 / 聚焦时的光圈：元素四周和脚下的一圈暖光（滤色叠加，像被灯照亮），平时透明；
+   亮起后轻轻呼吸。按下时更亮一点 */
+.scene-halo {
   position: absolute;
+  z-index: 6;
   max-width: none;
+  pointer-events: none;
   opacity: 0;
+  mix-blend-mode: screen;
   transition: opacity var(--fast) ease, filter var(--fast) ease;
 }
 
-.scene-pop.is-hover {
-  transform: scale(var(--pop));
-}
-
-.scene-pop.is-hover .scene-element,
-.scene-pop.is-pressed .scene-element {
+.scene-halo.is-hover,
+.scene-halo.is-pressed {
   opacity: 1;
-  filter: drop-shadow(0 0.35cqw 0.45cqw rgb(38 63 70 / 0.3));
+  animation: halo-breathe 2.4s ease-in-out infinite;
 }
 
-/* 按下：在放大的基础上轻轻压回一点，并亮一点 */
-.scene-pop.is-hover.is-pressed,
-.scene-pop.is-pressed {
-  transform: scale(calc(var(--pop) * 0.97));
+.scene-halo.is-pressed {
+  filter: brightness(1.25);
 }
 
-.scene-pop.is-pressed .scene-element {
-  filter: drop-shadow(0 0.2cqw 0.3cqw rgb(38 63 70 / 0.3)) brightness(1.08);
+@keyframes halo-breathe {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* ---------- 森林石像 ---------- */

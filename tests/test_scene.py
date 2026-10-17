@@ -65,8 +65,8 @@ def test_all_configured_assets_exist(app):
     with app.test_request_context():
         for mode in ("desktop", "mobile"):
             paths = [cfg["island"]["base"], cfg["island"]["statue_shadow"], cfg["memory_room"]["background"]]
-            paths += [r["element"] for r in cfg["island"]["regions"].values()]
-            paths += [cfg["island"]["loop_video"]]
+            paths += [r["halo"] for r in cfg["island"]["regions"].values()]
+            paths += [cfg["island"]["loop_video"], cfg["island"]["loop_detail"]]
             paths += [v for k, v in cfg["page_backgrounds"].items() if not k.startswith("_")]
             for p in paths:
                 assert (ASSETS / p.format(mode=mode)).is_file(), p
@@ -98,34 +98,44 @@ def test_home_uses_both_layouts(client):
         assert name in html
 
 
-def test_hotspots_follow_anchors(client):
+def test_hotspots_follow_element_outline(client):
+    """点击范围只在元素本身：热区是轮廓多边形的外接矩形 + clip-path 多边形。"""
     html = home(client)
-    # 横版森林热区 [40, 60, 850, 560]，底图 2560×1440
-    forest = style_of(html, r'<a class="hotspot" href="/forest"')
-    assert "left: 1.5625%; top: 4.1667%; width: 31.6406%; height: 34.7222%" in forest
+    cfg = content.load("scene")["island"]["shapes"]
+    for region_id, url in (("first_meet_forest", "/forest"), ("mailbox", "/settings"), ("whisper_pier", "/whisper")):
+        hit = cfg["desktop"][region_id]["hit"]
+        xs, ys = [x for x, _ in hit], [y for _, y in hit]
+        box = scene.rect_box([min(xs), min(ys), max(xs), max(ys)], (2560, 1440))
+        style = style_of(html, rf'<a class="hotspot" href="{url}"')
+        assert f"left: {box['left']}%; top: {box['top']}%; width: {box['width']}%; height: {box['height']}%" in style
+        assert "clip-path: polygon(" in style
+    # 信箱的点击范围很小（不再是一大块矩形）
+    mailbox = style_of(html, r'<a class="hotspot" href="/settings"')
+    assert float(mailbox.split("width: ")[1].split("%")[0]) < 6
 
 
-def test_hover_elements_for_every_region(client):
-    """悬停时放大的是场景元素本身（小船、信箱、小屋、告示牌、两个石台），不再是柔光层。"""
+def test_halo_for_every_region(client):
+    """悬停时元素四周和脚下亮起光圈；不再显示抠出来的元素图，也没有柔光层。"""
     html = home(client)
     for mode in ("desktop", "mobile"):
         for name in ("first_meet_forest", "quest_board", "memory_cottage", "mailbox", "whisper_pier"):
-            assert f"scenes/island/{mode}/elements/{name}_{mode}.png" in html
-    assert html.count('class="scene-element"') == 10
-    assert html.count('<div class="scene-pop" data-region=') == 10
-    assert "scene-glow" not in html and "/hotspots/" not in html
-    # 横版小船 [117, 1075, 501, 1317]：以底边中点为原点放大
-    boat = html[html.index('<div class="scene-pop" data-region="whisper_pier"'):]
-    assert "--ox: 12.0703%; --oy: 91.4583%;" in boat[:200]
-    assert "left: 4.5703%; top: 74.6528%; width: 15.0%; height: 16.8056%" in boat[:600]
+            assert f"scenes/island/{mode}/halo/{name}_{mode}.png" in html
+    assert html.count('<img class="scene-halo"') == 10
+    assert "scene-element" not in html and "scene-pop" not in html and "/hotspots/" not in html
+    # 光圈按配置里的位置摆放（横版小信箱）
+    box = scene.rect_box(content.load("scene")["island"]["shapes"]["desktop"]["mailbox"]["halo"], (2560, 1440))
+    mailbox = style_of(html, r'<img class="scene-halo" src="[^"]*mailbox_desktop.png"')
+    assert f"left: {box['left']}%; top: {box['top']}%; width: {box['width']}%; height: {box['height']}%" in mailbox
 
 
-def test_loop_video_only_through_js(client):
-    """循环视频：两套构图各一个（data-src，由 map.js 只给显示中的那套加载），带对齐用的放大倍数。"""
+def test_loop_video_and_crisp_overlay_only_through_js(client):
+    """循环视频：两套构图各一个（data-src，由 map.js 只给显示中的那套加载），缩小 0.9794 倍和底图对齐；
+    上面的高清小岛也是 data-src，和视频一起加载。"""
     html = home(client)
     for mode in ("desktop", "mobile"):
         assert f'data-src="/static/usland/assets/scenes/island/{mode}/island_loop_{mode}.mp4"' in html
-    assert html.count("--video-scale: 1.021;") == 2
+        assert f'data-src="/static/usland/assets/scenes/island/{mode}/island_detail_{mode}.webp"' in html
+    assert html.count("--video-scale: 0.9794;") == 2
     assert "<video" not in html  # 视频元素由 JS 创建：没有 JS 时只显示静态底图
     assert "island_waves" not in html
 
@@ -228,7 +238,14 @@ def test_statue_with_contact_shadow(client, partner, app):
     assert "animals/statues/estj.png" not in html  # 阿木还没测：右边底座空着
     # 阴影在石像下面（先输出），并且只露出左边
     assert html.index("statue_pedestals_desktop.png") < html.index("animals/statues/infp.png")
-    assert "clip-path: inset(0 74.707% 0 0)" in html  # 中线 (550 + 745) / 2 = 647.5 → 25.2929%
+    assert "clip-path: inset(0 75.0586% 0 0)" in html  # 中线 (548 + 729) / 2 = 638.5 → 24.9414%
+    # 石像脚底在石台台面正中：横版左边台面中心 (548, 414)
+    expected = scene.foot_box({"x": 548, "y": 414, "scale": 0.19}, 0.9375, (2560, 1440))
+    statue = style_of(html, r'<img class="statue" src="[^"]*infp.png"')
+    assert f"left: {expected['left']}%; top: {expected['top']}%" in statue
+    # 石像本身也能点进初见森林（不进 Tab 顺序）
+    assert html.count('class="hotspot hotspot-statue" href="/forest"') == 2
+    assert 'tabindex="-1" aria-hidden="true"' in html
     take_quiz(partner, ESTJ)
     assert "animals/statues/estj.png" in client.get("/").get_data(as_text=True)
 

@@ -29,31 +29,32 @@ left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.heig
            loading="lazy" decoding="async" draggable="false">
       {% if layout.video %}
         {# 5 秒循环视频（和底图同构图）：map.js 用两段视频交叉淡入淡出来循环，藏住首尾接缝。
+           视频只有 1280 宽，所以上面再盖一层高清小岛（scene-detail：底图的细节 + 视频的颜色，只盖不动的陆地），
+           画面清晰，海浪和烟仍然在动；视频开始播放后才显示（.is-playing）。
            只有正在显示的那套构图才加载视频（data-src）；没有 JavaScript 或"减少动态效果"时只显示静态底图 #}
         <div class="scene-video" style="--video-scale: {{ layout.video_scale }};" data-scene-video
-             data-src="{{ layout.video }}" aria-hidden="true"></div>
+             data-src="{{ layout.video }}" aria-hidden="true">
+          {% if layout.video_detail %}<img class="scene-detail" data-src="{{ layout.video_detail }}" alt="" draggable="false">{% endif %}
+        </div>
       {% endif %}
 
-      {# ② 悬停 / 键盘聚焦时放大的场景元素（从底图抠出来的透明图，平时看不见，看到的是视频里的样子）：
-         温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台。
-         整组以元素底边中点为原点放大；初见森林这一组里还有石像，悬停时和石台一起放大 #}
+      {# ② 悬停 / 键盘聚焦时亮起的光圈：元素四周 + 脚下一片暖光（温柔传话-小船、小信箱-信箱、
+         回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台）。平时透明 #}
       {% for region in layout.regions %}
-        {% set forest_group = region.id == 'first_meet_forest' %}
-        {% if region.element or (forest_group and layout.statues) %}
-        <div class="scene-pop" data-region="{{ region.id }}"
-             {% if region.element %}style="--ox: {{ region.element.origin_x }}%; --oy: {{ region.element.origin_y }}%;"{% endif %}>
-          {% if region.element %}
-            <img class="scene-element" src="{{ region.element.src }}" alt="" style="{{ pos(region.element.box) }}" loading="lazy" draggable="false">
-          {% endif %}
-          {% if forest_group %}
-            {# ③ 石台上的石像：谁做完测试谁的石像才出现（服务器端判断），先垫接触阴影 #}
-            {% for s in layout.statues %}
-              {% if s.shadow %}<img class="statue-shadow" src="{{ s.shadow }}" alt="" style="clip-path: {{ s.clip }};" loading="lazy" draggable="false">{% endif %}
-              <img class="statue" src="{{ s.src }}" alt="{{ t('map.statue_alt', name=s.name) }}" style="{{ pos(s.box) }}" loading="lazy" draggable="false">
-            {% endfor %}
-          {% endif %}
-        </div>
+        {% if region.halo %}
+        <img class="scene-halo" src="{{ region.halo.src }}" alt="" data-region="{{ region.id }}" style="{{ pos(region.halo.box) }}"
+             loading="lazy" draggable="false">
         {% endif %}
+      {% endfor %}
+
+      {# ③ 石台上的石像：谁做完测试谁的石像才出现（服务器端判断），先垫接触阴影；
+         石像本身也能点进初见森林（不进 Tab 顺序，键盘用石台的热区） #}
+      {% set forest_region = layout.regions | selectattr('id', 'equalto', 'first_meet_forest') | first %}
+      {% for s in layout.statues %}
+        {% if s.shadow %}<img class="statue-shadow" src="{{ s.shadow }}" alt="" style="clip-path: {{ s.clip }};" loading="lazy" draggable="false">{% endif %}
+        <img class="statue" src="{{ s.src }}" alt="{{ t('map.statue_alt', name=s.name) }}" style="{{ pos(s.box) }}" loading="lazy" draggable="false">
+        <a class="hotspot hotspot-statue" href="{{ forest_region.url }}" data-region="first_meet_forest"
+           data-action="{{ forest_region.action }}" style="{{ pos(s.hit) }}" tabindex="-1" aria-hidden="true"></a>
       {% endfor %}
 
       {# ④ 野餐垫上的两只动物（第一位成员在左、第二位在右）
@@ -94,8 +95,10 @@ left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.heig
         {% else %}
           {% set badge = '' %}
         {% endif %}
+        {# 热区只覆盖元素本身：外接矩形 + 沿轮廓的 clip-path（clip-path 外面点不到） #}
         <a class="hotspot" href="{{ region.url }}"
-           data-region="{{ region.id }}" data-action="{{ region.action }}" style="{{ pos(region.box) }}"
+           data-region="{{ region.id }}" data-action="{{ region.action }}"
+           style="{{ pos(region.box) }}{% if region.clip %} clip-path: {{ region.clip }};{% endif %}"
            aria-label="{{ region.name }}{% if badge %}，{{ badge }}{% endif %}">
           {% if debug %}<span class="debug-id">{{ region.id }}</span>{% endif %}
         </a>
