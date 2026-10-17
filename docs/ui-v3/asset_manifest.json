@@ -1,0 +1,688 @@
+[
+  {
+    "path": "assets/.DS_Store",
+    "bytes": 6148,
+    "sha256": "47c100cdc0bd3916a063e111bb12f2b72e575deb4b34e50cb2ceafd0e54fc45c",
+    "status": "included"
+  },
+  {
+    "path": "assets/animals/result/enfj.png",
+    "bytes": 576665,
+    "sha256": "3dc17f0ad08644ce13cd7deb84160d61c045232582fac0c672b7d4647d852c34",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/enfp.png",
+    "bytes": 614346,
+    "sha256": "d198b2fda597f5f015c84dc9568bda9442e17d97ccd372ce52b5eb8a8d29ce6f",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/entj.png",
+    "bytes": 478757,
+    "sha256": "c691eb6da5846916dec8ad856a70888c17184fcc16570f4e0ded7bb4c89528b5",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/entp.png",
+    "bytes": 659187,
+    "sha256": "27549ba5ed5d746e86900ca9fb34e592fddcef4b91a9f8f5f8c2f4fd68f45431",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/esfj.png",
+    "bytes": 529551,
+    "sha256": "df510faf7c00a5a0d696201f049a915ba57a1941857326fff96a25da247731d9",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/esfp.png",
+    "bytes": 472280,
+    "sha256": "48c1db9843877af78314f1d1f1996a6e33824cd64c00c4fdc24b5efe6111c4ef",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/estj.png",
+    "bytes": 500406,
+    "sha256": "ef60b8df820e2ee243656fffa788a3a66e50316789c0b03718f484ced79b97a0",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/estp.png",
+    "bytes": 520914,
+    "sha256": "fd0867364800077fda45a50c29ed5e3af64d65b7a645fe6ebbcc2d7c15abf752",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/infj.png",
+    "bytes": 495050,
+    "sha256": "b9f5f54a552d2136de33dfe620b332b41226e954bdf6d32331da30441dac1577",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/infp.png",
+    "bytes": 462532,
+    "sha256": "9d64eb3b67737dd55ea47cb0a2855f9d5a2addb0fc5c5969743369fb9acbc84f",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/intj.png",
+    "bytes": 543267,
+    "sha256": "6c465ed34a24c6688b5b6dad0be1e47c2fc85b71cbf6193e9b423d40ccdaa0cd",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/intp.png",
+    "bytes": 493304,
+    "sha256": "ee8526d66d724fb55701866102fbabdc4c649d50cf85dee2ea84b6cd75dbc63c",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/isfj.png",
+    "bytes": 637520,
+    "sha256": "dfc6bb93a2aa76899331195bb6da1a2c5e46252ce7ff0a96549dffb4ba3277aa",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/isfp.png",
+    "bytes": 522190,
+    "sha256": "0fc9d6c1c4babf2c202e522628d2906241a13a0f8d254b80738c31b35ee3104f",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/istj.png",
+    "bytes": 549584,
+    "sha256": "07e290ce3bddaa2b10d7bdbb068663c2504fc68463624c44458d49adfe9f3d84",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/animals/result/istp.png",
+    "bytes": 578552,
+    "sha256": "29c98be85000af7d473db56e08cea8bd6c5737145f4042dca397d5171c8df7f8",
+    "status": "included",
+    "width": 1024,
+    "height": 1024,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/.DS_Store",
+    "bytes": 6148,
+    "sha256": "a9b1fc0c798cf37009723156cd6b80c7ee5ff524cc2191168743898a183bbc04",
+    "status": "included"
+  },
+  {
+    "path": "assets/scenes/forest/forest_quiz_desktop.webp",
+    "bytes": 528690,
+    "sha256": "1403fa0bd147911e9fe91a6a1f5f1149ced133bc10847d1145fb94fbb8537cac",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/forest/forest_quiz_mobile.webp",
+    "bytes": 746654,
+    "sha256": "7ccd379ae7346ca039e2c71eca4e2988d6f239a32aa8f78ebe06faf48f2b9ee9",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/.DS_Store",
+    "bytes": 6148,
+    "sha256": "548e6c1acaca64bc7c0f2c204dd1b8fe72b0f18cb9e5855b833cdd9fc6c8a6c5",
+    "status": "included"
+  },
+  {
+    "path": "assets/scenes/island/desktop/.DS_Store",
+    "bytes": 6148,
+    "sha256": "d7f0d0fcab1234ea92e3f6d383ffc2721c7a0f23791f3c30cefdd29ff8cc8a2a",
+    "status": "included"
+  },
+  {
+    "path": "assets/scenes/island/desktop/hotspots/first_meet_forest_desktop.png",
+    "bytes": 23014,
+    "sha256": "85b27961065e28f87b80c6b4f96338b111dbcc267b56ee05c4a53c4608c16640",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/hotspots/mailbox_desktop.png",
+    "bytes": 22975,
+    "sha256": "4dd7151ea3c23a0fdc889b13cc28eb97bfd1bf3ff61331057071344a3a8203c0",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/hotspots/memory_cottage_desktop.png",
+    "bytes": 22923,
+    "sha256": "2c3bc4bd28eb4ab0f827a4d4cbf2690a8af56cc316bb63a02fa0377f0b9f81b0",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/hotspots/quest_board_desktop.png",
+    "bytes": 22934,
+    "sha256": "5c169d4651c9cbb57f50a0117f21e1804d8331ed1cae83086b1557a1eee1b50c",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/hotspots/whisper_pier_desktop.png",
+    "bytes": 22087,
+    "sha256": "0f264e66498b73e92f1283d05942d31e3381b7ff3528aaf54cd157e905586190",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/island_base_desktop.webp",
+    "bytes": 787218,
+    "sha256": "4afc43c0f1184904b9f9787d44346a9a607462ae5b557afdb73b50cece334330",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/island_loop_desktop_fallback.webp",
+    "bytes": 1461228,
+    "sha256": "013eae6d934dafa51aeee17dc32d0b162a52c0b06d9981910244eae81e1ce76a",
+    "status": "optional_motion_prototype",
+    "width": 1280,
+    "height": 720,
+    "mode": "RGBA",
+    "frames": 30
+  },
+  {
+    "path": "assets/scenes/island/desktop/states/memory_cottage_glow_desktop.png",
+    "bytes": 22923,
+    "sha256": "2c3bc4bd28eb4ab0f827a4d4cbf2690a8af56cc316bb63a02fa0377f0b9f81b0",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/desktop/statue_pedestals_desktop.png",
+    "bytes": 20038,
+    "sha256": "a3c68616e9a48ccb998abe8b1609edeeef3ba4246d3d926056fc4c954c17021c",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/hotspots/first_meet_forest_mobile.png",
+    "bytes": 23363,
+    "sha256": "35e4983a24e3f02380353108fb2b53c50d0109c0202111924dd273db5575388a",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/hotspots/mailbox_mobile.png",
+    "bytes": 23285,
+    "sha256": "0fc900295d58231ad6814cc7f59d5019dd1608063e142e9e05e50010b99fe33f",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/hotspots/memory_cottage_mobile.png",
+    "bytes": 23158,
+    "sha256": "4beee53270d572c5b9f9f1d68f845eb0bac5cda4e7ae7bb5fb9b25e797692631",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/hotspots/quest_board_mobile.png",
+    "bytes": 24278,
+    "sha256": "162462d1e522b2cb35794f0d814d8f4ab693deefae97cb1aa4e16cd44c27cbe3",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/hotspots/whisper_pier_mobile.png",
+    "bytes": 23520,
+    "sha256": "e1e39b8387d4ea2dd214e446f98b7229f501d97dfde180d982fb41fdb2b9119c",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/island_base_mobile.webp",
+    "bytes": 750600,
+    "sha256": "c3b077a012bc61a9e4a6fbe89697bef7643b0a6c58e663c9283e2353cc44725c",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/island_loop_mobile_fallback.webp",
+    "bytes": 971344,
+    "sha256": "0b8cf7ce132fdffa6ec676d9acee5a01f0f7c6c4192274fc22c5b9749b3ef1fc",
+    "status": "optional_motion_prototype",
+    "width": 540,
+    "height": 960,
+    "mode": "RGBA",
+    "frames": 30
+  },
+  {
+    "path": "assets/scenes/island/mobile/states/memory_cottage_glow_mobile.png",
+    "bytes": 23158,
+    "sha256": "4beee53270d572c5b9f9f1d68f845eb0bac5cda4e7ae7bb5fb9b25e797692631",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/mobile/statue_pedestals_mobile.png",
+    "bytes": 21581,
+    "sha256": "8186873922d5f896b971f8cee9cd20a7de7c65366016496c75a4a8c4b5b527c3",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/island/shared/player_slot_left.svg",
+    "bytes": 556,
+    "sha256": "605df51d1c243be8cff4d2bd5f4d665d2ea0a8300979ad0ff16f2e7a2e690134",
+    "status": "included"
+  },
+  {
+    "path": "assets/scenes/island/shared/player_slot_right.svg",
+    "bytes": 556,
+    "sha256": "39695fbd64cc5d3d32860dfb7eaba2d58fd397a5d443e30bce7faf8579c5b9b7",
+    "status": "included"
+  },
+  {
+    "path": "assets/scenes/mailbox/mailbox_settings_desktop.webp",
+    "bytes": 359220,
+    "sha256": "4a3dfb6659380bef34c167efbd6d8bee39611eabb024f0dbd1a5ae50c8e96ce4",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/mailbox/mailbox_settings_mobile.webp",
+    "bytes": 641434,
+    "sha256": "6573251e14218b7c3f82ef074ba755ed2347c9e2ba80bd458fe1381178ac50dc",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/interactive/memory_album_desktop.png",
+    "bytes": 23250,
+    "sha256": "48c6fd13d47b639fcf1df407c134874e8e0f0252e59c3ca397df9fc6c9ac6f03",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/interactive/memory_album_mobile.png",
+    "bytes": 24615,
+    "sha256": "9d3acd82a5dbbf1d078563efd25249c7b6d3035d26e8415946ab5f40147c4696",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/interactive/memory_frames_desktop.png",
+    "bytes": 23115,
+    "sha256": "17ef941dab6887c4c39b7cedcaa283bccbe3bc85c1eb60a462992d33619380b3",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/interactive/memory_frames_mobile.png",
+    "bytes": 23704,
+    "sha256": "091a593c456d857adbd25bf182caaa0ccf755805b445226314b9d720090f937b",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/interactive/memory_postcards_desktop.png",
+    "bytes": 23168,
+    "sha256": "6dd4156ee4bd9e430b3e16edd0a90f333a0333ad53483c301757734e5332d446",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/interactive/memory_postcards_mobile.png",
+    "bytes": 24746,
+    "sha256": "876738556f08827763a84eb5579323ec8a25b17e3259e4623b05981f533d4896",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGBA",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/memory_room_desktop.webp",
+    "bytes": 294298,
+    "sha256": "036bcdf763de44f3afb5b5709fae54f5ce2a72b23c53ab5f815e75c51a6ca319",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/memory/memory_room_mobile.webp",
+    "bytes": 473966,
+    "sha256": "743b3cc351b37137ebdb853649f1cee0bb14748a5072b4d06237ccd4a05e908a",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/quest/quest_board_desktop.webp",
+    "bytes": 399736,
+    "sha256": "306f6c508615b5f1483cfa8922e6a27af7b640c7c1fa7a635b10f0963748501b",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/quest/quest_board_mobile.webp",
+    "bytes": 630476,
+    "sha256": "d4320f1f0ce3c25ebf030d5d325f591b33c5b80b73e114c87be1c510caf376ba",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/whisper/whisper_room_desktop.webp",
+    "bytes": 353298,
+    "sha256": "bbf643573c2296d73fc8d4125b5c4b1de8122b9c33bad1f4c6538e61b32e6ea0",
+    "status": "included",
+    "width": 2560,
+    "height": 1440,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/scenes/whisper/whisper_room_mobile.webp",
+    "bytes": 573370,
+    "sha256": "8e5a86ced141e15d063bc9862360d912d16861f4bd5daa548217415df0b115d3",
+    "status": "included",
+    "width": 1440,
+    "height": 2560,
+    "mode": "RGB",
+    "frames": 1
+  },
+  {
+    "path": "assets/ui/.DS_Store",
+    "bytes": 6148,
+    "sha256": "5788db729821521f2236dbb3071f72449e773cfe983bb059f0ba51661577e866",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/brand/favicon.svg",
+    "bytes": 353,
+    "sha256": "ead7d1f916cc0790292a525dfa6ab416326bf78560f2d020e2237173c4994706",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/brand/logo_usland.svg",
+    "bytes": 472,
+    "sha256": "fb8eb6c5b04ac8ff4e5097366ef2a45bd41e98f1ca3f1cde3055bd0197c8644d",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_add.svg",
+    "bytes": 224,
+    "sha256": "55e20e467a43c51cd349bf3047088d24463b6ae1b4a6e096c9d1534409500d30",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_agree.svg",
+    "bytes": 222,
+    "sha256": "4ca6960ac917440f9b2875fa38f8eb4d89d0b96c3a257b5b744d9b94fe7affb9",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_album.svg",
+    "bytes": 279,
+    "sha256": "2739491251f6dd7474a0b39da24cf6da1bba680e5e63a55e5e6a3ce28dd2d77b",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_back.svg",
+    "bytes": 243,
+    "sha256": "92ffad665aee7e67ff730b5c758a4e31290b7177ed0f84f93446aada79fbc3d0",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_calendar.svg",
+    "bytes": 278,
+    "sha256": "78db0346436717e3631b31d1954a5c8bcbc29b2850ad9b64363ac6393184c194",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_check.svg",
+    "bytes": 252,
+    "sha256": "92e950bd0879e716967aa0193cfa86ad2aa7b706723fc92eb76daa5ddd34b6d2",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_close.svg",
+    "bytes": 228,
+    "sha256": "e3615f3219cfc20fa53369ec8268861b35d830558096ab737dad7c2003c272e1",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_copy.svg",
+    "bytes": 313,
+    "sha256": "c4a8019c21aa8dcd9551d2b911877efffe7bdeb2677022e841e68e2ecd23217b",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_expand.svg",
+    "bytes": 246,
+    "sha256": "692cf52af473f0a4dd1e6cae21bc9d10e053af4dbedcd8fcb493aad12d78915a",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_language.svg",
+    "bytes": 295,
+    "sha256": "65d4af10eee50ae6943cea3050087655d14b017e89232439b6fb7d66fd6cff16",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_lock.svg",
+    "bytes": 289,
+    "sha256": "745eec533458bc76059350022908ed4c5f29e28bd1ba6b65dbdbd48413d6c9e8",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_photo.svg",
+    "bytes": 308,
+    "sha256": "3463fe0f26827cbfd0255336014409ecee52afd5fe768150d4f32e72c75eaff3",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_postcard.svg",
+    "bytes": 269,
+    "sha256": "0852849eacdd729861e722a68b3c08d70695d4c2b6fb59d941475ab04e998994",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_reconcile.svg",
+    "bytes": 307,
+    "sha256": "a66f909cdcefa380455a774c15494f2cfb01621b5fe7798227617982ccefd73a",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_send.svg",
+    "bytes": 254,
+    "sha256": "00706f33f9720e1b33d0d2ac8d315745f795145b2f93bf9fb543ed2ca2d616f5",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_settings.svg",
+    "bytes": 579,
+    "sha256": "dffe60e29baa5c3ff982e6250d8cf4af255e8ace7d736ed8e8ba6a66630002f6",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_soften.svg",
+    "bytes": 312,
+    "sha256": "575e39c8778ac41f81b5c4123ea7026e84ef4f3e0becc2e414f08577306df846",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/icons/icon_upload.svg",
+    "bytes": 245,
+    "sha256": "476f6e293302961dda900e6d1c21d48e5c06e2ccc4dde89c8f1527563999e5c2",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/placeholders/avatar_placeholder.svg",
+    "bytes": 457,
+    "sha256": "5b10e093b76713fd8117e12298be9a7d7f10c91ea77f4f3d3efc33f9a739e8f2",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/placeholders/photo_placeholder_3x2.svg",
+    "bytes": 498,
+    "sha256": "6aae49ea52b154e2a7dd5fc60683056c4b3728f7cb139262976d9ab19e07eb08",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/placeholders/photo_placeholder_4x3.svg",
+    "bytes": 498,
+    "sha256": "f2cfdd1d63c51125b81076207035534454f1dd64f3eb64f2b99486f76d0746aa",
+    "status": "included"
+  },
+  {
+    "path": "assets/ui/placeholders/photo_placeholder_portrait.svg",
+    "bytes": 497,
+    "sha256": "c2c2078966bf44a8acec7c44bdd8af09552439767515290a809bd5cd1528a338",
+    "status": "included"
+  }
+]

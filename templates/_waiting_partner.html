@@ -1,0 +1,19 @@
+{# 等待另一半：只有一位成员时，各功能页都 include 这个片段。
+   用法：{% if members|length < 2 %}{% include "_waiting_partner.html" %}{% endif %}
+   地图页在 include 前 {% set compact = True %}，显示成一条小横幅。
+   页面会每 4 秒查询一次，TA 加入后自动刷新。 #}
+{% from "_icons.html" import icon %}
+<div class="waiting-card card {{ 'waiting-compact' if compact }}" data-wait-partner data-status-url="{{ url_for('auth.island_status') }}">
+  <div class="waiting-text">
+    <h2>{{ t('waiting.title') }}</h2>
+    {% if not compact %}<p>{{ t('waiting.text') }}</p>{% endif %}
+  </div>
+  <div class="invite-code-row">
+    <code class="invite-code" id="invite-code">{{ island.invite_code }}</code>
+    <button type="button" class="btn btn-secondary btn-small" data-copy-target="invite-code"
+            data-copied="{{ t('invite.copied') }}" data-failed="{{ t('invite.copy_failed') }}">
+      {{ icon('copy', 18) }}<span>{{ t('invite.copy') }}</span>
+    </button>
+  </div>
+  <p class="copy-status" aria-live="polite"></p>
+</div>

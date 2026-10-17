@@ -1,0 +1,10 @@
+{# 欢迎页 / 邀请页上的小岛插图（数据来自 services/scene.preview_image）：
+   第三版主岛底图，宽度 ≤700px 用竖版，其余用横版；保持原比例，不裁切。 #}
+{% macro scene_preview(preview, alt="") %}
+  {% if preview %}
+  <picture class="scene-preview" style="--ratio: {{ preview.ratio_w }} / {{ preview.ratio_h }}; --ratio-mobile: {{ preview.ratio_w_mobile }} / {{ preview.ratio_h_mobile }};">
+    <source media="(max-width: 700px)" srcset="{{ preview.src_mobile }}">
+    <img src="{{ preview.src }}" alt="{{ alt }}" decoding="async">
+  </picture>
+  {% endif %}
+{% endmacro %}

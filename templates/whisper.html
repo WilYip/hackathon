@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% set scene_bg = 'whisper' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+
+{% block title %}{{ t('whisper.title') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-whisper{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_whisper{% endblock %}
+{% block bgm_gain %}0.7{% endblock %}
+{% block amb %}amb_dock{% endblock %}
+{% block amb_extra %}env_boat_creak{% endblock %}
+{% block sound_region %}whisper{% endblock %}
+{% block sound_enter %}dock_enter{% endblock %}
+
+{% block content %}
+{% if alone %}
+  {# 只有一个人：等 TA 加入 #}
+  <section class="feature">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    <div class="feature-card card">
+      <div class="feature-art feature-art-icon">{{ icon('anchor', 72) }}</div>
+      <div class="feature-text">
+        <h1>{{ t('whisper.title') }}</h1>
+        <p>{{ t('regions_desc.whisper_pier') }}</p>
+      </div>
+    </div>
+    {% include "_waiting_partner.html" %}
+  </section>
+{% else %}
+
+<section class="whisper" data-whisper
+         data-needs-key="{{ 1 if needs_key else 0 }}" data-hug-id="{{ hug_id }}" data-lang="{{ lang }}">
+
+  {# ===== 左侧（电脑端）：两人状态、和好、小提示 ===== #}
+  <aside class="whisper-side card">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    {# 两人的头像和心情（心情只由本人在首页选择；对方的心情变化时，每 4 秒的轮询会更新这里） #}
+    <ul class="whisper-people">
+      <li>
+        <span class="mood-wrap mood-{{ partner.mood.key }}" data-mood-of="partner">{{ avatar(partner) }}</span>
+        <span class="person-name">{{ partner.nickname }}
+          <span class="mood-pill mood-pill-{{ partner.mood.key }}" data-mood-label="partner">{{ partner.mood.label }}</span>
+        </span>
+      </li>
+      <li>
+        <span class="mood-wrap mood-{{ me.mood.key }}" data-mood-of="me">{{ avatar(me) }}</span>
+        <span class="person-name">{{ me.nickname }}<small>{{ t('whisper.you_tag') }}</small>
+          <span class="mood-pill mood-pill-{{ me.mood.key }}" data-mood-label="me">{{ me.mood.label }}</span>
+        </span>
+      </li>
+    </ul>
+    {# 对方心情不是"平静"时，给一句温柔的提示 #}
+    <p class="mood-hint" data-mood-hint {% if partner.mood.key == 'calm' %}hidden{% endif %}>{{ partner.mood.hint }}</p>
+
+    <div class="reconcile-box">
+      <button type="button" class="btn btn-secondary btn-block" data-reconcile
+              {% if reconcile.me %}aria-pressed="true"{% endif %}>{{ icon('heart', 18) }}<span>{{ t('whisper.reconcile') }}</span></button>
+      <p class="reconcile-status" data-reconcile-status aria-live="polite">
+        {% if reconcile.me %}{{ t('whisper.reconcile_waiting') }}{% elif reconcile.partner %}{{ t('whisper.reconcile_partner') }}{% endif %}
+      </p>
+    </div>
+
+    <div class="whisper-tips">
+      <h2>{{ t('whisper.tips_title') }}</h2>
+      <ul>
+        <li>{{ t('whisper.tip1') }}</li>
+        <li>{{ t('whisper.tip2') }}</li>
+        <li>{{ t('whisper.tip3') }}</li>
+      </ul>
+    </div>
+
+    <p class="key-status" data-key-status {% if needs_key %}hidden{% endif %}>
+      {{ icon('check', 16) }}<span>{{ t('whisper.key_status') }} · <code data-masked-key>{{ masked_key or '' }}</code></span>
+    </p>
+  </aside>
+
+  {# ===== 中间：聊天区 ===== #}
+  <div class="whisper-main card">
+    {# 手机端顶部：返回、对方头像、和好按钮 #}
+    <header class="chat-head">
+      <a class="icon-btn" href="{{ url_for('island.index') }}" aria-label="{{ t('feature.back') }}">{{ icon('back') }}</a>
+      <span class="mood-wrap mood-{{ partner.mood.key }}" data-mood-of="partner">{{ avatar(partner, 'avatar-sm') }}</span>
+      <span class="chat-head-name">{{ partner.nickname }}
+        <span class="mood-pill mood-pill-{{ partner.mood.key }}" data-mood-label="partner" {% if partner.mood.key == 'calm' %}hidden{% endif %}>{{ partner.mood.label }}</span>
+      </span>
+      <button type="button" class="btn btn-secondary btn-small" data-reconcile
+              {% if reconcile.me %}aria-pressed="true"{% endif %}>{{ icon('heart', 16) }}<span>{{ t('whisper.reconcile') }}</span></button>
+    </header>
+    <p class="partner-banner{% if reconcile.me %} is-mine{% endif %}" data-partner-banner {% if not (reconcile.me or reconcile.partner) %}hidden{% endif %}>
+      {{ icon('heart', 16) }}<span>{% if reconcile.me %}{{ t('whisper.reconcile_waiting') }}{% elif reconcile.partner %}{{ t('whisper.reconcile_partner') }}{% endif %}</span>
+    </p>
+
+    <div class="chat-log" data-chat-log role="log" aria-live="polite" aria-label="{{ t('whisper.title') }}">
+      <p class="chat-state" data-chat-state>{{ t('whisper.loading') }}</p>
+    </div>
+
+    {# 没有 API key 时显示这张卡片代替输入框 #}
+    <div class="need-key card" data-need-key {% if not needs_key %}hidden{% endif %}>
+      <h2>{{ t('whisper.need_key_title') }}</h2>
+      <p>{{ t('whisper.need_key_text') }}</p>
+      <button type="button" class="btn btn-primary" data-open-key>{{ t('whisper.need_key_button') }}</button>
+    </div>
+
+    <form class="composer" data-composer {% if needs_key %}hidden{% endif %}>
+      <label class="visually-hidden" for="whisper-input">{{ t('whisper.placeholder') }}</label>
+      <textarea id="whisper-input" rows="2" maxlength="500" placeholder="{{ t('whisper.placeholder') }}" data-input></textarea>
+      <div class="composer-row">
+        <span class="char-count" data-char-count>0/500</span>
+        <button type="button" class="btn btn-secondary btn-small" data-direct>{{ t('whisper.direct') }}</button>
+        <button type="submit" class="btn btn-primary" data-soften>{{ icon('mail', 18) }}<span>{{ t('whisper.soften') }}</span></button>
+      </div>
+      <p class="composer-error" data-composer-error role="alert"></p>
+    </form>
+    <p class="not-counseling">{{ t('whisper.not_counseling') }}</p>
+
+    {# 送信小动画：发送成功后一个小信封飞出去（不阻塞发送） #}
+    <span class="send-flight" data-send-flight aria-hidden="true">{{ icon('mail', 22) }}</span>
+  </div>
+</section>
+
+{# ===== 弹窗 1：点亮传话魔法（填写 API key） ===== #}
+<dialog class="panel key-panel" id="dlg-key" aria-labelledby="dlg-key-title">
+  <form method="dialog" class="panel-close-form">
+    <button class="icon-btn panel-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <h2 id="dlg-key-title">{{ t('whisper.key.title') }}</h2>
+  <p>{{ t('whisper.key.intro') }}</p>
+
+  <details class="key-tutorial">
+    <summary>{{ t('whisper.key.tutorial_title') }}</summary>
+    <ol>
+      <li>{{ t('whisper.key.step1') }}</li>
+      <li>{{ t('whisper.key.step2') }}</li>
+      <li>{{ t('whisper.key.step3') }}</li>
+      <li>{{ t('whisper.key.step4') }}</li>
+    </ol>
+  </details>
+
+  <form class="form" data-key-form novalidate>
+    <label class="field">
+      <span class="field-label">{{ t('whisper.key.label') }}</span>
+      <span class="key-input-row">
+        <input type="password" name="api_key" autocomplete="off" spellcheck="false" placeholder="sk-..." data-key-input required>
+        <button type="button" class="btn btn-secondary btn-small" data-key-toggle>{{ t('whisper.key.show') }}</button>
+      </span>
+    </label>
+    <p class="key-message" data-key-message role="status" aria-live="polite"></p>
+    <button type="submit" class="btn btn-primary btn-block" data-key-submit>{{ t('whisper.key.submit') }}</button>
+  </form>
+  <p class="hint">{{ t('whisper.key.privacy') }}</p>
+</dialog>
+
+{# ===== 弹窗 2：温柔转达的等待 / 预览 / 再改改 ===== #}
+<dialog class="panel preview-panel" id="dlg-preview" aria-labelledby="dlg-preview-title">
+  <div class="preview-loading" data-preview-step="loading">
+    <span class="loading-envelope">{{ icon('mail', 34) }}</span>
+    <p>{{ t('whisper.softening') }}</p>
+  </div>
+
+  <div data-preview-step="result" hidden>
+    <h2 id="dlg-preview-title">{{ t('whisper.preview_title') }}</h2>
+    <div class="original-note">
+      <span>{{ t('whisper.your_original') }}</span>
+      <p data-preview-original></p>
+    </div>
+    <div class="letter-card" data-preview-softened></div>
+    <div class="preview-actions">
+      <button type="button" class="btn btn-secondary" data-preview-cancel>{{ t('whisper.cancel') }}</button>
+      <button type="button" class="btn btn-secondary" data-preview-edit>{{ t('whisper.edit') }}</button>
+      <button type="button" class="btn btn-primary" data-preview-send>{{ t('whisper.send_this') }}</button>
+    </div>
+  </div>
+
+  <div data-preview-step="edit" hidden>
+    <h2>{{ t('whisper.edit') }}</h2>
+    <label class="visually-hidden" for="preview-edit-input">{{ t('whisper.edit') }}</label>
+    <textarea id="preview-edit-input" class="letter-card letter-edit" rows="4" maxlength="1000" data-preview-edit-input></textarea>
+    <div class="preview-actions">
+      <button type="button" class="btn btn-secondary" data-preview-back>{{ t('whisper.back') }}</button>
+      <button type="button" class="btn btn-primary" data-preview-send-edited>{{ t('whisper.send_edited') }}</button>
+    </div>
+  </div>
+
+  <div data-preview-step="error" hidden>
+    <p class="preview-error" data-preview-error role="alert"></p>
+    <div class="preview-actions">
+      <button type="button" class="btn btn-primary" data-preview-close>{{ t('panel.close') }}</button>
+    </div>
+  </div>
+</dialog>
+
+{# ===== 弹窗 3：安全卡片（软化结果为 [UNSAFE] 时，不发送） ===== #}
+<dialog class="panel safety-panel" id="dlg-safety" aria-labelledby="dlg-safety-title">
+  <h2 id="dlg-safety-title">{{ t('whisper.safety.title') }}</h2>
+  <p>{{ t('whisper.safety.text') }}</p>
+  <ul class="help-list">
+    <li><span>{{ t('whisper.safety.emergency') }}</span><a href="tel:000">000</a></li>
+    <li><span>{{ t('whisper.safety.respect') }}</span><a href="tel:1800737732">1800 737 732</a></li>
+    <li><span>{{ t('whisper.safety.lifeline') }}</span><a href="tel:131114">13 11 14</a></li>
+  </ul>
+  <p class="hint">{{ t('whisper.safety.not_sent') }}</p>
+  <form method="dialog" class="panel-actions">
+    <button class="btn btn-primary">{{ t('whisper.safety.ok') }}</button>
+  </form>
+</dialog>
+
+{# ===== 和好成功：两只动物从两侧走近、拥抱、飘出爱心 ===== #}
+<div class="hug-overlay" data-hug-overlay hidden>
+  <div class="hug-stage">
+    {# 和好姿态（等待队友交付，animals/reconcile/<代码>.png）：有图片时用侧身姿态，右边的镜像翻转；没有时用头像 #}
+    {% for p, side in ((me, 'left'), (partner, 'right')) %}
+    <span class="hug-animal hug-{{ side }}">
+      {% if p and p.reconcile_src %}<img class="hug-pose" src="{{ p.reconcile_src }}" alt="">{% else %}{{ avatar(p) }}{% endif %}
+    </span>
+    {% endfor %}
+    <span class="hug-hearts" aria-hidden="true">
+      {% for i in range(5) %}<span class="hug-heart" style="--i: {{ i }}">{{ icon('heart', 22) }}</span>{% endfor %}
+    </span>
+  </div>
+  <p class="hug-text">{{ t('whisper.hug_text') }}</p>
+</div>
+
+{# 前端脚本用的文字 #}
+<script type="application/json" id="whisper-strings">{{ js_strings | tojson }}</script>
+{% endif %}
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block scripts %}
+{% if alone %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% else %}
+<script src="{{ url_for('static', filename='js/whisper.js') }}"></script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% set scene_bg = 'forest' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+
+{% block title %}{{ t('forest.subtitle') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-forest{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_forest{% endblock %}
+{% block amb %}amb_forest{% endblock %}
+{% block amb_extra %}env_birds{% endblock %}
+{% block sound_region %}forest{% endblock %}
+{% block sound_enter %}forest_enter{% endblock %}
+
+{% block content %}
+{# 森林动物性格测试，做成一段森林散步：
+   - 上方是一条小路和 12 个路标，每答一题，小角色沿路前进一步；天色从清晨慢慢变成黄昏
+   - 每次选择后，森林小精灵说一句和选项有关的话（约 1 秒后进入下一题，点一下可以跳过）
+   - 每走完 3 题（一个维度）弹出一张"森林发现"卡片
+   由 static/js/forest_quiz.js 控制；没有 JavaScript 时 12 题一起显示，也能直接提交 #}
+<section class="forest forest-walk-page">
+  <header class="quest-head">
+    <a class="back-link" href="{{ url_for('forest.index') }}">{{ icon('back', 20) }}<span>{{ t('forest.back_forest') }}</span></a>
+    <h1>{{ t('forest.subtitle') }}</h1>
+  </header>
+
+  {# ① 森林小路：天空三层（清晨 / 白天 / 黄昏）按进度淡入淡出，太阳沿弧线移动 #}
+  <div class="walk-scene js-block" data-walk style="--progress: 0;" role="img"
+       aria-label="{{ t('forest.walk_label', total=questions|length, n=0) }}"
+       data-label="{{ t('forest.walk_label') }}">
+    <span class="walk-sky walk-sky-day" aria-hidden="true"></span>
+    <span class="walk-sky walk-sky-dusk" aria-hidden="true"></span>
+    <span class="walk-sun" aria-hidden="true"></span>
+    <span class="walk-hill walk-hill-back" aria-hidden="true"></span>
+    <span class="walk-hill walk-hill-front" aria-hidden="true"></span>
+    {# 路边的小树（用已有的树图标，不需要新素材） #}
+    {% for tree in [(9, 34), (27, 26), (46, 33), (63, 24), (82, 31), (95, 40)] %}
+      <span class="walk-tree" style="left: {{ tree[0] }}%; top: {{ tree[1] }}%;" aria-hidden="true">{{ icon('tree', 28) }}</span>
+    {% endfor %}
+    <svg class="walk-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path class="walk-path-edge" d="{{ path }}"/>
+      <path class="walk-path-line" d="{{ path }}"/>
+    </svg>
+    <ol class="walk-posts" aria-hidden="true">
+      {% for p in points %}
+        <li class="walk-post{% if p.n == 0 %} is-trailhead{% endif %}" style="left: {{ p.x }}%; top: {{ p.y }}%;" data-post="{{ p.n }}">
+          <span>{{ p.n if p.n else t('forest.trailhead') }}</span>
+        </li>
+      {% endfor %}
+    </ol>
+    <span class="walker" data-walker style="left: {{ points[0].x }}%; top: {{ points[0].y }}%;" aria-hidden="true">
+      {{ avatar(me, 'avatar-walker') }}
+    </span>
+    <script type="application/json" data-walk-points>{{ points | tojson }}</script>
+  </div>
+
+  {# ② 森林小精灵：有 spirit.webp 时显示图片，没有时用一个小图标。点气泡可以跳过等待 #}
+  <div class="spirit walk-spirit">
+    <span class="spirit-face" aria-hidden="true">
+      {% if spirit %}<img src="{{ spirit }}" alt="">{% else %}{{ icon('tree', 30) }}{% endif %}
+    </span>
+    <div class="spirit-bubble" data-spirit-bubble>
+      <p class="spirit-text" data-spirit-text aria-live="polite">{{ t('forest.spirit_hello') }}</p>
+      <button type="button" class="spirit-skip js-only" data-skip hidden>{{ t('forest.skip') }} ›</button>
+    </div>
+  </div>
+
+  {% if error %}<p class="flash flash-error" role="alert">{{ error }}</p>{% endif %}
+
+  <form method="post" action="{{ url_for('forest.submit_quiz') }}" class="wizard walk-form card" data-forest-quiz
+        data-step-label="{{ t('forest.step_label') }}" data-pick-hint="{{ t('forest.pick_hint') }}">
+    <div class="wizard-top">
+      <p class="wizard-progress" data-progress-text>{{ t('forest.step_label').replace('{n}', '1').replace('{total}', questions|length|string) }}</p>
+    </div>
+
+    {% for q in questions %}
+    <fieldset class="wizard-step" data-step="{{ q.number }}" data-dimension="{{ q.dimension }}">
+      <legend class="wizard-question">{{ q.text }}</legend>
+      <div class="option-grid option-grid-two">
+        {# 选项 a：果子被摘下的效果；选项 b：小门被打开的效果（纯 CSS，见 style.css 的"森林散步"） #}
+        {% for key in ('a', 'b') %}
+        <label class="option-card option-card-big walk-option effect-{{ 'fruit' if key == 'a' else 'door' }}">
+          <input type="radio" name="q{{ q.number }}" value="{{ key }}" required
+                 data-pole="{{ q[key].pole }}" data-reply="{{ q[key].spirit }}"
+                 {% if chosen and chosen[q.number - 1] == key %}checked{% endif %}>
+          <span class="option-body">
+            <span class="option-emoji" aria-hidden="true"><span class="option-door"></span>{{ q[key].emoji }}</span>
+            <span class="option-label">{{ q[key].text }}</span>
+            <span class="option-check" aria-hidden="true">{{ icon('check', 16) }}</span>
+          </span>
+        </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    {% endfor %}
+
+    <p class="wizard-error" data-wizard-error role="alert"></p>
+    <div class="wizard-nav">
+      <button type="button" class="btn btn-secondary js-only" data-prev>{{ t('forest.prev') }}</button>
+      <button type="button" class="btn btn-primary js-only" data-next>{{ t('forest.next') }}</button>
+      <button type="submit" class="btn btn-primary" data-submit>{{ t('forest.submit') }}</button>
+    </div>
+  </form>
+</section>
+
+{# ③ 森林发现：每走完一个维度的 3 题弹出（Esc 或"继续散步"关闭；最后一张的按钮直接看结果） #}
+<dialog class="panel discovery-card" id="discovery" aria-labelledby="discovery-title" data-discovery
+        data-lean="{{ t('forest.discovery_lean') }}" data-votes="{{ t('forest.discovery_votes') }}"
+        data-continue="{{ t('forest.discovery_continue') }}" data-finish="{{ t('forest.submit') }}">
+  <p class="discovery-kicker">{{ icon('leaf', 18) }}<span>{{ t('forest.discovery_kicker') }} · <span data-discovery-label></span></span></p>
+  <h2 id="discovery-title" data-discovery-title></h2>
+  <p class="discovery-text" data-discovery-text></p>
+  <p class="discovery-votes" data-discovery-votes></p>
+  <div class="panel-actions">
+    <button type="button" class="btn btn-primary" data-discovery-go autofocus></button>
+  </div>
+</dialog>
+<script type="application/json" id="discoveries">{{ discoveries | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/forest_quiz.js') }}"></script>
+{% endblock %}

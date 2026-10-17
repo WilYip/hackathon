@@ -1,0 +1,23 @@
+:root {
+  --usland-warm-white: #f2ede3;
+  --usland-sand: #d8c7ad;
+  --usland-honey-wood: #b98b5f;
+  --usland-bay: #6f9394;
+  --usland-deep-sea: #263f46;
+  --usland-sage: #7f9279;
+  --usland-terracotta: #b97870;
+  --usland-amber: #e6b975;
+  --usland-radius-panel: 16px;
+  --usland-radius-button: 14px;
+  --usland-shadow-panel: 0 18px 50px rgb(38 63 70 / 16%);
+  --usland-focus: 0 0 0 3px rgb(242 237 227 / 95%), 0 0 0 6px rgb(38 63 70 / 55%);
+  --usland-motion-fast: 180ms;
+  --usland-motion-scene: 420ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --usland-motion-fast: 0ms;
+    --usland-motion-scene: 0ms;
+  }
+}

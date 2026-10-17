@@ -1,0 +1,437 @@
+{
+  "_说明": "约会选选选的任务库（48 个）。duration 分钟；budget：free / under_20 / unlimited；energy：low / medium / high；location：home / outdoor / anywhere；goals：quiet_time 安静陪伴 / deep_talk 深度交流 / memory 制造回忆 / teamwork 一起完成事情。修改后请运行 pytest（tests/test_matching.py 会检查字段是否合法）。",
+  "tasks": [
+    {
+      "id": "song_swap",
+      "title": {"zh": "交换一首歌", "en": "Song Swap"},
+      "rules": {
+        "zh": ["各自偷偷选一首最近最想让对方听的歌。", "戴上耳机，同时听对方选的歌。", "听完说说：为什么是这首？听的时候想到了什么？"],
+        "en": ["Each of you secretly picks a song you've wanted the other to hear lately.", "Put on headphones and listen to each other's pick at the same time.", "Afterwards, share why you chose it and what came to mind while listening."]
+      },
+      "duration": 15, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk", "memory"]
+    },
+    {
+      "id": "three_thanks",
+      "title": {"zh": "三个感谢的瞬间", "en": "Three Thank-You Moments"},
+      "rules": {
+        "zh": ["各自在纸上写下三个最近想感谢对方的具体瞬间。", "轮流念给对方听，一次念一个。", "听的人只需要说一句\"我收到啦\"。"],
+        "en": ["Each of you writes down three specific recent moments you want to thank the other for.", "Take turns reading them aloud, one at a time.", "The listener only needs to say \"I hear you\"."]
+      },
+      "duration": 15, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk", "quiet_time"]
+    },
+    {
+      "id": "ten_min_break",
+      "title": {"zh": "给 TA 的十分钟休息", "en": "A Ten-Minute Break, Planned for You"},
+      "rules": {
+        "zh": ["一人当\"休息策划师\"，为对方安排十分钟：一杯喝的、一首歌、一个舒服的位置。", "被照顾的人什么都不用做，只负责放松。", "十分钟后交换角色，或者约好下次轮到谁。"],
+        "en": ["One of you plans a ten-minute break for the other: a drink, a song, a comfy spot.", "The one being looked after does nothing but relax.", "Swap roles after ten minutes, or agree whose turn it is next time."]
+      },
+      "duration": 15, "budget": "free", "energy": ["low"], "location": "home", "goals": ["quiet_time"]
+    },
+    {
+      "id": "color_hunt",
+      "title": {"zh": "同色寻宝", "en": "Colour Hunt"},
+      "rules": {
+        "zh": ["一起抽一个颜色（比如闭眼指衣柜里的一件衣服）。", "在附近十分钟内找到三个这种颜色的物品并拍照。", "把三张照片拼在一起，给这组照片起个名字。"],
+        "en": ["Pick a colour together (for example, point at something in the wardrobe with your eyes closed).", "Within ten minutes, find and photograph three things nearby in that colour.", "Put the three photos together and give the set a name."]
+      },
+      "duration": 15, "budget": "free", "energy": ["medium", "high"], "location": "anywhere", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "compliment_relay",
+      "title": {"zh": "夸夸接力", "en": "Compliment Relay"},
+      "rules": {
+        "zh": ["轮流夸对方一个具体的优点，不能重复。", "谁先卡住超过五秒，谁就给对方一个拥抱。", "最后各自说出今天最喜欢听到的那一句。"],
+        "en": ["Take turns giving each other a specific compliment, no repeats.", "Whoever gets stuck for more than five seconds owes the other a hug.", "Finish by naming the compliment you liked hearing most."]
+      },
+      "duration": 10, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk"]
+    },
+    {
+      "id": "tea_for_two",
+      "title": {"zh": "两杯茶的时间", "en": "Tea for Two"},
+      "rules": {
+        "zh": ["一起烧水，泡两杯茶或热饮。", "关掉手机通知，坐在一起慢慢喝完。", "不用聊天也没关系，安静地待着就好。"],
+        "en": ["Boil the kettle together and make two cups of tea or something warm.", "Silence your phones and sip slowly side by side.", "No need to talk; just being together quietly is enough."]
+      },
+      "duration": 15, "budget": "free", "energy": ["low"], "location": "home", "goals": ["quiet_time"]
+    },
+    {
+      "id": "living_room_dance",
+      "title": {"zh": "客厅两首歌舞会", "en": "Two-Song Living Room Dance"},
+      "rules": {
+        "zh": ["各选一首歌，组成一个两首歌的歌单。", "把客厅中间空出来，跟着音乐随便跳。", "第二首歌的副歌部分一定要牵手转一圈。"],
+        "en": ["Each choose one song to make a two-song playlist.", "Clear a space in the living room and dance however you like.", "During the chorus of the second song, hold hands and spin once."]
+      },
+      "duration": 10, "budget": "free", "energy": ["medium", "high"], "location": "home", "goals": ["memory"]
+    },
+    {
+      "id": "dialect_swap",
+      "title": {"zh": "家乡话小课堂", "en": "Home Language Mini Class"},
+      "rules": {
+        "zh": ["各自教对方五句家乡话或母语（打招呼、撒娇、夸人都行）。", "学的人要模仿发音，老师负责打分。", "最后用新学的话互相说一句晚安或谢谢。"],
+        "en": ["Each teach the other five phrases from your hometown dialect or first language.", "The learner copies the pronunciation and the teacher gives a score.", "End by saying thank you or goodnight to each other in your new words."]
+      },
+      "duration": 15, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk", "teamwork"]
+    },
+    {
+      "id": "breathe_together",
+      "title": {"zh": "一起呼吸五分钟", "en": "Five Minutes of Breathing Together"},
+      "rules": {
+        "zh": ["背靠背坐好，设一个五分钟的计时器。", "慢慢吸气四秒、呼气六秒，感受对方的呼吸。", "结束后各用一个词形容现在的心情。"],
+        "en": ["Sit back to back and set a five-minute timer.", "Breathe in for four seconds and out for six, feeling each other's breath.", "Afterwards, each describe how you feel in one word."]
+      },
+      "duration": 10, "budget": "free", "energy": ["low"], "location": "anywhere", "goals": ["quiet_time"]
+    },
+    {
+      "id": "plank_duel",
+      "title": {"zh": "平板支撑对决", "en": "Plank Duel"},
+      "rules": {
+        "zh": ["同时开始平板支撑，互相给对方加油。", "坚持到最后的人可以决定今晚吃什么。", "结束后一起拉伸三分钟。"],
+        "en": ["Start planking at the same time and cheer each other on.", "Whoever lasts longest decides what you eat tonight.", "Stretch together for three minutes afterwards."]
+      },
+      "duration": 10, "budget": "free", "energy": ["high"], "location": "anywhere", "goals": ["teamwork"]
+    },
+    {
+      "id": "snack_swap",
+      "title": {"zh": "便利店零食交换", "en": "Corner Store Snack Swap"},
+      "rules": {
+        "zh": ["一起走到最近的便利店或超市。", "各自花不超过 $5，偷偷给对方挑一样零食。", "出门后交换，猜猜对方为什么选这个。"],
+        "en": ["Walk to the nearest corner store or supermarket together.", "Each spend up to $5 secretly picking a snack for the other.", "Swap outside and guess why the other chose it."]
+      },
+      "duration": 15, "budget": "under_20", "energy": ["medium"], "location": "outdoor", "goals": ["memory"]
+    },
+    {
+      "id": "theme_selfies",
+      "title": {"zh": "五张主题合照", "en": "Five Themed Selfies"},
+      "rules": {
+        "zh": ["一起想五个主题：开心、惊讶、生气、装酷、第一次见面。", "每个主题拍一张合照，表情要夸张。", "选出最好笑的一张设成手机壁纸一周。"],
+        "en": ["Agree on five themes: happy, surprised, grumpy, too cool, first meeting.", "Take one selfie for each theme with exaggerated faces.", "Set the funniest one as your phone wallpaper for a week."]
+      },
+      "duration": 15, "budget": "free", "energy": ["medium", "high"], "location": "anywhere", "goals": ["memory"]
+    },
+    {
+      "id": "quick_tidy",
+      "title": {"zh": "十五分钟整理挑战", "en": "Fifteen-Minute Tidy Challenge"},
+      "rules": {
+        "zh": ["选一个乱乱的角落（书桌、玄关、冰箱都行）。", "设十五分钟计时，一人整理一人递东西，中途交换。", "整理完拍一张前后对比照，奖励自己一个击掌。"],
+        "en": ["Pick one messy spot (a desk, the entryway, the fridge).", "Set a fifteen-minute timer: one tidies, one hands things over, then swap.", "Take a before-and-after photo and reward yourselves with a high five."]
+      },
+      "duration": 15, "budget": "free", "energy": ["medium"], "location": "home", "goals": ["teamwork"]
+    },
+    {
+      "id": "phone_free_walk",
+      "title": {"zh": "无手机散步", "en": "Phone-Free Walk"},
+      "rules": {
+        "zh": ["把两部手机都留在家里（或者锁进包里）。", "随便选一个方向，散步大约四十分钟。", "路上各自指出三个以前没注意到的小细节。"],
+        "en": ["Leave both phones at home (or lock them away in a bag).", "Pick any direction and walk for about forty minutes.", "Each point out three little details you'd never noticed before."]
+      },
+      "duration": 45, "budget": "free", "energy": ["low", "medium"], "location": "outdoor", "goals": ["quiet_time", "deep_talk"]
+    },
+    {
+      "id": "pantry_cook",
+      "title": {"zh": "冰箱现有材料料理", "en": "Pantry Challenge Dinner"},
+      "rules": {
+        "zh": ["不准出门买菜，只用家里现有的材料。", "一起想一道菜，一人掌勺一人打下手。", "给这道菜起一个只属于你们的名字，拍照留念。"],
+        "en": ["No shopping allowed: use only what's already at home.", "Invent a dish together; one cooks, one assists.", "Give the dish a name only you two would understand, and take a photo."]
+      },
+      "duration": 60, "budget": "free", "energy": ["medium"], "location": "home", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "childhood_cartoon",
+      "title": {"zh": "童年动画重温", "en": "Childhood Cartoon Rewatch"},
+      "rules": {
+        "zh": ["各自说出小时候最喜欢的一部动画。", "每部挑一集一起看（找不到就看片段）。", "看完说说：小时候的你最喜欢里面的谁？"],
+        "en": ["Each name your favourite cartoon from childhood.", "Watch one episode of each together (clips are fine if you can't find one).", "Afterwards, share which character little you loved most."]
+      },
+      "duration": 60, "budget": "free", "energy": ["low"], "location": "home", "goals": ["quiet_time", "memory"]
+    },
+    {
+      "id": "dream_weekend",
+      "title": {"zh": "画出理想周末", "en": "Draw Your Dream Weekend"},
+      "rules": {
+        "zh": ["各自在纸上画出（或写出）理想周末的一整天。", "交换看，用笔圈出你们画里的重合部分。", "从重合部分挑一件事，约好下个周末去做。"],
+        "en": ["Each draw (or write) your ideal weekend day on paper.", "Swap drawings and circle everything that overlaps.", "Pick one overlapping thing and plan to do it next weekend."]
+      },
+      "duration": 30, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk", "memory"]
+    },
+    {
+      "id": "future_postcard",
+      "title": {"zh": "未来旅行明信片", "en": "Postcard from a Future Trip"},
+      "rules": {
+        "zh": ["一起选一个想去的地方。", "在一张卡片正面画出那里的风景，背面假装已经到了，写一段话给现在的你们。", "把明信片贴在冰箱或书桌上，等真正去的那天带上它。"],
+        "en": ["Choose a place you'd love to visit together.", "Draw the view on the front of a card, and on the back write to your present selves as if you're already there.", "Stick it on the fridge or desk and take it with you when you finally go."]
+      },
+      "duration": 30, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk", "memory"]
+    },
+    {
+      "id": "sunset_walk",
+      "title": {"zh": "黄昏散步", "en": "Sunset Walk"},
+      "rules": {
+        "zh": ["找一条没有走过的路，散步 30 分钟。", "途中每个人拍一张最喜欢的风景。", "回来后交换照片，并说为什么选择它。"],
+        "en": ["Find a path you've never walked and stroll for 30 minutes.", "Each of you takes a photo of your favourite view.", "Swap photos afterwards and explain why you chose it."]
+      },
+      "duration": 60, "budget": "free", "energy": ["low", "medium"], "location": "outdoor", "goals": ["quiet_time", "memory"]
+    },
+    {
+      "id": "question_cards",
+      "title": {"zh": "十二个问题", "en": "Twelve Questions"},
+      "rules": {
+        "zh": ["各自写下六个想问对方、但一直没问的问题。", "轮流抽问题回答，可以说\"这题跳过\"一次。", "最后各自说出一个今天新认识的对方。"],
+        "en": ["Each write six questions you've always wanted to ask but never have.", "Take turns drawing and answering; each may skip one.", "Finish by sharing one new thing you learned about each other."]
+      },
+      "duration": 45, "budget": "free", "energy": ["low", "medium"], "location": "anywhere", "goals": ["deep_talk"]
+    },
+    {
+      "id": "letter_to_future",
+      "title": {"zh": "写给一年后的我们", "en": "A Letter to Us, One Year On"},
+      "rules": {
+        "zh": ["各自写一封信给一年后的你们，写现在的生活、烦恼和期待。", "不要给对方看，装进同一个信封封好。", "在信封上写好开封日期，放在你们都能找到的地方。"],
+        "en": ["Each write a letter to the two of you a year from now: life, worries, hopes.", "Don't show each other; seal both in one envelope.", "Write the opening date on it and keep it somewhere you'll both remember."]
+      },
+      "duration": 40, "budget": "free", "energy": ["low"], "location": "anywhere", "goals": ["deep_talk", "memory"]
+    },
+    {
+      "id": "card_game_night",
+      "title": {"zh": "扑克牌之夜", "en": "Card Game Night"},
+      "rules": {
+        "zh": ["用一副扑克牌（或家里的桌游）玩三局。", "每局输的人要回答赢的人一个问题。", "最后一局输的人负责明天的早餐。"],
+        "en": ["Play three rounds with a deck of cards (or any board game at home).", "The loser of each round answers one question from the winner.", "Whoever loses the final round makes tomorrow's breakfast."]
+      },
+      "duration": 60, "budget": "free", "energy": ["medium"], "location": "home", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "bake_cookies",
+      "title": {"zh": "一起烤饼干", "en": "Bake Cookies Together"},
+      "rules": {
+        "zh": ["买一包饼干粉或找一个简单的食谱（材料控制在 $20 以内）。", "一人揉面一人调配料，饼干形状各做一半。", "趁热交换一块对方做的，评出\"今日最丑饼干\"。"],
+        "en": ["Grab a cookie mix or a simple recipe (keep ingredients under $20).", "One mixes the dough, one handles the add-ins; each shapes half.", "Swap a warm one you each made and crown the ugliest cookie of the day."]
+      },
+      "duration": 60, "budget": "under_20", "energy": ["medium"], "location": "home", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "boba_blind_test",
+      "title": {"zh": "奶茶盲测", "en": "Bubble Tea Blind Taste Test"},
+      "rules": {
+        "zh": ["去一家奶茶店，一人点两杯不同口味（共四杯，或者小杯）。", "闭上眼睛给对方喂一口，猜是什么口味。", "猜对多的人决定下次约会去哪儿。"],
+        "en": ["At a bubble tea shop, each order two different flavours (small sizes are fine).", "Close your eyes and give each other a sip; guess the flavour.", "Whoever guesses more correctly picks the next date spot."]
+      },
+      "duration": 45, "budget": "under_20", "energy": ["medium"], "location": "outdoor", "goals": ["memory"]
+    },
+    {
+      "id": "op_shop_gift",
+      "title": {"zh": "二手店 $10 礼物挑战", "en": "$10 Op Shop Gift Challenge"},
+      "rules": {
+        "zh": ["一起去附近的二手店（op shop），分头逛二十分钟。", "各自花不超过 $10，给对方买一件\"最像 TA\"的东西。", "在店门口交换礼物，并解释为什么选它。"],
+        "en": ["Go to a nearby op shop and split up for twenty minutes.", "Each spend up to $10 on the item that's most \"them\".", "Swap gifts outside and explain your choice."]
+      },
+      "duration": 60, "budget": "under_20", "energy": ["medium", "high"], "location": "outdoor", "goals": ["memory"]
+    },
+    {
+      "id": "new_cafe_chat",
+      "title": {"zh": "新咖啡店聊天", "en": "New Café Chat"},
+      "rules": {
+        "zh": ["选一家你们都没去过的咖啡店。", "点单前各自猜对方会点什么。", "坐下后聊一个话题：最近有什么事让你特别有成就感？"],
+        "en": ["Choose a café neither of you has been to.", "Before ordering, guess what the other will get.", "Once seated, talk about one thing: what recently made you feel proud?"]
+      },
+      "duration": 60, "budget": "under_20", "energy": ["low", "medium"], "location": "outdoor", "goals": ["deep_talk"]
+    },
+    {
+      "id": "library_date",
+      "title": {"zh": "图书馆安静约会", "en": "Quiet Library Date"},
+      "rules": {
+        "zh": ["去一座漂亮的图书馆（比如新南威尔士州立图书馆的阅览室）。", "各自挑一本书安静地读四十分钟。", "离开时用一句话向对方介绍你读到的最好的一段。"],
+        "en": ["Visit a beautiful library (like the reading room at the State Library of NSW).", "Each pick a book and read quietly for forty minutes.", "On the way out, sum up the best passage you read in one sentence."]
+      },
+      "duration": 60, "budget": "free", "energy": ["low"], "location": "outdoor", "goals": ["quiet_time"]
+    },
+    {
+      "id": "park_badminton",
+      "title": {"zh": "公园羽毛球", "en": "Park Badminton"},
+      "rules": {
+        "zh": ["带上羽毛球拍或飞盘去附近的公园。", "目标是一起连续对打二十个来回，不比输赢。", "成功后去买一瓶水分着喝，庆祝一下。"],
+        "en": ["Take badminton rackets or a frisbee to a nearby park.", "Aim for a twenty-hit rally together; it's teamwork, not a contest.", "Celebrate with a shared bottle of water when you make it."]
+      },
+      "duration": 60, "budget": "free", "energy": ["high"], "location": "outdoor", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "twenty_dollar_dinner",
+      "title": {"zh": "$20 晚餐挑战", "en": "$20 Dinner Challenge"},
+      "rules": {
+        "zh": ["两人一共 $20 预算，一起去超市买晚餐材料。", "一人管预算计算器，一人负责挑菜，不能超支。", "回家一起做好，边吃边给这顿饭打分。"],
+        "en": ["With a shared $20 budget, shop for dinner ingredients together.", "One keeps the running total, one picks the food; no going over.", "Cook it together at home and rate the meal while you eat."]
+      },
+      "duration": 60, "budget": "under_20", "energy": ["medium"], "location": "anywhere", "goals": ["teamwork"]
+    },
+    {
+      "id": "portrait_swap",
+      "title": {"zh": "互相画像", "en": "Portrait Swap"},
+      "rules": {
+        "zh": ["面对面坐好，各自用十分钟画对方。", "不许偷看，画完同时翻开。", "在画像旁边写上日期和一句悄悄话，收好。"],
+        "en": ["Sit facing each other and draw each other for ten minutes.", "No peeking; reveal both drawings at the same time.", "Add the date and a little secret message beside the portrait, then keep them."]
+      },
+      "duration": 30, "budget": "free", "energy": ["low"], "location": "anywhere", "goals": ["memory", "quiet_time"]
+    },
+    {
+      "id": "stargazing",
+      "title": {"zh": "阳台看星星", "en": "Stargazing from the Balcony"},
+      "rules": {
+        "zh": ["找一个能看到天空的地方（阳台、天台或附近的草地）。", "用手机星图找一颗星星，给它起个你们的名字。", "关掉手机，聊聊小时候抬头看天时在想什么。"],
+        "en": ["Find a spot with a view of the sky (a balcony, rooftop or nearby lawn).", "Use a star map app to find one star and give it your own name.", "Put the phones away and talk about what you used to wonder as kids looking up."]
+      },
+      "duration": 45, "budget": "free", "energy": ["low"], "location": "outdoor", "goals": ["quiet_time", "deep_talk"]
+    },
+    {
+      "id": "campus_treasure_hunt",
+      "title": {"zh": "校园寻宝", "en": "Campus Treasure Hunt"},
+      "rules": {
+        "zh": ["各自为对方列五个校园里的\"宝物\"（某棵树、某张长椅、某块招牌）。", "交换清单，在一小时内一起把十个宝物都找到并拍照。", "最后在找到的最后一个地点合照。"],
+        "en": ["Each list five campus \"treasures\" for the other (a tree, a bench, a sign).", "Swap lists and find all ten together within an hour, taking photos.", "Take a selfie at the last spot you find."]
+      },
+      "duration": 60, "budget": "free", "energy": ["high"], "location": "outdoor", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "home_karaoke",
+      "title": {"zh": "在家 K 歌", "en": "Karaoke at Home"},
+      "rules": {
+        "zh": ["用电视或电脑找卡拉 OK 版本的歌。", "每人点三首，其中一首必须是对唱。", "评出今晚的\"最佳表演奖\"，录一小段视频留念。"],
+        "en": ["Find karaoke versions on a TV or laptop.", "Each choose three songs, including at least one duet.", "Award tonight's \"Best Performance\" and record a short clip."]
+      },
+      "duration": 60, "budget": "free", "energy": ["high"], "location": "home", "goals": ["memory"]
+    },
+    {
+      "id": "plant_together",
+      "title": {"zh": "一起种一盆植物", "en": "Pot a Plant Together"},
+      "rules": {
+        "zh": ["一起买一盆小植物或一包种子（$20 以内）。", "一人换盆一人浇水，给它起个名字。", "约定谁负责每周浇水，在回忆里记录它的成长。"],
+        "en": ["Buy a small plant or a seed packet together (under $20).", "One repots, one waters; give it a name.", "Agree who waters it each week and track its growth in your memories."]
+      },
+      "duration": 45, "budget": "under_20", "energy": ["low", "medium"], "location": "home", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "shared_playlist",
+      "title": {"zh": "我们的共同歌单", "en": "Our Shared Playlist"},
+      "rules": {
+        "zh": ["新建一个歌单，名字一起想。", "轮流加歌，每首歌都要说一句和它有关的回忆。", "加满十首后，从头一起听三首。"],
+        "en": ["Start a new playlist and name it together.", "Take turns adding songs, sharing a memory for each one.", "Once you hit ten songs, listen to the first three together."]
+      },
+      "duration": 30, "budget": "free", "energy": ["low"], "location": "anywhere", "goals": ["memory", "teamwork"]
+    },
+    {
+      "id": "night_market",
+      "title": {"zh": "逛夜市", "en": "Night Market Stroll"},
+      "rules": {
+        "zh": ["找一个夜市或美食街（比如周五晚上的唐人街夜市）。", "两人一共 $20，挑三样没吃过的小吃分着吃。", "给三样小吃排名，输掉的那样下次不点了。"],
+        "en": ["Find a night market or food street (like Chinatown's Friday night market).", "With $20 between you, share three snacks you've never tried.", "Rank the three; the loser never gets ordered again."]
+      },
+      "duration": 60, "budget": "under_20", "energy": ["medium"], "location": "outdoor", "goals": ["memory"]
+    },
+    {
+      "id": "first_photo_redo",
+      "title": {"zh": "重现第一次见面的照片", "en": "Recreate Your First Photo"},
+      "rules": {
+        "zh": ["翻出你们的第一张合照（或第一次见面的地方）。", "回到那里（或在家布置相似的场景），用同样的姿势再拍一张。", "把新旧两张照片放在一起，说说这段时间变了什么、没变什么。"],
+        "en": ["Dig out your first photo together (or where you first met).", "Go back there (or set up something similar at home) and recreate the pose.", "Put the old and new photos side by side and talk about what has and hasn't changed."]
+      },
+      "duration": 120, "budget": "free", "energy": ["medium"], "location": "outdoor", "goals": ["memory"]
+    },
+    {
+      "id": "manly_ferry",
+      "title": {"zh": "坐渡轮去 Manly", "en": "Ferry to Manly"},
+      "rules": {
+        "zh": ["用 Opal 卡从环形码头坐渡轮去 Manly。", "在船尾找位置，经过歌剧院时合照一张。", "到了以后沿着海滩散步，坐在沙滩上看一会儿海再回来。"],
+        "en": ["Tap on with Opal and take the ferry from Circular Quay to Manly.", "Grab a spot at the back and take a photo as you pass the Opera House.", "Walk along the beach, sit on the sand and watch the waves for a while before heading back."]
+      },
+      "duration": 240, "budget": "under_20", "energy": ["medium"], "location": "outdoor", "goals": ["memory", "quiet_time"]
+    },
+    {
+      "id": "bondi_coogee_walk",
+      "title": {"zh": "邦迪到库吉海岸步道", "en": "Bondi to Coogee Coastal Walk"},
+      "rules": {
+        "zh": ["带上水和防晒，从邦迪海滩出发走海岸步道到库吉。", "每经过一个海湾，轮流分享一个小时候的故事。", "走到终点后一起泡一下脚，奖励自己。"],
+        "en": ["Bring water and sunscreen and walk the coastal path from Bondi to Coogee.", "At each bay, take turns telling a story from your childhood.", "Dip your feet in the water at the end as a reward."]
+      },
+      "duration": 180, "budget": "free", "energy": ["high"], "location": "outdoor", "goals": ["memory", "deep_talk"]
+    },
+    {
+      "id": "botanic_picnic",
+      "title": {"zh": "植物园野餐", "en": "Botanic Garden Picnic"},
+      "rules": {
+        "zh": ["准备简单的野餐（三明治、水果，$20 以内），带一块垫子。", "去皇家植物园找一片能看到海港的草地。", "吃完躺下一起看云，谁先睡着谁负责收拾。"],
+        "en": ["Pack a simple picnic (sandwiches, fruit, under $20) and a mat.", "Find a lawn with a harbour view at the Royal Botanic Garden.", "Lie back and cloud-watch after eating; whoever dozes off first packs up."]
+      },
+      "duration": 180, "budget": "under_20", "energy": ["low", "medium"], "location": "outdoor", "goals": ["quiet_time", "memory"]
+    },
+    {
+      "id": "art_gallery_afternoon",
+      "title": {"zh": "美术馆的下午", "en": "An Afternoon at the Gallery"},
+      "rules": {
+        "zh": ["去新南威尔士美术馆（常设展免费）。", "各自找一件最喜欢的作品，先不告诉对方。", "带对方去看你选的作品，讲讲它让你想到了什么。"],
+        "en": ["Visit the Art Gallery of NSW (the permanent collection is free).", "Each find a favourite piece without telling the other.", "Take each other to your pick and share what it made you think of."]
+      },
+      "duration": 180, "budget": "free", "energy": ["low", "medium"], "location": "outdoor", "goals": ["quiet_time", "deep_talk"]
+    },
+    {
+      "id": "dumpling_party",
+      "title": {"zh": "一起包饺子", "en": "Dumpling Making Afternoon"},
+      "rules": {
+        "zh": ["买饺子皮和馅料（$20 以内），一起和馅。", "比赛谁包的饺子更好看，也可以包一个\"幸运饺子\"。", "煮好后一起吃，吃到幸运饺子的人许一个愿。"],
+        "en": ["Buy wrappers and filling ingredients (under $20) and mix the filling together.", "Compete for the prettiest dumpling, and hide one \"lucky\" dumpling.", "Cook and eat together; whoever finds the lucky one makes a wish."]
+      },
+      "duration": 180, "budget": "under_20", "energy": ["medium"], "location": "home", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "hometown_dish",
+      "title": {"zh": "做一道对方的家乡菜", "en": "Cook Each Other's Hometown Dish"},
+      "rules": {
+        "zh": ["各自说一道最想念的家乡菜和它背后的故事。", "选其中一道，查菜谱、买材料（$20 以内）。", "一起做出来，吃的时候聊聊家里人做这道菜的样子。"],
+        "en": ["Each describe a hometown dish you miss and the story behind it.", "Choose one, look up a recipe and buy ingredients (under $20).", "Cook it together and talk about how your family makes it."]
+      },
+      "duration": 180, "budget": "under_20", "energy": ["medium"], "location": "home", "goals": ["teamwork", "deep_talk"]
+    },
+    {
+      "id": "beach_sunrise",
+      "title": {"zh": "海边看日出", "en": "Sunrise at the Beach"},
+      "rules": {
+        "zh": ["查好日出时间，提前半小时到海边。", "带一条毯子和两杯热饮，找一个面朝东的位置。", "太阳升起的那一刻，各自小声说一个今年的愿望。"],
+        "en": ["Check the sunrise time and get to the beach half an hour early.", "Bring a blanket and two warm drinks; find a spot facing east.", "As the sun comes up, each whisper one wish for this year."]
+      },
+      "duration": 180, "budget": "free", "energy": ["high"], "location": "outdoor", "goals": ["memory"]
+    },
+    {
+      "id": "kayak_adventure",
+      "title": {"zh": "双人皮划艇", "en": "Double Kayak Adventure"},
+      "rules": {
+        "zh": ["预约一艘双人皮划艇（比如 Lane Cove 河或 Rose Bay）。", "一人掌方向一人出力，划到一半交换位置。", "在水中央停下来，拍一张只有你们和水面的照片。"],
+        "en": ["Book a double kayak (for example on the Lane Cove River or at Rose Bay).", "One steers, one paddles; swap halfway.", "Stop in the middle of the water and take a photo of just you two and the water."]
+      },
+      "duration": 180, "budget": "unlimited", "energy": ["high"], "location": "outdoor", "goals": ["teamwork", "memory"]
+    },
+    {
+      "id": "escape_room",
+      "title": {"zh": "密室逃脱", "en": "Escape Room"},
+      "rules": {
+        "zh": ["预约一个双人密室逃脱。", "开始前约定：不许互相埋怨，只许说\"好主意\"。", "出来后各自说出对方今天最厉害的一个瞬间。"],
+        "en": ["Book an escape room for two.", "Agree beforehand: no blaming, only \"good idea!\"", "Afterwards, each name the other's most impressive moment."]
+      },
+      "duration": 90, "budget": "unlimited", "energy": ["high"], "location": "anywhere", "goals": ["teamwork"]
+    },
+    {
+      "id": "pottery_class",
+      "title": {"zh": "陶艺体验课", "en": "Pottery Class"},
+      "rules": {
+        "zh": ["报名一节双人陶艺体验课。", "各自为对方做一个小杯子或小碗。", "烧好以后，用对方做的杯子喝第一杯饮料。"],
+        "en": ["Sign up for a pottery class for two.", "Each make a small cup or bowl for the other.", "Once it's fired, drink your first drink from the cup they made."]
+      },
+      "duration": 180, "budget": "unlimited", "energy": ["low", "medium"], "location": "anywhere", "goals": ["memory", "teamwork"]
+    },
+    {
+      "id": "blue_mountains",
+      "title": {"zh": "蓝山一日游", "en": "Blue Mountains Day Trip"},
+      "rules": {
+        "zh": ["坐火车去 Katoomba，走到回声角看三姐妹峰。", "选一条一小时左右的步道一起走完。", "回程的火车上，各自说一件这趟旅程里最难忘的小事。"],
+        "en": ["Catch the train to Katoomba and walk to Echo Point to see the Three Sisters.", "Pick a trail of about an hour and finish it together.", "On the train home, each share the smallest moment you'll remember most."]
+      },
+      "duration": 240, "budget": "unlimited", "energy": ["high"], "location": "outdoor", "goals": ["memory", "deep_talk"]
+    }
+  ]
+}

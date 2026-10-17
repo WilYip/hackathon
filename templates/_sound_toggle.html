@@ -1,0 +1,11 @@
+{# 声音总开关（首页、欢迎页、小信箱）。由 static/js/sound.js 控制：没有 JavaScript 时保持隐藏。
+   声音默认关闭；打开后才会加载背景音乐和环境声。偏好只存在这台设备的浏览器里 #}
+{% from "_icons.html" import icon %}
+<button type="button" class="sound-toggle{% if extra_class %} {{ extra_class }}{% endif %}" data-sound-toggle hidden
+        aria-pressed="false" aria-label="{{ t('sound.toggle_label') }}"
+        data-label-on="{{ t('sound.on') }}" data-label-off="{{ t('sound.off') }}"
+        data-title-on="{{ t('sound.title_on') }}" data-title-off="{{ t('sound.title_off') }}" title="{{ t('sound.title_off') }}">
+  <span class="sound-icon sound-icon-on">{{ icon('sound', 18) }}</span>
+  <span class="sound-icon sound-icon-off">{{ icon('sound_off', 18) }}</span>
+  <span data-sound-label>{{ t('sound.off') }}</span>
+</button>

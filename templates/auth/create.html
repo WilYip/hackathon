@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, pin_fields, error_box %}
+
+{% block title %}{{ t('create.title') }} · {{ t('app.name') }}{% endblock %}
+
+{% block content %}
+<section class="form-card card">
+  <h1>{{ t('create.title') }}</h1>
+  <p class="form-intro">{{ t('create.intro') }}</p>
+  {{ error_box(error) }}
+
+  <form method="post" class="form" novalidate>
+    {{ text_field('island_name', t('form.island_name'), form.island_name, t('form.island_name_placeholder'), 30) }}
+    {{ text_field('nickname', t('form.nickname'), form.nickname, t('form.nickname_placeholder'), 20, 'nickname') }}
+    {{ pin_fields(confirm=True) }}
+
+    <fieldset class="field">
+      <legend class="field-label">{{ t('form.lang') }}</legend>
+      <div class="segmented">
+        <label><input type="radio" name="lang" value="zh" {{ 'checked' if form.lang == 'zh' }}><span>{{ t('form.lang_zh') }}</span></label>
+        <label><input type="radio" name="lang" value="en" {{ 'checked' if form.lang == 'en' }}><span>{{ t('form.lang_en') }}</span></label>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary btn-block">{{ t('create.submit') }}</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{# 全站统一的头像（数据来自 services/animals.py）。
+   用法：{% from "_avatar.html" import avatar %} ... {{ avatar(person) }} 或 {{ avatar(person, 'avatar-sm') }}
+   有动物图片时显示图片；没有时显示圆形占位头像：柔和底色 + 动物名首字（没做测试时是昵称首字） #}
+{% macro avatar(person, size='') %}
+  {% if person.src %}
+    <img class="avatar avatar-img{% if person.is_placeholder %} avatar-placeholder{% endif %} {{ size }}" src="{{ person.src }}" alt=""
+         {% if person.animal_name %}title="{{ person.animal_name }}"{% endif %}>
+  {% else %}
+    <span class="avatar avatar-{{ person.index }} {{ size }}" aria-hidden="true"
+          {% if person.animal_name %}title="{{ person.animal_name }}"{% endif %}>{{ person.initial }}</span>
+  {% endif %}
+{% endmacro %}

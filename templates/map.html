@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+
+{% block body_class %}page-map{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block amb %}amb_ocean{% endblock %}
+{% block amb_extra %}env_breeze{% endblock %}
+
+{% macro pos(b) -%}
+left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.height }}%;
+{%- endmacro %}
+
+{% block content %}
+{# 小岛首页场景（第三版素材，数据由 services/scene.py 准备，坐标来自 content/scene_anchors.json）。
+   横版 / 竖版两套构图都输出，CSS 按屏幕宽度（≤700px 用竖版）只显示其中一套。
+   场景容器保持底图原比例，所有图层和热区用百分比定位，所以永远和底图对齐。
+   每个热区 <a> 都是真链接：没有 JavaScript 时也能直接进入功能。
+   热区、标签、柔光层都带 data-region，map.js 用它同步悬停 / 聚焦 / 按压效果。 #}
+<section class="map-wrap">
+  {% for layout in scene.layouts %}
+  <div class="map-viewport layout-{{ layout.name }}" data-map-viewport>
+    <div class="map-stage is-loading{% if debug %} debug{% endif %}"
+         style="--ratio: {{ layout.ratio_w }} / {{ layout.ratio_h }}; --ratio-num: {{ '%.4f' % (layout.ratio_w / layout.ratio_h) }};"
+         data-map-stage>
+
+      {# ① 底图（不含动物和石像）。两套构图的图片都是 lazy：隐藏的那一套浏览器不会下载 #}
+      <img class="scene-base" src="{{ layout.base }}" alt="{{ t('map.alt', island=island.name) }}" data-scene-img
+           loading="lazy" decoding="async" draggable="false">
+      {% if layout.waves %}
+        {# 海浪循环视频（等待队友交付，文件到位后自动出现；减少动态效果时隐藏） #}
+        <video class="scene-waves" src="{{ layout.waves }}" poster="{{ layout.base }}" autoplay muted loop playsinline
+               preload="none" aria-hidden="true"></video>
+      {% endif %}
+
+      {# ② 五个入口的透明柔光层：平时看不见，悬停 / 键盘聚焦时淡入（回忆小屋同时亮灯） #}
+      {% for region in layout.regions %}
+        {% if region.glow %}<img class="scene-glow" src="{{ region.glow }}" alt="" data-region="{{ region.id }}" loading="lazy" draggable="false">{% endif %}
+        {% if region.state %}<img class="scene-glow scene-state" src="{{ region.state }}" alt="" data-region="{{ region.id }}" loading="lazy" draggable="false">{% endif %}
+      {% endfor %}
+
+      {# ③ 森林底座上的石像：做过测试并且石像图片已交付时才有（服务器端判断），先垫接触阴影 #}
+      {% for s in layout.statues %}
+        {% if s.shadow %}<img class="statue-shadow" src="{{ s.shadow }}" alt="" style="clip-path: {{ s.clip }};" loading="lazy" draggable="false">{% endif %}
+        <img class="statue" src="{{ s.src }}" alt="{{ t('map.statue_alt', name=s.name) }}" style="{{ pos(s.box) }}" loading="lazy" draggable="false">
+      {% endfor %}
+
+      {# ④ 野餐垫上的两只动物（第一位成员在左、第二位在右）
+         - 做过测试：海岛姿态（有的话）或结果立绘；没做测试：中性占位剪影，不显示任何人格动物
+         - 点自己的动物：打开心情选择（data-mood-picker）；点对方的动物：随机挥爪 / 歪头 / 小跳
+         - 心情动作：开心挥爪、委屈垂耳、需要空间缩小并显示小窝（class mood-xxx，见 services/mood.py） #}
+      {% for a in layout.animals %}
+        {% set m = a.mood.key if a.mood else 'calm' %}
+        <button type="button" class="animal animal-{{ a.side }} mood-{{ m }}{% if a.is_me %} is-me{% endif %}{% if not a.member %} is-empty{% endif %}{% if a.is_slot %} is-slot{% endif %}"
+                style="{{ pos(a.box) }}" data-animal {% if a.is_me %}data-mood-picker{% endif %}
+                aria-label="{% if a.member %}{{ a.nickname }}{% if a.animal_name %} · {{ a.animal_name }}{% endif %} · {{ a.mood.label }}{% if a.is_me %} · {{ t('mood.pick_hint') }}{% endif %}{% else %}{{ t('map.waiting_partner') }}{% endif %}"
+                {% if not a.member %}disabled{% endif %}>
+          <img class="animal-img" src="{{ a.img }}" alt="" loading="lazy" draggable="false">
+          {% if a.member and m != 'calm' %}
+            {# 心情小标记：开心是太阳、委屈是小水滴、需要空间是小窝 #}
+            <span class="mood-badge mood-badge-{{ m }}" aria-hidden="true">{{ icon(a.mood.icon, 18) }}</span>
+          {% endif %}
+          {% if debug %}<span class="debug-id">{{ a.side }}</span>{% endif %}
+        </button>
+        {# 名牌：心情文字放在名牌正下方（不加宽名牌）；map.js 会在任何宽度下把两张名牌推开，保证不重叠 #}
+        <span class="name-chip{% if not a.member %} is-waiting{% endif %}{% if a.member and m != 'calm' %} has-mood{% endif %}"
+              style="left: {{ a.label.x }}%; top: {{ a.label.y }}%;" data-name-chip aria-hidden="true">
+          {% if a.member %}{{ avatar(a.avatar, 'chip-avatar') }}{% endif %}
+          <span>{{ a.nickname if a.member else t('map.waiting_partner') }}</span>
+          {% if a.member and m != 'calm' %}<span class="chip-mood chip-mood-{{ m }}">{{ a.mood.label }}</span>{% endif %}
+        </span>
+      {% endfor %}
+
+      {# ⑤ 五个功能入口：HTML 热区 + 常驻名称标签 #}
+      {% for region in layout.regions %}
+        {# 提示标记：传话码头有未读消息 / 告示牌轮到你选或对方提议了任务 / 还没做测试时森林"从这里开始" #}
+        {% if region.id == 'whisper_pier' and whisper_unread %}
+          {% set badge = t('map.unread', count=whisper_unread) %}
+        {% elif region.id == 'quest_board' and quest_attention %}
+          {% set badge = t('map.quest_' ~ quest_attention) %}
+        {% elif region.id == 'first_meet_forest' and needs_forest %}
+          {% set badge = t('map.forest_start') %}
+        {% else %}
+          {% set badge = '' %}
+        {% endif %}
+        <a class="hotspot" href="{{ region.url }}"
+           data-region="{{ region.id }}" data-action="{{ region.action }}" style="{{ pos(region.box) }}"
+           aria-label="{{ region.name }}{% if badge %}，{{ badge }}{% endif %}">
+          {% if debug %}<span class="debug-id">{{ region.id }}</span>{% endif %}
+        </a>
+        <a class="region-label{% if region.id == 'first_meet_forest' and needs_forest %} is-guide{% endif %}" href="{{ region.url }}"
+           data-region="{{ region.id }}" data-action="{{ region.action }}"
+           style="left: {{ region.label.x }}%; top: {{ region.label.y }}%;" tabindex="-1" aria-hidden="true">
+          {{ icon(region.icon, 16) }}<span>{{ region.name }}</span>
+          {% if badge %}
+            <span class="map-badge{% if region.id != 'first_meet_forest' %} unread-badge{% endif %}">{{ icon({'whisper_pier': 'mail', 'quest_board': 'note'}.get(region.id, 'leaf'), 14) }}{{ badge }}</span>
+          {% endif %}
+        </a>
+      {% endfor %}
+
+      {# ⑥ 进入初见森林时，从树后探头的小动物（只有自己做过测试时才有） #}
+      {% set forest = layout.regions | selectattr('id', 'equalto', 'first_meet_forest') | first %}
+      {% set peeker = layout.animals | selectattr('is_me') | rejectattr('is_slot') | first %}
+      {% if peeker %}
+      <span class="peek" style="left: {{ forest.box.left + forest.box.width * 0.5 }}%; top: {{ forest.box.top + forest.box.height * 0.6 }}%;" aria-hidden="true">
+        <img src="{{ peeker.img }}" alt="" loading="lazy">
+      </span>
+      {% endif %}
+
+      {# 图片加载失败时的提示（名称标签仍然可以点击进入） #}
+      <div class="scene-error glass" role="status">
+        <p>{{ t('map.load_failed') }}</p>
+        <button type="button" class="btn btn-secondary btn-small" onclick="location.reload()">{{ t('map.retry') }}</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  {# 声音开关：地图左上角，小小的，不挡住入口 #}
+  {% with extra_class = 'sound-toggle-map glass' %}{% include "_sound_toggle.html" %}{% endwith %}
+
+  {% if members|length < 2 %}
+    {% set compact = True %}
+    {% include "_waiting_partner.html" %}
+  {% endif %}
+</section>
+
+{# ===== 新用户第一次进入小岛：温和地引导先去初见森林（每次登录只自动弹出一次，随时可以关掉） ===== #}
+{% if forest_intro %}
+<dialog class="panel forest-intro" id="forest-intro" aria-labelledby="forest-intro-title" data-open-on-load>
+  <form method="dialog" class="panel-close-form">
+    <button class="icon-btn panel-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <p class="forest-intro-icon" aria-hidden="true">{{ icon('tree', 40) }}</p>
+  <h2 id="forest-intro-title">{{ t('forest_intro.title') }}</h2>
+  <p>{{ t('forest_intro.text') }}</p>
+  <div class="panel-actions">
+    <a class="btn btn-primary" href="{{ url_for('forest.index') }}">{{ t('forest_intro.go') }}</a>
+    <form method="dialog"><button class="btn btn-secondary">{{ t('forest_intro.later') }}</button></form>
+  </div>
+</dialog>
+{% endif %}
+
+{# ===== 面板：告示牌和小信箱点击后先弹出面板（电脑端居中，手机端底部弹出，Esc 关闭） ===== #}
+<dialog class="panel" id="panel-quest_board" aria-labelledby="panel-quest-title">
+  <form method="dialog" class="panel-close-form">
+    <button class="icon-btn panel-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <h2 id="panel-quest-title">{{ t('panel.quest_title') }}</h2>
+  <p>{{ t('regions_desc.quest_board') }}</p>
+  {# 展开的三张"任务卡片"：说明约会选选选怎么玩 #}
+  <ol class="note-cards">
+    <li class="note-card note-yellow"><strong>1</strong><span>{{ t('panel.quest_step1') }}</span></li>
+    <li class="note-card note-pink"><strong>2</strong><span>{{ t('panel.quest_step2') }}</span></li>
+    <li class="note-card note-mint"><strong>3</strong><span>{{ t('panel.quest_step3') }}</span></li>
+  </ol>
+  <div class="panel-actions">
+    <a class="btn btn-primary" href="{{ url_for('quest.index') }}">{{ t('panel.quest_go') }}</a>
+  </div>
+</dialog>
+
+<dialog class="panel" id="panel-mailbox" aria-labelledby="panel-mailbox-title">
+  <form method="dialog" class="panel-close-form">
+    <button class="icon-btn panel-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <h2 id="panel-mailbox-title">{{ t('panel.mailbox_title') }}</h2>
+  <p>{{ t('regions_desc.mailbox') }}</p>
+  <div class="panel-list">
+    <a class="panel-row" href="{{ url_for('settings.index') }}">{{ icon('gear') }}<span>{{ t('panel.mailbox_settings') }}</span>{{ icon('back', 18) }}</a>
+    <form method="post" action="{{ url_for('auth.logout') }}">
+      <button type="submit" class="panel-row">{{ icon('logout') }}<span>{{ t('nav.logout') }}</span></button>
+    </form>
+  </div>
+</dialog>
+
+{# ===== 心情选择：点自己的动物打开。只能选自己的心情，24 小时后自动回到"平静" ===== #}
+<dialog class="panel" id="mood-panel" aria-labelledby="mood-panel-title">
+  <form method="dialog" class="panel-close-form">
+    <button class="icon-btn panel-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <h2 id="mood-panel-title">{{ t('mood.title') }}</h2>
+  <p>{{ t('mood.intro') }}</p>
+  <form method="post" action="{{ url_for('island.set_mood') }}" class="mood-options">
+    <input type="hidden" name="next" value="/">
+    {# 再点一次当前已选的心情 = 取消（回到平静），服务器端处理，见 services/mood.choose #}
+    {% for o in mood_options %}
+      {% set selected = o.key == my_mood and my_mood != 'calm' %}
+      <button type="submit" name="mood" value="{{ o.key }}" class="mood-option mood-option-{{ o.key }}"
+              {% if o.key == my_mood %}aria-pressed="true"{% endif %}
+              {% if selected %}aria-describedby="mood-tap-again" title="{{ t('mood.tap_again') }}"{% endif %}>
+        <span class="mood-option-icon">{{ icon(o.icon, 26) }}</span>
+        <span class="mood-option-label">{{ o.label }}</span>
+        {% if o.key == my_mood %}<span class="mood-option-check">{{ icon('check', 16) }}</span>{% endif %}
+      </button>
+    {% endfor %}
+    {% if my_mood != 'calm' %}
+      <p class="mood-tap-again" id="mood-tap-again">{{ t('mood.tap_again') }}</p>
+    {% endif %}
+    <button type="submit" name="mood" value="clear" class="btn btn-ghost mood-clear"
+            {% if my_mood == 'calm' %}disabled{% endif %}>{{ icon('close', 16) }}<span>{{ t('mood.clear') }}</span></button>
+  </form>
+</dialog>
+{% endblock %}
+
+{# 地图页要一屏放下，不显示页脚 #}
+{% block footer %}{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

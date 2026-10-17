@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- 小图标：大海中的小岛和一颗爱心 -->
+  <circle cx="32" cy="32" r="30" fill="#bfe6f2"/>
+  <ellipse cx="32" cy="40" rx="20" ry="9" fill="#fff3d6"/>
+  <ellipse cx="32" cy="37" rx="15" ry="7" fill="#b8e0a5"/>
+  <path d="M32 30 C27 25 20 21 24 15 C27 11 31 13 32 17 C33 13 37 11 40 15 C44 21 37 25 32 30 Z" fill="#f39bb3"/>
+</svg>

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_scene_preview.html" import scene_preview %}
+
+{% block title %}{{ t('invite.title') }} · {{ t('app.name') }}{% endblock %}
+{# 声音场景：创建小岛后的邀请页仍然是欢迎音乐 #}
+{% block bgm %}bgm_welcome{% endblock %}
+{% block sound_region %}welcome{% endblock %}
+
+{% block content %}
+<section class="form-card card invite-page">
+  {% if preview %}<div class="invite-art">{{ scene_preview(preview) }}</div>{% endif %}
+  <h1>{{ t('invite.title') }}</h1>
+  <p class="form-intro">{{ t('invite.intro') }}</p>
+
+  <div class="invite-code-row" data-wait-partner data-status-url="{{ url_for('auth.island_status') }}">
+    <code class="invite-code invite-code-big" id="invite-code">{{ island.invite_code }}</code>
+    <button type="button" class="btn btn-primary" data-copy-target="invite-code"
+            data-copied="{{ t('invite.copied') }}" data-failed="{{ t('invite.copy_failed') }}">
+      {{ icon('copy', 18) }}<span>{{ t('invite.copy') }}</span>
+    </button>
+  </div>
+  <p class="copy-status" aria-live="polite"></p>
+  <p class="field-hint">{{ t('invite.how') }}</p>
+
+  <a class="btn btn-secondary btn-block" href="{{ url_for('island.index') }}">{{ t('invite.go_home') }}</a>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

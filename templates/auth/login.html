@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pin_fields, error_box %}
+{% from "_avatar.html" import avatar %}
+
+{% block title %}{{ t('login.submit') }} · {{ t('app.name') }}{% endblock %}
+
+{% block content %}
+<section class="form-card card">
+  <h1>{{ t('login.title', island=island.name) }}</h1>
+  {{ error_box(error) }}
+
+  <form method="post" class="form" novalidate>
+    <fieldset class="field">
+      <legend class="field-label">{{ t('login.who') }}</legend>
+      {# 选择昵称：每位成员一张卡片；只有一位成员时默认选中 #}
+      <div class="member-choices">
+        {% for m in members %}
+        <label class="member-choice">
+          <input type="radio" name="member_id" value="{{ m.id }}"
+                 {{ 'checked' if selected_id == m.id or (selected_id is none and members|length == 1) }}>
+          <span class="member-card">
+            {{ avatar(people[loop.index0]) }}
+            <span class="member-name">{{ m.nickname }}</span>
+          </span>
+        </label>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    {{ pin_fields(confirm=False, autocomplete="current-password") }}
+    <button type="submit" class="btn btn-primary btn-block">{{ t('login.submit') }}</button>
+  </form>
+
+  {% if can_join %}
+  <p class="form-footer"><a href="{{ url_for('auth.join') }}">{{ t('login.join_link') }}</a></p>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

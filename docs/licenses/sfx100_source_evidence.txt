@@ -1,0 +1,25 @@
+Title: 100 CC0 SFX
+Author: rubberduck
+Source: https://opengameart.org/content/100-cc0-sfx
+License: CC0 1.0
+Checked: 2026-10-16
+
+Page excerpt:
+License(s):
+CC0
+Collections:
+Assorted_Audio_Assets_Collection
+BlackCortex
+CC0 Audio - Uploader: rubberduck
+CC0 Sound Effects
+Detective Game
+GDS Assets
+GemRB demo assets
+Impyrean options
+L2D Assets
+Little Spy
+Might use
+MySFX
+Phantom
+RPG::Audio::SFX
+SF

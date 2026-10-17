@@ -1,0 +1,44 @@
+{
+  "_说明": "约会选选选的四个问题和选项（一步一题）。value 是保存到数据库和匹配引擎用的值，不要随意修改；emoji 只是装饰。",
+  "questions": [
+    {
+      "key": "time",
+      "title": {"zh": "今天有多少时间？", "en": "How much time do you have today?"},
+      "options": [
+        {"value": "15min", "emoji": "⏱️", "label": {"zh": "15 分钟", "en": "15 minutes"}, "hint": {"zh": "抽空的一点小甜蜜", "en": "A sweet little break"}},
+        {"value": "1h", "emoji": "☕", "label": {"zh": "1 小时", "en": "1 hour"}, "hint": {"zh": "一杯咖啡的时间", "en": "About a coffee's worth"}},
+        {"value": "half_day", "emoji": "🌤️", "label": {"zh": "半天", "en": "Half a day"}, "hint": {"zh": "可以出门好好玩", "en": "Time for a proper outing"}}
+      ]
+    },
+    {
+      "key": "budget",
+      "title": {"zh": "预算多少？", "en": "What's the budget?"},
+      "options": [
+        {"value": "free", "emoji": "🍃", "label": {"zh": "免费", "en": "Free"}, "hint": {"zh": "不花钱也很开心", "en": "Fun without spending"}},
+        {"value": "under_20", "emoji": "🪙", "label": {"zh": "$20 以内", "en": "Under $20"}, "hint": {"zh": "一点点小花销", "en": "A little treat"}},
+        {"value": "unlimited", "emoji": "🎁", "label": {"zh": "不限", "en": "Any budget"}, "hint": {"zh": "今天想好好犒劳自己", "en": "Let's spoil ourselves"}}
+      ]
+    },
+    {
+      "key": "mood",
+      "title": {"zh": "你现在的状态？", "en": "How are you feeling?"},
+      "options": [
+        {"value": "tired", "emoji": "😴", "label": {"zh": "疲惫", "en": "Tired"}, "hint": {"zh": "想轻松一点", "en": "Keep it easy"}},
+        {"value": "bored", "emoji": "🫧", "label": {"zh": "无聊", "en": "Bored"}, "hint": {"zh": "想找点事做", "en": "Need something to do"}},
+        {"value": "chatty", "emoji": "💬", "label": {"zh": "想聊天", "en": "Chatty"}, "hint": {"zh": "有好多话想说", "en": "Lots to talk about"}},
+        {"value": "go_out", "emoji": "🚶", "label": {"zh": "想出门", "en": "Want to go out"}, "hint": {"zh": "想透透气", "en": "Need some fresh air"}},
+        {"value": "adventurous", "emoji": "🧗", "label": {"zh": "想冒险", "en": "Adventurous"}, "hint": {"zh": "来点刺激的", "en": "Bring on something new"}}
+      ]
+    },
+    {
+      "key": "want",
+      "title": {"zh": "今天想要什么？", "en": "What do you want today?"},
+      "options": [
+        {"value": "quiet_time", "emoji": "🫖", "label": {"zh": "安静陪伴", "en": "Quiet time together"}, "hint": {"zh": "待在一起就好", "en": "Just being together"}},
+        {"value": "deep_talk", "emoji": "💞", "label": {"zh": "深度交流", "en": "A real talk"}, "hint": {"zh": "想更懂对方", "en": "Get to know each other more"}},
+        {"value": "memory", "emoji": "📸", "label": {"zh": "制造回忆", "en": "Make a memory"}, "hint": {"zh": "留下点什么", "en": "Something to remember"}},
+        {"value": "teamwork", "emoji": "🤝", "label": {"zh": "一起完成事情", "en": "Do something together"}, "hint": {"zh": "合作的感觉真好", "en": "Teamwork feels good"}}
+      ]
+    }
+  ]
+}

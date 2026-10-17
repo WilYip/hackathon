@@ -1,0 +1,121 @@
+<!doctype html>
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+<html lang="{{ 'zh-CN' if lang == 'zh' else 'en' }}"{% if reduce_motion %} class="reduce-motion"{% endif %}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2ede3">
+  <title>{% block title %}{{ island.name if island else t('app.name') }}{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='usland/assets/ui/brand/favicon.svg') }}" type="image/svg+xml">
+  {# 第三版视觉变量（= docs/ui-v3/integration/tokens.css），style.css 里的颜色、圆角、阴影都从这里来 #}
+  <link rel="stylesheet" href="{{ url_for('static', filename='usland/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {# 是否减少动态效果：系统设置，或者小信箱里手动打开（html 上的 reduce-motion）。所有脚本都用它判断 #}
+  <script>
+    window.uslandReduceMotion = function () {
+      return document.documentElement.classList.contains("reduce-motion") ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    };
+  </script>
+  {% block head %}{% endblock %}
+</head>
+{# 声音场景（static/js/sound.js 读取）：每个页面用 block 指定背景音乐、环境声、偶尔的环境音效、
+   所在区域（换到不同区域时播放进入音效）。默认：登录后是小岛首页的音乐，登录前是欢迎音乐 #}
+{# 功能页背景（第三版 scenes/ 下的横竖背景图）：子模板写 {% set scene_bg = 'whisper' %} 即可。
+   CSS 按屏幕宽度（≤700px 用竖版）只加载其中一张；文字都放在不透明的浅色面板上 #}
+{% set bg = page_background(scene_bg) if scene_bg is defined else none %}
+<body class="{% if current_user %}logged-in {% endif %}{% if bg %}has-scene-bg {% endif %}{% block body_class %}{% endblock %}"
+      {% if bg %}style="--scene-bg: url('{{ bg.desktop }}'); --scene-bg-mobile: url('{{ bg.mobile }}');"{% endif %}
+      data-bgm="{% block bgm %}{{ 'bgm_island' if current_user else 'bgm_welcome' }}{% endblock %}"
+      data-bgm-gain="{% block bgm_gain %}1{% endblock %}"
+      data-amb="{% block amb %}{% endblock %}"
+      data-amb-extra="{% block amb_extra %}{% endblock %}"
+      data-sound-region="{% block sound_region %}{{ 'island' if current_user else 'welcome' }}{% endblock %}"
+      data-sound-enter="{% block sound_enter %}{% endblock %}">
+  {# 顶部栏：半透明磨砂玻璃，悬浮在页面上方。
+     手机：小岛名 + 头像 + 语言 + 设置图标；电脑：再加上五个功能的文字导航和昵称 #}
+  <header class="topbar">
+    <div class="topbar-inner glass">
+      <a class="brand" href="{{ url_for('island.index') }}" {% if current_user %}aria-label="{{ t('nav.island') }}"{% endif %}>
+        <img src="{{ url_for('static', filename='usland/assets/ui/brand/favicon.svg') }}" alt="" width="32" height="32">
+        <span class="brand-name">{{ island.name if island else t('app.name') }}</span>
+      </a>
+
+      {% if current_user %}
+      <nav class="topnav" aria-label="{{ t('nav.main') }}">
+        {% for r in regions %}
+          <a href="{{ url_for(r.endpoint) }}" class="topnav-link {{ 'active' if request.endpoint == r.endpoint }}"
+             {% if request.endpoint == r.endpoint %}aria-current="page"{% endif %}>{{ tr(r.short) }}</a>
+        {% endfor %}
+      </nav>
+      {% endif %}
+
+      <div class="topbar-actions">
+        {% if current_user %}
+        {# 两人的头像：初见森林测出的动物（services/animals.py），点一下去初见森林 #}
+        <a class="couple" href="{{ url_for('forest.index') }}" aria-label="{{ t('nav.couple') }}">
+          {% for p in member_avatars %}
+          <span class="couple-member {{ 'is-me' if p.is_me }}">
+            {{ avatar(p, 'avatar-sm') }}
+            <span class="couple-name">{{ p.nickname }}</span>
+          </span>
+          {% endfor %}
+        </a>
+        {% endif %}
+
+        {# 语言切换：POST 表单，点击后回到当前页面 #}
+        <form class="lang-switch" method="post" action="{{ url_for('island.set_lang') }}" aria-label="{{ t('lang.switch_label') }}">
+          <input type="hidden" name="next" value="{{ request.full_path if request.query_string else request.path }}">
+          <button type="submit" name="lang" value="zh" class="lang-btn {{ 'active' if lang == 'zh' }}" {% if lang == 'zh' %}aria-current="true"{% endif %}>{{ t('lang.zh') }}</button>
+          <button type="submit" name="lang" value="en" class="lang-btn {{ 'active' if lang == 'en' }}" {% if lang == 'en' %}aria-current="true"{% endif %}>{{ t('lang.en') }}</button>
+        </form>
+
+        {% if current_user %}
+        <a class="icon-btn" href="{{ url_for('settings.index') }}" aria-label="{{ t('nav.settings') }}" title="{{ t('nav.settings') }}">{{ icon('gear') }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    {# 一次性提示（例如"状态刚刚变了"、"照片太大"），显示一次就消失 #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-list" role="status">
+        {% for category, message in messages %}
+          <p class="flash flash-{{ category }}">{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {# 手机 / 平板底部导航：五个入口一直可见（电脑端用顶部的文字导航） #}
+  {% if current_user %}
+  <nav class="bottom-nav glass" aria-label="{{ t('nav.main') }}">
+    {% for r in regions %}
+      <a href="{{ url_for(r.endpoint) }}" class="bottom-nav-link {{ 'active' if request.endpoint == r.endpoint }}"
+         {% if request.endpoint == r.endpoint %}aria-current="page"{% endif %}>
+        {{ icon(r.icon, 22) }}<span>{{ tr(r.short) }}</span>
+      </a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+
+  {% block footer %}
+  <footer class="footer">
+    <p>{{ t('footer.privacy') }}</p>
+  </footer>
+  {% endblock %}
+
+  {# 全站声音管理器：所有页面都通过它播放声音（window.UslandSound），要在各页面脚本之前加载 #}
+  <script type="application/json" id="sound-manifest">{{ sound_manifest() | tojson }}</script>
+  <script type="application/json" id="sound-cues">{{ sound_cues() | tojson }}</script>
+  {# 页面状态里的事件音（约会推荐出来了、组合揭晓……）：[{sound, key, fresh}]，由路由准备 sound_events #}
+  {% if sound_events %}<script type="application/json" id="sound-events">{{ sound_events | tojson }}</script>{% endif %}
+  <script src="{{ url_for('static', filename='js/sound.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

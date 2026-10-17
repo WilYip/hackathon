@@ -1,0 +1,121 @@
+[
+  {
+    "source_id": "cozy",
+    "source_page": "https://opengameart.org/content/snowy-cozyness-calm-pianoguitar",
+    "download_url": "https://opengameart.org/sites/default/files/I%20Never%20Came%20Home%20Again_0.ogg",
+    "bytes": 1344929,
+    "original_filename": "I Never Came Home Again_0.ogg"
+  },
+  {
+    "source_id": "cozy",
+    "source_page": "https://opengameart.org/content/snowy-cozyness-calm-pianoguitar",
+    "download_url": "https://opengameart.org/sites/default/files/A%20Warm%20Fireplace_0.ogg",
+    "bytes": 1352906,
+    "original_filename": "A Warm Fireplace_0.ogg"
+  },
+  {
+    "source_id": "cozy",
+    "source_page": "https://opengameart.org/content/snowy-cozyness-calm-pianoguitar",
+    "download_url": "https://opengameart.org/sites/default/files/It%27s%20Getting%20Freezing%20Cold_0.ogg",
+    "bytes": 1236175,
+    "original_filename": "It's Getting Freezing Cold_0.ogg"
+  },
+  {
+    "source_id": "revelation",
+    "source_page": "https://opengameart.org/content/revelation",
+    "download_url": "https://opengameart.org/sites/default/files/Revelation_0.mp3",
+    "bytes": 3395007,
+    "original_filename": "Revelation_0.mp3"
+  },
+  {
+    "source_id": "sfx100",
+    "source_page": "https://opengameart.org/content/100-cc0-sfx",
+    "download_url": "https://opengameart.org/sites/default/files/100-CC0-SFX_0.zip",
+    "bytes": 2921904,
+    "original_filename": "100-CC0-SFX_0.zip"
+  },
+  {
+    "source_id": "ocean",
+    "source_page": "https://opengameart.org/content/beach-ocean-waves",
+    "download_url": "https://opengameart.org/sites/default/files/wave_03_cc0-18363__jasinski__alkaibeach.flac",
+    "bytes": 367584,
+    "original_filename": "wave_03_cc0-18363__jasinski__alkaibeach.flac"
+  },
+  {
+    "source_id": "ocean",
+    "source_page": "https://opengameart.org/content/beach-ocean-waves",
+    "download_url": "https://opengameart.org/sites/default/files/wave_02_cc0-18363__jasinski__alkaibeach.flac",
+    "bytes": 404529,
+    "original_filename": "wave_02_cc0-18363__jasinski__alkaibeach.flac"
+  },
+  {
+    "source_id": "ocean",
+    "source_page": "https://opengameart.org/content/beach-ocean-waves",
+    "download_url": "https://opengameart.org/sites/default/files/wave_01_cc0-18363__jasinski__alkaibeach.flac",
+    "bytes": 626248,
+    "original_filename": "wave_01_cc0-18363__jasinski__alkaibeach.flac"
+  },
+  {
+    "source_id": "ocean",
+    "source_page": "https://opengameart.org/content/beach-ocean-waves",
+    "download_url": "https://opengameart.org/sites/default/files/wave_04_cc0-18363__jasinski__alkaibeach.flac",
+    "bytes": 591767,
+    "original_filename": "wave_04_cc0-18363__jasinski__alkaibeach.flac"
+  },
+  {
+    "source_id": "sunset",
+    "source_page": "https://opengameart.org/content/sunset-plains",
+    "download_url": "https://opengameart.org/sites/default/files/sunset_plains.wav",
+    "bytes": 63298600,
+    "original_filename": "sunset_plains.wav"
+  },
+  {
+    "source_id": "interface",
+    "source_page": "https://kenney.nl/assets/interface-sounds",
+    "download_url": "https://kenney.nl/media/pages/assets/interface-sounds/fa43c1dd4d-1677589452/kenney_interface-sounds.zip",
+    "bytes": 834536,
+    "original_filename": "kenney_interface-sounds.zip"
+  },
+  {
+    "source_id": "jingles",
+    "source_page": "https://kenney.nl/assets/music-jingles",
+    "download_url": "https://kenney.nl/media/pages/assets/music-jingles/f37e530b9e-1677590399/kenney_music-jingles.zip",
+    "bytes": 1239525,
+    "original_filename": "kenney_music-jingles.zip"
+  },
+  {
+    "source_id": "rpg",
+    "source_page": "https://kenney.nl/assets/rpg-audio",
+    "download_url": "https://kenney.nl/media/pages/assets/rpg-audio/8e99002d76-1677590336/kenney_rpg-audio.zip",
+    "bytes": 964837,
+    "original_filename": "kenney_rpg-audio.zip"
+  },
+  {
+    "source_id": "forest_music",
+    "source_page": "https://opengameart.org/content/forest-ambience",
+    "download_url": "https://opengameart.org/sites/default/files/Forest_Ambience.mp3",
+    "bytes": 716670,
+    "original_filename": "Forest_Ambience.mp3"
+  },
+  {
+    "source_id": "fire",
+    "source_page": "https://opengameart.org/content/fireplace-sound-loop",
+    "download_url": "https://opengameart.org/sites/default/files/fire.wav",
+    "bytes": 10324410,
+    "original_filename": "fire.wav"
+  },
+  {
+    "source_id": "park",
+    "source_page": "https://opengameart.org/content/park-ambiences",
+    "download_url": "https://opengameart.org/sites/default/files/park_ambience_wind.wav",
+    "bytes": 73960096,
+    "original_filename": "park_ambience_wind.wav"
+  },
+  {
+    "source_id": "park",
+    "source_page": "https://opengameart.org/content/park-ambiences",
+    "download_url": "https://opengameart.org/sites/default/files/park_ambience_birds.wav",
+    "bytes": 86190432,
+    "original_filename": "park_ambience_birds.wav"
+  }
+]

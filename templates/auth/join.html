@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, pin_fields, error_box %}
+
+{% block title %}{{ t('join.title') }} · {{ t('app.name') }}{% endblock %}
+
+{% block content %}
+<section class="form-card card">
+  {% if full %}
+    {# 两人已到齐，不再接受加入 #}
+    <h1>{{ t('join.full_title') }}</h1>
+    <p class="form-intro">{{ t('join.full_text') }}</p>
+    <a class="btn btn-primary btn-block" href="{{ url_for('auth.login') }}">{{ t('join.back_login') }}</a>
+  {% else %}
+    <h1>{{ t('join.title') }}</h1>
+    <p class="form-intro">{{ t('join.intro') }}</p>
+    {{ error_box(error) }}
+
+    <form method="post" class="form" novalidate>
+      {{ text_field('invite_code', t('form.invite_code'), form.invite_code, t('form.invite_code_placeholder'), 8, 'off',
+                    'class="code-input" autocapitalize="characters" spellcheck="false"') }}
+      {{ text_field('nickname', t('form.nickname'), form.nickname, t('form.nickname_placeholder'), 20, 'nickname') }}
+      {{ pin_fields(confirm=True) }}
+      <button type="submit" class="btn btn-primary btn-block">{{ t('join.submit') }}</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

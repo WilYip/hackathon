@@ -1,0 +1,30 @@
+{# 约会选选选的可复用片段 #}
+{% from "_icons.html" import icon %}
+
+{# 一个人的选择：一排小标签 #}
+{% macro choice_chips(items) %}
+  <ul class="choice-chips">
+    {% for item in items %}<li><span aria-hidden="true">{{ item.emoji }}</span>{{ item.label }}</li>{% endfor %}
+  </ul>
+{% endmacro %}
+
+{# 任务卡（旅行任务卡风格）。用 {% call task_card(card) %}...{% endcall %} 可以在卡片底部放按钮 #}
+{% macro task_card(card, extra_class='') %}
+<article class="task-card {{ extra_class }}">
+  <header class="task-head">
+    <h3>{{ card.title }}</h3>
+    <ul class="task-meta">
+      <li>{{ icon('clock', 16) }}{{ card.duration }}</li>
+      <li>{{ icon('coin', 16) }}{{ card.budget }}</li>
+      <li>{{ icon('pin', 16) }}{{ card.location }}</li>
+    </ul>
+  </header>
+  <ol class="task-rules">
+    {% for step in card.rules %}<li>{{ step }}</li>{% endfor %}
+  </ol>
+  {% if card.reason %}
+    <p class="task-reason">{{ card.reason }}</p>
+  {% endif %}
+  {% if caller is defined %}<footer class="task-foot">{{ caller() }}</footer>{% endif %}
+</article>
+{% endmacro %}

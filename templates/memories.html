@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ t('memories.title') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-memories{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_memories{% endblock %}
+{% block amb %}amb_cottage{% endblock %}
+{% block sound_region %}memories{% endblock %}
+{% block sound_enter %}cottage_open{% endblock %}
+
+{% block content %}
+{# 回忆小屋（第三版素材）：
+   ① 房间场景：保持原比例，宽度 ≤700px 用竖版。相框、相册、明信片是可点击的互动区域，悬停 / 聚焦时显示发光层
+      相框 → 照片墙（有照片的回忆）；相册 → 完整时间线；明信片 → 添加回忆
+   ② 照片墙和时间线：内容都放在不透明的浅色面板 / 拍立得卡片上。没有 JavaScript 时两块都直接显示
+   照片点开大图（Esc 关闭），照片用 object-fit: contain，不裁掉重要内容。 #}
+{% macro pos(b) -%}
+left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.height }}%;
+{%- endmacro %}
+{% set spot_href = {'frames': '#photo-wall', 'album': '#timeline', 'postcards': '#add-memory'} %}
+{% set spot_icon = {'frames': 'photo', 'album': 'album', 'postcards': 'postcard'} %}
+<section class="memories">
+  <header class="quest-head page-panel">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    <div>
+      <h1>{{ t('memories.title') }}</h1>
+      <p class="forest-sub">{{ t('memories.subtitle') }}</p>
+    </div>
+  </header>
+
+  <nav class="memory-room" aria-label="{{ t('memories.room_title') }}">
+    {% for layout in room %}
+    <div class="room-stage layout-{{ layout.name }}"
+         style="--ratio: {{ layout.ratio_w }} / {{ layout.ratio_h }}; --ratio-num: {{ '%.4f' % (layout.ratio_w / layout.ratio_h) }};"
+         data-room-stage>
+      <img class="room-base" src="{{ layout.background }}" alt="" loading="lazy" decoding="async" draggable="false">
+      {% for spot in layout.spots %}
+        {% if spot.glow %}<img class="room-glow" src="{{ spot.glow }}" alt="" data-room-glow="{{ spot.key }}" loading="lazy" draggable="false">{% endif %}
+      {% endfor %}
+      {% for spot in layout.spots %}
+        <a class="room-spot{% if not spot.glow %} no-glow{% endif %}" href="{{ spot_href[spot.key] }}"
+           data-room-spot="{{ spot.key }}"{% if spot.key == 'postcards' %} data-open-add{% else %} data-show-view="{{ 'photos' if spot.key == 'frames' else 'timeline' }}"{% endif %}
+           style="{{ pos(spot.box) }}" aria-label="{{ t('memories.spot_' ~ spot.key) }}">
+          <span class="room-spot-label" aria-hidden="true">{{ icon(spot_icon[spot.key], 16) }}<span>{{ t('memories.spot_' ~ spot.key ~ '_short') }}</span></span>
+        </a>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </nav>
+
+  {% if members|length < 2 %}
+    {% include "_waiting_partner.html" %}
+  {% endif %}
+
+  {# ===== 完整时间线（相册） ===== #}
+  <section class="memory-view" id="timeline" data-memory-view="timeline" tabindex="-1" aria-labelledby="timeline-title">
+    <h2 class="memory-view-title page-panel" id="timeline-title">{{ icon('album', 20) }}<span>{{ t('memories.timeline') }}</span></h2>
+  {% if items %}
+    <ol class="memory-grid">
+      {% for m in items %}
+      <li class="memory-card memory-{{ m.kind }}">
+        {% if m.photo %}
+          <button type="button" class="memory-photo" data-lightbox="{{ m.photo }}" aria-label="{{ t('memories.view_photo') }}">
+            <img src="{{ m.photo }}" alt="" loading="lazy">
+          </button>
+        {% endif %}
+        <div class="memory-body">
+          <p class="memory-kind">{{ icon(m.icon, 16) }}<span>{{ m.kind_label }}</span></p>
+          <h3 class="memory-title">{{ m.title }}</h3>
+          {% if m.subtitle %}<p class="memory-subtitle">{{ m.subtitle }}</p>{% endif %}
+          {% if m.note %}<p class="memory-note">{{ m.note }}</p>{% endif %}
+          <p class="memory-meta">
+            <time datetime="{{ m.iso }}">{{ m.date }}</time>
+            {% if m.author %}<span>· {{ t('memories.by', name=m.author) }}</span>{% endif %}
+          </p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    {# 空状态：告诉用户回忆从哪里来 #}
+    <div class="memory-empty card">
+      <p class="memory-empty-icon" aria-hidden="true">{{ icon('cottage', 48) }}</p>
+      <h3>{{ t('memories.empty_title') }}</h3>
+      <p>{{ t('memories.empty_text') }}</p>
+      <div class="quest-actions">
+        <a class="btn btn-secondary" href="{{ url_for('quest.index') }}">{{ t('panel.quest_go') }}</a>
+        <a class="btn btn-primary" href="#add-memory" data-open-add>{{ t('memories.add') }}</a>
+      </div>
+    </div>
+  {% endif %}
+  </section>
+
+  {# ===== 照片墙（相框）：只看有照片的回忆 ===== #}
+  <section class="memory-view" id="photo-wall" data-memory-view="photos" tabindex="-1" aria-labelledby="photo-wall-title">
+    <h2 class="memory-view-title page-panel" id="photo-wall-title">{{ icon('photo', 20) }}<span>{{ t('memories.photo_wall') }}</span></h2>
+    {% if photo_items %}
+      <ul class="photo-wall">
+        {% for m in photo_items %}
+        <li class="photo-frame">
+          <button type="button" class="memory-photo" data-lightbox="{{ m.photo }}" aria-label="{{ t('memories.view_photo') }}">
+            <img src="{{ m.photo }}" alt="" loading="lazy">
+          </button>
+          <p class="photo-caption">{{ m.note or m.title }}<br><time datetime="{{ m.iso }}">{{ m.date }}</time></p>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="memory-empty card">
+        <img class="photo-empty-art" src="{{ asset_url('ui/placeholders/photo_placeholder_4x3.svg') }}" alt="" width="240" height="180">
+        <p>{{ t('memories.photo_wall_empty') }}</p>
+        <div class="quest-actions">
+          <a class="btn btn-primary" href="#add-memory" data-open-add>{{ t('memories.add') }}</a>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</section>
+
+{# 右下角的"＋"：手动添加一条回忆 #}
+<a class="fab" href="#add-memory" data-open-add aria-label="{{ t('memories.add') }}" title="{{ t('memories.add') }}">
+  {{ icon('add', 28) }}
+</a>
+
+<dialog class="panel" id="add-memory" aria-labelledby="add-memory-title" {% if form_errors %}data-open-on-load{% endif %}>
+  <form method="dialog" class="panel-close-form">
+    <button class="icon-btn panel-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <h2 id="add-memory-title">{{ t('memories.add') }}</h2>
+  <form method="post" action="{{ url_for('memories.add') }}" enctype="multipart/form-data" class="form" novalidate
+        data-memory-form data-max-bytes="{{ 5 * 1024 * 1024 }}"
+        data-too-large="{{ t('photo.errors.too_large') }}" data-bad-type="{{ t('photo.errors.bad_type') }}">
+    <label class="field">
+      <span class="field-label">{{ t('memories.note_label') }}</span>
+      <textarea name="note" rows="3" maxlength="{{ note_max }}" required data-note
+                placeholder="{{ t('memories.note_placeholder') }}">{{ form_note or '' }}</textarea>
+      <span class="field-hint"><span data-note-count>{{ (form_note or '')|length }}</span>/{{ note_max }}</span>
+      {% if form_errors and form_errors.note %}<span class="field-error" role="alert">{{ form_errors.note }}</span>{% endif %}
+    </label>
+    <label class="field photo-field">
+      <span class="field-label">{{ icon('camera', 18) }}{{ t('quest.photo_label') }}</span>
+      <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-photo>
+      <img class="photo-preview" alt="" hidden data-photo-preview>
+      <span class="field-error" role="alert" data-photo-error>{% if form_errors and form_errors.photo %}{{ form_errors.photo }}{% endif %}</span>
+    </label>
+    <button type="submit" class="btn btn-primary btn-block" data-save>{{ t('memories.save') }}</button>
+  </form>
+</dialog>
+
+{# 照片大图：点照片打开，Esc 或点背景关闭 #}
+<dialog class="lightbox" id="lightbox" aria-label="{{ t('memories.view_photo') }}">
+  <form method="dialog">
+    <button class="icon-btn lightbox-close" aria-label="{{ t('panel.close') }}">{{ icon('close') }}</button>
+  </form>
+  <img alt="" data-lightbox-img>
+</dialog>
+{% endblock %}
+
+{% block scripts %}
+{% if members|length < 2 %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endif %}
+<script src="{{ url_for('static', filename='js/memories.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{
+  "_说明": "16 种森林动物。代码按 E/I、S/N、T/F、J/P 组成。图片是第三版素材 static/usland/assets/animals/result/<代码小写>.png（路径规则见 content/character_assets.json）；缺图时显示圆形占位头像，上面写 initial（动物名首字）。trait 一句话特点；love 在恋爱里的你；tips 和你相处的小贴士（2 条）。",
+  "animals": {
+    "INTJ": {
+      "name": {"zh": "星图猫头鹰", "en": "Stargazer Owl"},
+      "initial": {"zh": "鹰", "en": "O"},
+      "trait": {"zh": "安静的策划家，心里有张未来地图。", "en": "A quiet planner with a map of the future in mind."},
+      "love": {"zh": "你不常把喜欢挂在嘴边，却会默默为两个人的未来做好打算。你欣赏聪明、真诚的人，一旦认定，就会非常认真。", "en": "You rarely say it out loud, but you quietly plan a future for two. You admire honesty and a sharp mind, and once you commit, you mean it."},
+      "tips": {
+        "zh": ["给 TA 一点独处思考的时间，TA 会带着更好的想法回来。", "说出感受时尽量具体，TA 喜欢清楚的沟通。"],
+        "en": ["Give them quiet time to think; they'll come back with better ideas.", "Be specific when you share feelings; they love clear communication."]
+      }
+    },
+    "INTP": {
+      "name": {"zh": "好奇小浣熊", "en": "Curious Raccoon"},
+      "initial": {"zh": "浣", "en": "R"},
+      "trait": {"zh": "脑袋里装满\"为什么\"。", "en": "A head full of “but why?”"},
+      "love": {"zh": "你喜欢和喜欢的人聊奇奇怪怪的话题，聊到半夜也不累。你表达爱的方式，常常是认真研究对方喜欢的东西。", "en": "You love chatting about odd, wonderful topics with your person until midnight. You often show love by seriously studying what they care about."},
+      "tips": {
+        "zh": ["陪 TA 聊那些奇怪的小问题，TA 会觉得被理解。", "需要 TA 表态时直接问，TA 不太会猜心思。"],
+        "en": ["Join in their curious little questions; it makes them feel understood.", "Ask directly when you need an answer; mind-reading isn't their strength."]
+      }
+    },
+    "ENTJ": {
+      "name": {"zh": "领航狮子", "en": "Captain Lion"},
+      "initial": {"zh": "狮", "en": "L"},
+      "trait": {"zh": "天生的带队人，可靠又果断。", "en": "A natural leader, dependable and decisive."},
+      "love": {"zh": "你会主动规划两个人的路线，遇到问题第一个站出来。你希望另一半也有自己的目标，两个人一起往前走。", "en": "You take the lead on plans for two and step up first when problems come. You hope your partner has goals of their own so you can grow side by side."},
+      "tips": {
+        "zh": ["在 TA 做决定前，温柔地说出你的想法，TA 会认真考虑。", "提醒 TA 偶尔停下来休息，不是每件事都要赢。"],
+        "en": ["Share your view gently before they decide; they'll take it seriously.", "Remind them to rest sometimes; not everything needs winning."]
+      }
+    },
+    "ENTP": {
+      "name": {"zh": "点子狐狸", "en": "Idea Fox"},
+      "initial": {"zh": "狐", "en": "F"},
+      "trait": {"zh": "鬼点子多，永远有新玩法。", "en": "Full of clever ideas, always with a new game to play."},
+      "love": {"zh": "和你在一起很少无聊，你总能想出新奇的约会。你喜欢斗嘴，也喜欢对方能接住你的玩笑。", "en": "Life with you is rarely boring; you always dream up new date ideas. You love playful banter and a partner who can keep up with your jokes."},
+      "tips": {
+        "zh": ["和 TA 一起尝试新东西，TA 会超级开心。", "认真的话题可以约个时间好好聊，TA 会收起玩笑。"],
+        "en": ["Try new things together; it makes them light up.", "For serious talks, set a time; they'll put the jokes aside."]
+      }
+    },
+    "INFJ": {
+      "name": {"zh": "月光小鹿", "en": "Moonlight Deer"},
+      "initial": {"zh": "鹿", "en": "D"},
+      "trait": {"zh": "温柔敏锐，懂你没说出口的话。", "en": "Gentle and perceptive, hearing what you leave unsaid."},
+      "love": {"zh": "你很会察觉对方的情绪，常常比对方更早发现 TA 不开心。你想要的是心与心的靠近，而不只是热闹。", "en": "You sense your partner's moods, often before they do. You long for closeness of the heart, not just fun and noise."},
+      "tips": {
+        "zh": ["主动告诉 TA 你的心情，TA 也需要被照顾。", "给 TA 留一些安静的深夜聊天时间。"],
+        "en": ["Share how you feel too; they need looking after as well.", "Save some quiet late-night talks just for them."]
+      }
+    },
+    "INFP": {
+      "name": {"zh": "梦想兔兔", "en": "Dreamy Bunny"},
+      "initial": {"zh": "兔", "en": "B"},
+      "trait": {"zh": "浪漫的小诗人，心里有片花田。", "en": "A romantic little poet with a flower field in their heart."},
+      "love": {"zh": "你相信真心，会为喜欢的人写小纸条、记住很多小细节。你很温柔，但心里也有自己坚持的东西。", "en": "You believe in sincerity, writing little notes and remembering tiny details for the one you love. You're gentle, yet you hold firm to what matters to you."},
+      "tips": {
+        "zh": ["认真对待 TA 的小心思，哪怕只是一张纸条。", "提意见前先肯定 TA 的用心，TA 会更容易听进去。"],
+        "en": ["Treasure their little gestures, even a small note.", "Acknowledge their effort before giving feedback; it helps them hear you."]
+      }
+    },
+    "ENFJ": {
+      "name": {"zh": "暖阳金毛", "en": "Sunny Golden Retriever"},
+      "initial": {"zh": "金", "en": "G"},
+      "trait": {"zh": "热情的小太阳，照顾所有人。", "en": "A warm little sun who looks after everyone."},
+      "love": {"zh": "你总是第一个注意到对方需要什么，并且马上行动。你喜欢把爱说出来，也希望对方能回应你的热情。", "en": "You're first to notice what your partner needs, and you act on it right away. You love saying how you feel and hope your warmth is returned."},
+      "tips": {
+        "zh": ["也照顾一下总在照顾别人的 TA，问问 TA 累不累。", "多说谢谢和我爱你，TA 会充满电。"],
+        "en": ["Look after the one who looks after everyone; ask if they're tired.", "Say thank you and I love you often; it recharges them."]
+      }
+    },
+    "ENFP": {
+      "name": {"zh": "彩虹水獭", "en": "Rainbow Otter"},
+      "initial": {"zh": "獭", "en": "O"},
+      "trait": {"zh": "快乐能量满格，牵着你的手去冒险。", "en": "Bursting with joy, ready to take your hand on an adventure."},
+      "love": {"zh": "你会把普通的日子变成小冒险，喜欢和对方分享每一个新发现。你需要被欣赏，也需要一点自由。", "en": "You turn ordinary days into little adventures and love sharing every new discovery. You need to feel appreciated, and a little freedom too."},
+      "tips": {
+        "zh": ["回应 TA 的兴奋，哪怕只是一个大大的笑脸。", "帮 TA 把灵感落地，一起完成一件小事。"],
+        "en": ["Match their excitement, even with just a big smile.", "Help turn their ideas into something real, one small step at a time."]
+      }
+    },
+    "ISTJ": {
+      "name": {"zh": "守护海龟", "en": "Steady Turtle"},
+      "initial": {"zh": "龟", "en": "T"},
+      "trait": {"zh": "稳稳的，说到做到。", "en": "Steady and true to their word."},
+      "love": {"zh": "你的爱不花哨，却很可靠：记得约定，守住承诺。你喜欢稳定的节奏，用行动证明自己的在乎。", "en": "Your love isn't flashy, but it's solid: you remember plans and keep promises. You like a steady rhythm and show you care through actions."},
+      "tips": {
+        "zh": ["计划有变时提前告诉 TA，TA 会更安心。", "看见 TA 默默做的事，并说一声谢谢。"],
+        "en": ["Tell them about changes ahead of time; it puts them at ease.", "Notice the quiet things they do, and say thank you."]
+      }
+    },
+    "ISFJ": {
+      "name": {"zh": "暖心考拉", "en": "Cozy Koala"},
+      "initial": {"zh": "考", "en": "K"},
+      "trait": {"zh": "安静的拥抱担当，默默照顾你。", "en": "The quiet hugger who looks after you without any fuss."},
+      "love": {"zh": "你会记得对方的口味、习惯和不舒服的日子，默默把一切照顾好。你不太提自己的需要，但很希望被看见。", "en": "You remember their tastes, habits and hard days, quietly taking care of everything. You rarely mention your own needs, but you hope to be seen."},
+      "tips": {
+        "zh": ["主动问 TA 想要什么，TA 常常不好意思开口。", "一个突然的拥抱，就能让 TA 开心很久。"],
+        "en": ["Ask what they'd like; they're often too shy to say.", "A surprise hug will brighten their whole day."]
+      }
+    },
+    "ESTJ": {
+      "name": {"zh": "管家企鹅", "en": "Organizer Penguin"},
+      "initial": {"zh": "企", "en": "P"},
+      "trait": {"zh": "把生活安排得井井有条。", "en": "Keeps life neat and well organised."},
+      "love": {"zh": "你让两个人的生活有条不紊，账单、行程、家务都安排得明明白白。你用负责任的方式表达爱。", "en": "You keep life for two running smoothly, with bills, plans and chores all sorted. Being responsible is how you show love."},
+      "tips": {
+        "zh": ["欣赏 TA 的安排，再一起留一点随意的空间。", "有意见时直接说，TA 喜欢有话直说。"],
+        "en": ["Appreciate their planning, then leave a little room for spontaneity together.", "Say it plainly when you disagree; they prefer straight talk."]
+      }
+    },
+    "ESFJ": {
+      "name": {"zh": "甜心小羊", "en": "Sweetheart Lamb"},
+      "initial": {"zh": "羊", "en": "L"},
+      "trait": {"zh": "记得每个纪念日的贴心鬼。", "en": "The sweetheart who remembers every anniversary."},
+      "love": {"zh": "你重视仪式感，每个纪念日都会好好准备。你希望两个人的关系温暖和睦，也很在意对方的回应。", "en": "You love little rituals and prepare for every anniversary. You want a warm, harmonious relationship and care a lot about how your partner responds."},
+      "tips": {
+        "zh": ["记得 TA 在意的日子，一起好好过。", "有不同意见时温柔地说，TA 很在乎和睦。"],
+        "en": ["Remember the dates that matter to them and celebrate together.", "Disagree gently; harmony means a lot to them."]
+      }
+    },
+    "ISTP": {
+      "name": {"zh": "工匠海狸", "en": "Handy Beaver"},
+      "initial": {"zh": "狸", "en": "B"},
+      "trait": {"zh": "动手能力超强，什么都会修。", "en": "Super handy; they can fix just about anything."},
+      "love": {"zh": "你不太说甜言蜜语，但会把对方坏掉的东西修好。你喜欢轻松自在的相处，不喜欢被追问太多。", "en": "You're not big on sweet talk, but you'll fix whatever is broken. You like an easygoing relationship without too many questions."},
+      "tips": {
+        "zh": ["给 TA 自己的空间，TA 会更愿意靠近你。", "和 TA 一起动手做点东西，比聊天更能拉近距离。"],
+        "en": ["Give them their own space and they'll draw closer.", "Build or make something together; it brings you closer than talking."]
+      }
+    },
+    "ISFP": {
+      "name": {"zh": "艺术小猫", "en": "Artsy Kitten"},
+      "initial": {"zh": "猫", "en": "K"},
+      "trait": {"zh": "用自己的方式把日子过成画。", "en": "Turning everyday life into art, in their own way."},
+      "love": {"zh": "你用温柔的小事表达爱：一张照片、一首歌、一顿用心做的饭。你需要被尊重，也喜欢自在的节奏。", "en": "You show love through gentle little things: a photo, a song, a carefully cooked meal. You need to be respected and enjoy an easy pace."},
+      "tips": {
+        "zh": ["欣赏 TA 的审美，夸夸 TA 拍的照片。", "不要催 TA 马上回答，给 TA 一点时间。"],
+        "en": ["Admire their taste; compliment the photos they take.", "Don't rush them for an answer; give them a moment."]
+      }
+    },
+    "ESTP": {
+      "name": {"zh": "冒险袋鼠", "en": "Adventure Kangaroo"},
+      "initial": {"zh": "袋", "en": "K"},
+      "trait": {"zh": "说走就走，跳着去探索。", "en": "Ready to go at a moment's notice, bounding off to explore."},
+      "love": {"zh": "和你在一起总有新鲜事，你喜欢一起出去玩、一起动起来。你的爱很直接，开心就笑，在乎就行动。", "en": "There's always something new with you; you love getting out and moving together. Your love is direct: you laugh when you're happy and act when you care."},
+      "tips": {
+        "zh": ["陪 TA 说走就走一次，TA 会记很久。", "需要认真谈的时候，边散步边聊会更轻松。"],
+        "en": ["Join them on a spontaneous outing; they'll remember it for ages.", "For serious talks, try chatting while you walk; it feels easier."]
+      }
+    },
+    "ESFP": {
+      "name": {"zh": "派对凤头鹦鹉", "en": "Party Cockatoo"},
+      "initial": {"zh": "鹦", "en": "C"},
+      "trait": {"zh": "走到哪里都是开心果。", "en": "The bright spark in every room."},
+      "love": {"zh": "你让身边的人都开心，和喜欢的人在一起时更是闪闪发光。你喜欢热闹的约会，也需要对方真心的陪伴。", "en": "You make everyone around you happy, and you shine even brighter with the one you love. You love lively dates and need heartfelt company."},
+      "tips": {
+        "zh": ["和 TA 一起享受当下的快乐，不要扫兴。", "TA 不开心时也会笑，记得私下问问 TA 好不好。"],
+        "en": ["Enjoy the moment with them; don't spoil the fun.", "They smile even when they're down, so check in quietly."]
+      }
+    }
+  }
+}

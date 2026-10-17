@@ -1,0 +1,37 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "usland",
+      "runtimeExecutable": ".venv\\Scripts\\python.exe",
+      "runtimeArgs": [
+        "app.py"
+      ],
+      "port": 8080
+    },
+    {
+      "name": "usland-check",
+      "runtimeExecutable": ".venv\\Scripts\\python.exe",
+      "runtimeArgs": [
+        "app.py"
+      ],
+      "env": {
+        "DATA_DIR": "data/check",
+        "PORT": "8091"
+      },
+      "port": 8091
+    },
+    {
+      "name": "usland-fresh",
+      "runtimeExecutable": ".venv\\Scripts\\python.exe",
+      "runtimeArgs": [
+        "app.py"
+      ],
+      "env": {
+        "DATA_DIR": "data/check_fresh",
+        "PORT": "8092"
+      },
+      "port": 8092
+    }
+  ]
+}

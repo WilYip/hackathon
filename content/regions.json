@@ -1,0 +1,45 @@
+{
+  "_说明": "小岛上的五个功能入口：名字、顶部导航短名、图标、点击后去的 Flask 路由（endpoint），以及点击方式（action：go 直接进入；panel 先弹出面板）。它们在地图上的位置写在 content/scene.json。",
+  "regions": [
+    {
+      "id": "memory_cottage",
+      "name": {"zh": "回忆小屋", "en": "Memory Cottage"},
+      "short": {"zh": "回忆小屋", "en": "Memories"},
+      "icon": "cottage",
+      "endpoint": "memories.index",
+      "action": "go"
+    },
+    {
+      "id": "whisper_pier",
+      "name": {"zh": "传话码头", "en": "Whisper Pier"},
+      "short": {"zh": "温柔传话", "en": "Whispers"},
+      "icon": "anchor",
+      "endpoint": "whisper.index",
+      "action": "go"
+    },
+    {
+      "id": "quest_board",
+      "name": {"zh": "约会选选选", "en": "Quest Board"},
+      "short": {"zh": "约会选选选", "en": "Date Quests"},
+      "icon": "note",
+      "endpoint": "quest.index",
+      "action": "panel"
+    },
+    {
+      "id": "first_meet_forest",
+      "name": {"zh": "初见森林", "en": "First Meet Forest"},
+      "short": {"zh": "初见森林", "en": "Forest"},
+      "icon": "tree",
+      "endpoint": "forest.index",
+      "action": "go"
+    },
+    {
+      "id": "mailbox",
+      "name": {"zh": "小信箱", "en": "Mailbox"},
+      "short": {"zh": "小信箱", "en": "Mailbox"},
+      "icon": "mail",
+      "endpoint": "settings.index",
+      "action": "panel"
+    }
+  ]
+}

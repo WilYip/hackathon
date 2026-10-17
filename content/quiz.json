@@ -1,0 +1,160 @@
+{
+  "_说明": "初见森林的森林动物性格测试（页面上不要出现 MBTI 字样）。questions：12 道题，每个维度 3 道；选 a 记前一端（E / S / T / J），选 b 记后一端（I / N / F / P）。dimensions：四个维度的可爱命名，以及'你们的组合'卡片用的句子（same_first 两人都是前一端、same_second 两人都是后一端、different 两人不同）。 spirit：选了这个选项后森林小精灵的俏皮回应。discovery：每完成一个维度的 3 题后弹出的'森林发现'卡片，按票多的一端显示。",
+  "dimensions": [
+    {
+      "key": "EI",
+      "first": "E",
+      "second": "I",
+      "label": {"zh": "能量", "en": "Energy"},
+      "names": {
+        "E": {"zh": "热闹派", "en": "Sunny"},
+        "I": {"zh": "安静派", "en": "Cozy"}
+      },
+      "combo": {
+        "same_first": {"zh": "你们都是热闹派，约上朋友一起出去玩，能量满格。", "en": "You're both Sunny: grab some friends, head out, and you're fully charged."},
+        "same_second": {"zh": "你们都喜欢安静的陪伴，一起窝在家里就是最好的约会。", "en": "You both love quiet company; curling up at home together is the perfect date."},
+        "different": {"zh": "一个热闹、一个安静：热闹派带对方看看新世界，安静派给两个人留一个温暖的小窝。", "en": "One Sunny, one Cozy: the Sunny one opens new doors, and the Cozy one keeps a warm nest for two."}
+      },
+      "discovery": {
+        "E": {"zh": "你像清晨的小太阳，和大家在一起时最有活力。", "en": "Like a little morning sun, you shine brightest around others."},
+        "I": {"zh": "你像树洞里的小夜灯，安静的时光最能让你充电。", "en": "Like a night-light in a tree hollow, quiet time recharges you best."}
+      }
+    },
+    {
+      "key": "SN",
+      "first": "S",
+      "second": "N",
+      "label": {"zh": "感知", "en": "Perception"},
+      "names": {
+        "S": {"zh": "务实派", "en": "Grounded"},
+        "N": {"zh": "梦想派", "en": "Dreamy"}
+      },
+      "combo": {
+        "same_first": {"zh": "你们都很务实，把每一天都过得踏踏实实。", "en": "You're both Grounded, making every day steady and real."},
+        "same_second": {"zh": "你们都爱做梦，聊起未来能聊一整晚。", "en": "You're both Dreamy; talk about the future can last all night."},
+        "different": {"zh": "一个脚踏实地、一个天马行空：梦想派负责画蓝图，务实派负责把它变成真的。", "en": "One Grounded, one Dreamy: the dreamer sketches the plan, and the grounded one makes it real."}
+      },
+      "discovery": {
+        "S": {"zh": "你的脚步很踏实，总能注意到身边小小的美好。", "en": "Your steps are steady, and you notice the little lovely things around you."},
+        "N": {"zh": "你的脑袋里有一片星空，总在想象远方和以后。", "en": "There's a sky full of stars in your head, always imagining what's ahead."}
+      }
+    },
+    {
+      "key": "TF",
+      "first": "T",
+      "second": "F",
+      "label": {"zh": "判断", "en": "Decisions"},
+      "names": {
+        "T": {"zh": "小脑袋", "en": "Clever"},
+        "F": {"zh": "小心心", "en": "Tender"}
+      },
+      "combo": {
+        "same_first": {"zh": "你们都爱讲道理，遇到问题会一起冷静地想办法。", "en": "You're both Clever, calmly working things out together when problems come up."},
+        "same_second": {"zh": "你们都很照顾彼此的感受，说话总是软软的。", "en": "You're both Tender, always gentle with each other's feelings."},
+        "different": {"zh": "一个讲道理、一个讲感受：闹别扭时先抱一抱，再一起想办法。", "en": "One Clever, one Tender: when you clash, hug first, then solve it together."}
+      },
+      "discovery": {
+        "T": {"zh": "你遇事先想清楚，是两个人里可靠的小军师。", "en": "You think things through first: the steady strategist of the two."},
+        "F": {"zh": "你最在意彼此的感受，心里装着软软的温柔。", "en": "You care most about how you both feel, soft and warm inside."}
+      }
+    },
+    {
+      "key": "JP",
+      "first": "J",
+      "second": "P",
+      "label": {"zh": "节奏", "en": "Rhythm"},
+      "names": {
+        "J": {"zh": "计划控", "en": "Planner"},
+        "P": {"zh": "随心走", "en": "Wanderer"}
+      },
+      "combo": {
+        "same_first": {"zh": "你们都是计划控，旅行攻略可以一起做到完美。", "en": "You're both Planners; together your travel plans can be perfect."},
+        "same_second": {"zh": "你们都随心走，说走就走的约会最适合你们。", "en": "You're both Wanderers; spontaneous dates suit you best."},
+        "different": {"zh": "一个爱计划、一个随心走：计划控定好大方向，随心派负责制造惊喜。", "en": "One Planner, one Wanderer: the planner sets the course, and the wanderer brings the surprises."}
+      },
+      "discovery": {
+        "J": {"zh": "你喜欢把日子安排得井井有条，让人特别安心。", "en": "You like your days neatly planned, and that helps others feel safe."},
+        "P": {"zh": "你喜欢随风走走看，总能给日子带来小惊喜。", "en": "You like to drift with the breeze and bring little surprises to each day."}
+      }
+    }
+  ],
+  "combo_intro": {
+    "all_same": {"zh": "你们是同一种小动物，默契满分！", "en": "You're the same little animal, a perfect match!"},
+    "none_same": {"zh": "你们几乎完全相反，正好可以互相补位。", "en": "You're almost complete opposites, which means you fill each other's gaps."},
+    "some_same": {"zh": "你们有 {n} 个地方一模一样，也各有各的可爱。", "en": "You match on {n} of 4 traits, and each bring your own charm."}
+  },
+  "questions": [
+    {
+      "dimension": "EI",
+      "text": {"zh": "小岛周末开派对，你会……", "en": "The island is throwing a weekend party. You…"},
+      "a": {"emoji": "🎉", "text": {"zh": "第一个冲去，顺便认识新朋友", "en": "Rush in first and make new friends along the way"}, "spirit": {"zh": "哇，派对小火箭出发！记得给我留块蛋糕～", "en": "Whoosh, party rocket launched! Save me a slice of cake~"}},
+      "b": {"emoji": "☕", "text": {"zh": "带杯热可可，找个角落和熟人聊天", "en": "Bring a hot chocolate and chat with old friends in a corner"}, "spirit": {"zh": "角落里的热可可最香了，我也想蹭一口。", "en": "Corner cocoa is the coziest. Can I have a sip?"}}
+    },
+    {
+      "dimension": "EI",
+      "text": {"zh": "累了一周，最能让你回血的是……", "en": "After a long week, what recharges you most is…"},
+      "a": {"emoji": "🍜", "text": {"zh": "约朋友出去吃一顿", "en": "Going out for a meal with friends"}, "spirit": {"zh": "吃饱饱，电量满格！", "en": "Full tummy, full battery!"}},
+      "b": {"emoji": "🛋️", "text": {"zh": "一个人窝在被子里追剧", "en": "Curling up alone under a blanket with a show"}, "spirit": {"zh": "被窝结界已开启，谁也别想打扰。", "en": "Blanket fort activated. Do not disturb!"}}
+    },
+    {
+      "dimension": "EI",
+      "text": {"zh": "森林里有只陌生小动物向你打招呼", "en": "A little animal you've never met waves at you in the forest"},
+      "a": {"emoji": "👋", "text": {"zh": "开心地和它聊起来", "en": "Happily start chatting with it"}, "spirit": {"zh": "它一定被你的热情暖到了！", "en": "Your warm hello just made its day!"}},
+      "b": {"emoji": "🌿", "text": {"zh": "礼貌点头，慢慢熟悉", "en": "Nod politely and warm up slowly"}, "spirit": {"zh": "慢慢来，好朋友都是一点点熟起来的。", "en": "Slow and steady. Best friends grow little by little."}}
+    },
+    {
+      "dimension": "SN",
+      "text": {"zh": "一起去海边，你最先注意到……", "en": "At the beach together, the first thing you notice is…"},
+      "a": {"emoji": "🌊", "text": {"zh": "浪花的声音和沙子的温度", "en": "The sound of the waves and the warmth of the sand"}, "spirit": {"zh": "沙子暖暖的，浪花哗啦啦，你很会感受当下呢。", "en": "Warm sand, swishing waves. You really live in the moment."}},
+      "b": {"emoji": "🔭", "text": {"zh": "想象海的另一边有什么", "en": "Wondering what lies on the other side of the sea"}, "spirit": {"zh": "海的另一边？说不定住着一只会唱歌的鲸鱼！", "en": "The other side of the sea? Maybe a singing whale lives there!"}}
+    },
+    {
+      "dimension": "SN",
+      "text": {"zh": "TA 问\"我们以后会怎样？\"", "en": "Your partner asks, “What will we be like in the future?”"},
+      "a": {"emoji": "📅", "text": {"zh": "说说下个月想一起做的事", "en": "Talk about what you want to do together next month"}, "spirit": {"zh": "下个月的计划，我已经帮你记在树叶上啦。", "en": "Next month's plans, noted on a leaf for you."}},
+      "b": {"emoji": "🏡", "text": {"zh": "描绘十年后的小家", "en": "Describe your little home ten years from now"}, "spirit": {"zh": "十年后的小家，记得给我留一个窗台。", "en": "Your home in ten years? Save me a spot on the windowsill."}}
+    },
+    {
+      "dimension": "SN",
+      "text": {"zh": "拼一个新家具，你会……", "en": "Putting together new furniture, you…"},
+      "a": {"emoji": "📖", "text": {"zh": "按说明书一步一步来", "en": "Follow the instructions step by step"}, "spirit": {"zh": "一步一步来，螺丝一颗都不会多出来！", "en": "Step by step, and not a single screw left over!"}},
+      "b": {"emoji": "🧩", "text": {"zh": "先看图大概想象，边拼边改", "en": "Glance at the picture, picture it, and adjust as you go"}, "spirit": {"zh": "边拼边改，说不定拼出一个新发明。", "en": "Adjusting as you go. You might invent something new!"}}
+    },
+    {
+      "dimension": "TF",
+      "text": {"zh": "TA 抱怨工作的烦心事，你第一反应是……", "en": "Your partner vents about a rough day at work. Your first reaction is…"},
+      "a": {"emoji": "🧠", "text": {"zh": "帮 TA 分析怎么解决", "en": "Help them work out how to fix it"}, "spirit": {"zh": "小军师上线！烦心事先别跑。", "en": "Strategist mode on! Problems, don't run away."}},
+      "b": {"emoji": "🤗", "text": {"zh": "先抱抱 TA，说\"辛苦了\"", "en": "Hug them first and say “that sounds tough”"}, "spirit": {"zh": "抱抱是森林里最灵的魔法。", "en": "A hug is the strongest magic in the forest."}}
+    },
+    {
+      "dimension": "TF",
+      "text": {"zh": "两个人意见不同时，你更在意……", "en": "When you two disagree, you care more about…"},
+      "a": {"emoji": "⚖️", "text": {"zh": "哪个方案更合理", "en": "Which plan makes more sense"}, "spirit": {"zh": "叮！公平的小天平摆好啦。", "en": "Ding! The little scale of fairness is ready."}},
+      "b": {"emoji": "💞", "text": {"zh": "两个人的感受是否都被照顾", "en": "Whether both of your feelings are looked after"}, "spirit": {"zh": "两颗心都被照顾到，才是真的赢了。", "en": "When both hearts are looked after, everyone wins."}}
+    },
+    {
+      "dimension": "TF",
+      "text": {"zh": "挑礼物时你会……", "en": "When choosing a gift, you…"},
+      "a": {"emoji": "🎁", "text": {"zh": "选实用、对方真的用得上的", "en": "Pick something practical they'll really use"}, "spirit": {"zh": "实用的礼物，TA 每次用都会想起你。", "en": "A practical gift: they'll think of you every time they use it."}},
+      "b": {"emoji": "💌", "text": {"zh": "选有纪念意义、能让对方感动的", "en": "Pick something meaningful that will touch their heart"}, "spirit": {"zh": "这份心意，TA 会收藏很久很久。", "en": "A gift like that gets treasured for a long, long time."}}
+    },
+    {
+      "dimension": "JP",
+      "text": {"zh": "旅行前一天，你的状态是……", "en": "The day before a trip, you are…"},
+      "a": {"emoji": "🗂️", "text": {"zh": "行程表早做好，连餐厅都订了", "en": "Itinerary done, even the restaurants are booked"}, "spirit": {"zh": "连餐厅都订好了？请收下我的小星星！", "en": "Restaurants already booked? Here's a gold star!"}},
+      "b": {"emoji": "🎒", "text": {"zh": "背包还没收，到了再说", "en": "Haven't packed yet; you'll figure it out there"}, "spirit": {"zh": "说走就走！背包里记得塞点零食。", "en": "Off we go! Don't forget snacks in that backpack."}}
+    },
+    {
+      "dimension": "JP",
+      "text": {"zh": "周末突然空出一整天，你会……", "en": "A whole free day suddenly opens up this weekend. You…"},
+      "a": {"emoji": "📝", "text": {"zh": "列清单把想做的事安排好", "en": "Make a list and plan out what to do"}, "spirit": {"zh": "清单写好，一件一件打勾超满足！", "en": "A list to tick off one by one. So satisfying!"}},
+      "b": {"emoji": "🍃", "text": {"zh": "看心情，走到哪算哪", "en": "Follow your mood and see where the day goes"}, "spirit": {"zh": "跟着风走，今天会遇到什么呢？", "en": "Following the breeze. Who knows what today brings?"}}
+    },
+    {
+      "dimension": "JP",
+      "text": {"zh": "约会快迟到了，你会……", "en": "You might be late for a date. You…"},
+      "a": {"emoji": "⏰", "text": {"zh": "早早出门，绝不让 TA 等", "en": "Leave early. You'd never keep them waiting"}, "spirit": {"zh": "准时小达人，TA 一定很安心。", "en": "Always on time. They must feel so cared for."}},
+      "b": {"emoji": "🐢", "text": {"zh": "慢慢来，到了给 TA 一个大大的笑脸", "en": "Take it easy and greet them with a big smile"}, "spirit": {"zh": "慢吞吞的小乌龟，带着最大的笑脸到啦！", "en": "Slow little turtle, arriving with the biggest smile!"}}
+    }
+  ]
+}

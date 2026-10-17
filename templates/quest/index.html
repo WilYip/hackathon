@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% set scene_bg = 'quest' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+{% from "quest/_macros.html" import choice_chips, task_card %}
+
+{% block title %}{{ t('quest.title') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-quest{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_quest{% endblock %}
+{% block sound_region %}quest{% endblock %}
+{% block sound_enter %}board_open{% endblock %}
+
+{% block content %}
+{# 约会选选选。state 由 routes/quest.py 决定：
+   alone / none / choosing / waiting / deciding / confirmed
+   data-version：页面每 4 秒问一次服务器，状态变了就刷新（见 static/js/quest.js） #}
+<section class="quest" data-quest data-state="{{ state }}"
+         {% if version %}data-version="{{ version }}" data-state-url="{{ url_for('quest.api_state') }}"{% endif %}>
+
+  <header class="quest-head">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    <h1>{{ t('quest.title') }}</h1>
+    {% if state in ('choosing', 'waiting', 'deciding', 'confirmed') %}
+    <form method="post" action="{{ url_for('quest.cancel') }}" class="quest-cancel" data-confirm="{{ t('quest.cancel_confirm') }}">
+      <button type="submit" class="btn btn-ghost btn-small">{{ t('quest.cancel') }}</button>
+    </form>
+    {% endif %}
+  </header>
+
+  {# ================= 只有一个人 ================= #}
+  {% if state == 'alone' %}
+    <div class="board-card card">
+      <p>{{ t('regions_desc.quest_board') }}</p>
+    </div>
+    {% include "_waiting_partner.html" %}
+
+  {# ================= 没有进行中的一轮 ================= #}
+  {% elif state == 'none' %}
+    {% if celebrate %}
+      {# 刚完成：撒花 + 回忆预览 #}
+      <div class="celebrate card" data-confetti>
+        <h2>{{ t('quest.celebrate_title') }}</h2>
+        <p>{{ t('quest.celebrate_text') }}</p>
+        <figure class="memory-preview">
+          {% if celebrate.photo %}<img src="{{ celebrate.photo }}" alt="">{% endif %}
+          <figcaption>
+            {% if celebrate.task %}<strong>{{ celebrate.task.title }}</strong>{% endif %}
+            <span>{{ celebrate.note }}</span>
+          </figcaption>
+        </figure>
+        <div class="quest-actions">
+          <a class="btn btn-secondary" href="{{ url_for('memories.index') }}">{{ t('quest.go_memories') }}</a>
+          <form method="post" action="{{ url_for('quest.start') }}">
+            <button type="submit" class="btn btn-primary">{{ t('quest.again') }}</button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <div class="board-card card">
+        <p class="board-lead">{{ t('regions_desc.quest_board') }}</p>
+        <ol class="note-cards">
+          <li class="note-card note-yellow"><strong>1</strong><span>{{ t('panel.quest_step1') }}</span></li>
+          <li class="note-card note-pink"><strong>2</strong><span>{{ t('panel.quest_step2') }}</span></li>
+          <li class="note-card note-mint"><strong>3</strong><span>{{ t('panel.quest_step3') }}</span></li>
+        </ol>
+        <form method="post" action="{{ url_for('quest.start') }}" class="quest-actions">
+          <button type="submit" class="btn btn-primary btn-large">{{ t('quest.start') }}</button>
+        </form>
+      </div>
+      {% if last %}
+        <div class="last-quest card">
+          <h2>{{ t('quest.last_title') }}</h2>
+          <figure class="memory-preview">
+            {% if last.photo %}<img src="{{ last.photo }}" alt="">{% endif %}
+            <figcaption>
+              {% if last.task %}<strong>{{ last.task.title }}</strong>{% endif %}
+              <span>{{ last.note }}</span>
+            </figcaption>
+          </figure>
+        </div>
+      {% endif %}
+    {% endif %}
+
+  {# ================= 一步一题选择 ================= #}
+  {% elif state == 'choosing' %}
+    <form method="post" action="{{ url_for('quest.choose') }}" class="wizard card" data-wizard
+          data-step-label="{{ t('quest.step_label') }}" data-pick-hint="{{ t('quest.pick_hint') }}">
+      <div class="wizard-top">
+        <p class="wizard-progress" data-progress-text>{{ t('quest.step_label').replace('{n}', '1').replace('{total}', questions|length|string) }}</p>
+        <ol class="footprints" aria-hidden="true">
+          {% for q in questions %}<li data-footprint="{{ loop.index }}"></li>{% endfor %}
+        </ol>
+      </div>
+      {% if partner_ready %}
+        <p class="partner-ready">{{ icon('check', 16) }}{{ t('quest.partner_ready', name=people.partner.nickname) }}</p>
+      {% endif %}
+
+      {% for q in questions %}
+      <fieldset class="wizard-step" data-step="{{ loop.index }}">
+        <legend class="wizard-question">{{ tr(q.title) }}</legend>
+        <div class="option-grid">
+          {% for o in q.options %}
+          <label class="option-card">
+            <input type="radio" name="{{ q.key }}" value="{{ o.value }}" required>
+            <span class="option-body">
+              <span class="option-emoji" aria-hidden="true">{{ o.emoji }}</span>
+              <span class="option-label">{{ tr(o.label) }}</span>
+              <span class="option-hint">{{ tr(o.hint) }}</span>
+              <span class="option-check" aria-hidden="true">{{ icon('check', 16) }}</span>
+            </span>
+          </label>
+          {% endfor %}
+        </div>
+      </fieldset>
+      {% endfor %}
+
+      <p class="wizard-error" data-wizard-error role="alert"></p>
+      <div class="wizard-nav">
+        <button type="button" class="btn btn-secondary js-only" data-prev>{{ t('quest.prev') }}</button>
+        <button type="button" class="btn btn-primary js-only" data-next>{{ t('quest.next') }}</button>
+        <button type="submit" class="btn btn-primary" data-submit>{{ icon('note', 18) }}<span>{{ t('quest.submit') }}</span></button>
+      </div>
+    </form>
+
+  {# ================= 自己选好了，等对方 ================= #}
+  {% elif state == 'waiting' %}
+    <div class="waiting-board card">
+      <div class="board-scene" aria-hidden="true">
+        <span class="board-sign">{{ icon('note', 44) }}</span>
+        <span class="board-pet">{{ avatar(people.me) }}</span>
+      </div>
+      <h2>{{ t('quest.waiting_title', name=people.partner.nickname) }}</h2>
+      <p>{{ t('quest.waiting_text', name=people.partner.nickname) }}</p>
+    </div>
+
+  {# ================= 共同选择 ================= #}
+  {% elif state == 'deciding' %}
+    <div class="choices-summary card">
+      <h2>{{ t('quest.choices_title') }}</h2>
+      <div class="choices-row">{{ avatar(people.me, 'avatar-sm') }}<span class="who">{{ t('quest.you') }}</span>{{ choice_chips(choices.me) }}</div>
+      <div class="choices-row">{{ avatar(people.partner, 'avatar-sm') }}<span class="who">{{ people.partner.nickname }}</span>{{ choice_chips(choices.partner) }}</div>
+    </div>
+
+    {# 当前状态的说明：没人提议 / 我提议了（等待 TA 确认） / TA 提议了（等我确认） #}
+    <p class="decide-status {% if proposal %}{{ 'is-mine' if proposal.by_me else 'is-theirs' }}{% endif %}" role="status">
+      {% if not proposal %}{{ icon('note', 18) }}{{ t('quest.deciding_hint_none') }}
+      {% elif proposal.by_me %}{{ icon('hourglass', 18) }}{{ t('quest.deciding_hint_mine', title=proposal.title) }}
+      {% else %}{{ icon('send', 18) }}{{ t('quest.deciding_hint_partner', name=people.partner.nickname, title=proposal.title) }}{% endif %}
+    </p>
+
+    <div class="task-grid">
+      {% for card in cards %}
+        {% set cls = 'is-proposed-mine' if card.status == 'proposed_by_me' else ('is-proposed-theirs' if card.status == 'proposed_by_partner' else '') %}
+        {% call task_card(card, cls) %}
+          {% if card.relaxed %}<p class="relaxed-note">{{ t('quest.relaxed_badge') }}</p>{% endif %}
+          {% if card.status == 'proposed_by_me' %}
+            {# 已提议：虚线边框 + 沙漏，等对方确认 #}
+            <p class="state-badge badge-proposed">{{ icon('hourglass', 18) }}<span><strong>{{ t('quest.badge_proposed') }}</strong><small>{{ t('quest.badge_proposed_sub', name=people.partner.nickname) }}</small></span></p>
+          {% elif card.status == 'proposed_by_partner' %}
+            {# 等待确认：对方提议了，我可以同意 #}
+            <p class="state-badge badge-waiting">{{ icon('send', 18) }}<span><strong>{{ t('quest.badge_waiting') }}</strong><small>{{ t('quest.badge_waiting_sub', name=people.partner.nickname) }}</small></span></p>
+            <form method="post" action="{{ url_for('quest.agree') }}">
+              <input type="hidden" name="task_id" value="{{ card.id }}">
+              <button type="submit" class="btn btn-primary btn-block">{{ icon('check', 18) }}<span>{{ t('quest.agree') }}</span></button>
+            </form>
+          {% else %}
+            <form method="post" action="{{ url_for('quest.propose') }}">
+              <input type="hidden" name="task_id" value="{{ card.id }}">
+              <button type="submit" class="btn btn-secondary btn-block">{{ t('quest.choose_this') }}</button>
+            </form>
+          {% endif %}
+        {% endcall %}
+      {% endfor %}
+    </div>
+
+  {# ================= 已共同确定 ================= #}
+  {% elif state == 'confirmed' %}
+    <div class="confirmed-wrap">
+      {% call task_card(task, 'is-confirmed task-card-big') %}
+        <p class="state-badge badge-confirmed">{{ icon('check', 18) }}<span><strong>{{ t('quest.badge_confirmed') }}</strong>
+          <small class="pair">{{ people.me.nickname }} &amp; {{ people.partner.nickname }}</small></span></p>
+      {% endcall %}
+
+      <div class="complete-box card">
+        <h2>{{ t('quest.confirmed_title') }}</h2>
+        <p>{{ t('quest.confirmed_text') }}</p>
+        <button type="button" class="btn btn-primary btn-large js-only" data-show-complete {% if form_errors %}hidden{% endif %}>{{ t('quest.done_button') }}</button>
+
+        {# 完成表单：一句回忆（必填）+ 照片（可选）。没有 JavaScript 时直接显示 #}
+        <form method="post" action="{{ url_for('quest.complete') }}" enctype="multipart/form-data"
+              class="form complete-form{% if not form_errors %} js-collapsed{% endif %}" data-complete-form novalidate
+              data-max-bytes="{{ 5 * 1024 * 1024 }}" data-too-large="{{ t('photo.errors.too_large') }}"
+              data-bad-type="{{ t('photo.errors.bad_type') }}">
+          <h3>{{ t('quest.form_title') }}</h3>
+          <label class="field">
+            <span class="field-label">{{ t('quest.note_label') }}</span>
+            <textarea name="note" rows="3" maxlength="{{ note_max }}" required data-note
+                      placeholder="{{ t('quest.note_placeholder') }}">{{ form_note or '' }}</textarea>
+            <span class="field-hint"><span data-note-count>{{ (form_note or '')|length }}</span>/{{ note_max }}</span>
+            {% if form_errors and form_errors.note %}<span class="field-error" role="alert">{{ form_errors.note }}</span>{% endif %}
+          </label>
+          <label class="field photo-field">
+            <span class="field-label">{{ icon('camera', 18) }}{{ t('quest.photo_label') }}</span>
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-photo>
+            <img class="photo-preview" alt="" hidden data-photo-preview>
+            <span class="field-error" role="alert" data-photo-error>{% if form_errors and form_errors.photo %}{{ form_errors.photo }}{% endif %}</span>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block" data-save-memory>{{ t('quest.save_memory') }}</button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if state == 'alone' %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endif %}
+<script src="{{ url_for('static', filename='js/wizard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/quest.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{# 界面图标（内联 SVG，颜色跟随文字颜色 currentColor）。
+   用法：{% from "_icons.html" import icon %} ... {{ icon('gear') }}
+   关键图标用 SVG 而不是 emoji，保证 Windows 和苹果设备上显示一致。
+   优先使用第三版统一图标 static/usland/assets/ui/icons/icon_<名字>.svg（services/assets.icon_svg 内联输出）；
+   第三版没有的图标（小屋、锚、树、爱心、声音……）继续用下面手写的线条图标，风格一致：24 格、圆头描边。 #}
+{# 旧名字 → 第三版图标的名字；其余名字直接按 icon_<名字>.svg 查找 #}
+{% set V3_NAMES = {'gear': 'settings', 'camera': 'photo'} %}
+{% macro icon(name, size=22) %}
+{% set v3 = ui_icon(V3_NAMES.get(name, name), size) %}
+{% if v3 %}{{ v3 }}{% else %}
+<svg class="icon" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+  {% if name == 'gear' %}
+    <circle cx="12" cy="12" r="3.2"/>
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+  {% elif name == 'back' %}
+    <path d="M15 18l-6-6 6-6"/>
+  {% elif name == 'close' %}
+    <path d="M18 6L6 18M6 6l12 12"/>
+  {% elif name == 'copy' %}
+    <rect x="9" y="9" width="11" height="11" rx="3"/>
+    <path d="M5 15V6a2 2 0 0 1 2-2h8"/>
+  {% elif name == 'logout' %}
+    <path d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3"/>
+    <path d="M16 17l5-5-5-5"/>
+    <path d="M21 12H9"/>
+  {% elif name == 'cottage' %}
+    <path d="M3 11l9-7 9 7"/>
+    <path d="M5 10v10h14V10"/>
+    <path d="M12 19.5c-2.2-1.4-3.2-2.6-3.2-3.8a1.6 1.6 0 0 1 3.2-.5 1.6 1.6 0 0 1 3.2.5c0 1.2-1 2.4-3.2 3.8z"/>
+  {% elif name == 'anchor' %}
+    <circle cx="12" cy="5" r="2.2"/>
+    <path d="M12 7.2V21"/>
+    <path d="M8 11h8"/>
+    <path d="M4.5 13.5A7.5 7.5 0 0 0 12 21a7.5 7.5 0 0 0 7.5-7.5"/>
+  {% elif name == 'note' %}
+    <rect x="4" y="4" width="16" height="16" rx="3"/>
+    <path d="M8 9h8M8 13h8M8 17h5"/>
+  {% elif name == 'tree' %}
+    <path d="M12 3l5 7h-3l4 6H6l4-6H7z"/>
+    <path d="M12 16v5"/>
+  {% elif name == 'mail' %}
+    <rect x="3" y="5" width="18" height="14" rx="3"/>
+    <path d="M3.5 7l8.5 6 8.5-6"/>
+  {% elif name == 'heart' %}
+    <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="currentColor" stroke="none"/>
+  {% elif name == 'swipe' %}
+    <path d="M7 8l-4 4 4 4M17 8l4 4-4 4M3 12h18"/>
+  {% elif name == 'check' %}
+    <path d="M5 12.5l4.5 4.5L19 7.5"/>
+  {% elif name == 'clock' %}
+    <circle cx="12" cy="12" r="8.5"/>
+    <path d="M12 7.5V12l3 2"/>
+  {% elif name == 'coin' %}
+    <circle cx="12" cy="12" r="8.5"/>
+    <path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.5 0-2.5.8-2.5 1.9 0 2.6 5.2 1.4 5.2 4.2 0 1.1-1.1 1.9-2.7 1.9-1.2 0-2.2-.5-2.7-1.3M12 6.5v1.5M12 16v1.5"/>
+  {% elif name == 'pin' %}
+    <path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/>
+    <circle cx="12" cy="10" r="2.3"/>
+  {% elif name == 'send' %}
+    <path d="M21 3L10 14"/>
+    <path d="M21 3l-6.5 18-4-7.5L3 9.5z"/>
+  {% elif name == 'hourglass' %}
+    <path d="M6.5 3h11M6.5 21h11"/>
+    <path d="M7.5 3c0 5 9 5 9 9s-9 4-9 9M16.5 3c0 5-9 5-9 9s9 4 9 9"/>
+  {% elif name == 'sun' %}
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>
+  {% elif name == 'drop' %}
+    <path d="M12 3.5s-6 6.6-6 10.6a6 6 0 0 0 12 0c0-4-6-10.6-6-10.6z"/>
+  {% elif name == 'leaf' %}
+    <path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14z"/>
+    <path d="M5 19c3-4 6-7 10-9"/>
+  {% elif name == 'sound' %}
+    <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/>
+    <path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>
+  {% elif name == 'sound_off' %}
+    <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/>
+    <path d="M16 10l4 4M20 10l-4 4"/>
+  {% elif name == 'music' %}
+    <path d="M9 18V6l11-2v12"/>
+    <circle cx="6.5" cy="18" r="2.5"/>
+    <circle cx="17.5" cy="16" r="2.5"/>
+  {% elif name == 'camera' %}
+    <path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z"/>
+    <circle cx="12" cy="13" r="3.5"/>
+  {% endif %}
+</svg>
+{% endif %}
+{% endmacro %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% set scene_bg = 'mailbox' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+
+{% block title %}{{ t('settings.title') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-settings{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_island{% endblock %}
+{% block sound_region %}mailbox{% endblock %}
+{% block sound_enter %}mailbox_open{% endblock %}
+
+{% block content %}
+{# 小信箱（设置）：简单的信纸表单卡片，居中，最大宽度约 640px #}
+<section class="settings">
+  <header class="quest-head">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    <h1>{{ t('settings.title') }}</h1>
+  </header>
+
+  {# ① 小岛与我 #}
+  <form method="post" action="{{ url_for('settings.profile') }}" class="letter-form card form" novalidate>
+    <h2>{{ t('settings.profile_title') }}</h2>
+    <label class="field">
+      <span class="field-label">{{ t('form.island_name') }}</span>
+      <input type="text" name="island_name" value="{{ island.name }}" maxlength="30" required>
+    </label>
+    <label class="field">
+      <span class="field-label">{{ t('form.nickname') }}</span>
+      <input type="text" name="nickname" value="{{ current_user.nickname }}" maxlength="20" required>
+      <span class="field-hint">{{ t('settings.nickname_hint') }}</span>
+    </label>
+    <fieldset class="field">
+      <legend class="field-label">{{ t('form.lang') }}</legend>
+      <div class="segmented">
+        <label><input type="radio" name="lang" value="zh" {{ 'checked' if current_user.lang == 'zh' }}><span>{{ t('form.lang_zh') }}</span></label>
+        <label><input type="radio" name="lang" value="en" {{ 'checked' if current_user.lang == 'en' }}><span>{{ t('form.lang_en') }}</span></label>
+      </div>
+    </fieldset>
+    <button type="submit" class="btn btn-primary">{{ t('settings.save') }}</button>
+  </form>
+
+  {# ①½ 减少动态效果：只影响这台设备（Cookie）。系统已经开启"减少动态效果"时也会自动生效 #}
+  <form method="post" action="{{ url_for('settings.motion') }}" class="letter-form card form">
+    <h2>{{ t('settings.motion_title') }}</h2>
+    <label class="check-row">
+      <input type="checkbox" name="reduce" value="1" {{ 'checked' if reduce_motion }}>
+      <span>{{ t('settings.motion_label') }}</span>
+    </label>
+    <p class="hint">{{ t('settings.motion_hint') }}</p>
+    <button type="submit" class="btn btn-secondary">{{ t('settings.save') }}</button>
+  </form>
+
+  {# ①¾ 声音：总开关 + 背景音乐 / 环境声 / 音效三个开关和音量（static/js/sound.js，存在这台设备的浏览器里）
+     音乐致谢：CC BY 3.0 要求向用户展示署名 #}
+  <div class="letter-form card sound-settings" data-sound-details>
+    <h2>{{ t('sound.title') }}</h2>
+    <p class="hint">{{ t('sound.intro') }}</p>
+    <noscript><p class="hint">{{ t('sound.need_js') }}</p></noscript>
+    {% with extra_class = 'sound-toggle-inline' %}{% include "_sound_toggle.html" %}{% endwith %}
+    <div class="sound-rows">
+      {% for key in ('bgm', 'amb', 'sfx') %}
+      <div class="sound-row">
+        <label class="check-row">
+          <input type="checkbox" data-sound-pref="{{ key }}" checked>
+          <span>{{ t('sound.' ~ key) }}</span>
+        </label>
+        <input type="range" min="0" max="100" step="5" value="100" class="sound-volume"
+               data-sound-volume="{{ key }}" aria-label="{{ t('sound.volume_of', name=t('sound.' ~ key)) }}">
+      </div>
+      {% endfor %}
+      <label class="check-row">
+        <input type="checkbox" data-sound-pref="error">
+        <span>{{ t('sound.error') }}</span>
+      </label>
+    </div>
+    <a class="panel-row sound-credits" href="{{ url_for('static', filename='audio/credits.html') }}" target="_blank" rel="noopener">
+      {{ icon('music') }}<span>{{ t('sound.credits') }}</span>{{ icon('back', 18) }}
+    </a>
+  </div>
+
+  {# ② 邀请码：只有一个人时显示 #}
+  {% if members|length < 2 %}
+    {% include "_waiting_partner.html" %}
+  {% endif %}
+
+  {# ③ 传话魔法：DeepSeek API key（只显示末尾 4 位） #}
+  <div class="letter-form card">
+    <h2>{{ t('settings.key_title') }}</h2>
+    <p class="key-state {{ 'is-on' if has_key else 'is-off' }}">
+      {{ icon('check' if has_key else 'close', 18) }}
+      <span>{% if has_key %}{{ t('settings.key_set') }} <code>{{ masked_key }}</code>{% else %}{{ t('settings.key_unset') }}{% endif %}</span>
+    </p>
+
+    <form method="post" action="{{ url_for('settings.save_key') }}" class="form" novalidate>
+      <label class="field">
+        <span class="field-label">{{ t('settings.key_replace') if has_key else t('whisper.key.label') }}</span>
+        <input type="password" name="api_key" autocomplete="off" spellcheck="false" placeholder="sk-..." required>
+      </label>
+      <button type="submit" class="btn btn-primary">{{ t('whisper.key.submit') }}</button>
+    </form>
+
+    {% if has_key %}
+    <div class="key-actions">
+      <form method="post" action="{{ url_for('settings.test_key') }}">
+        <button type="submit" class="btn btn-secondary">{{ t('settings.key_test') }}</button>
+      </form>
+      <form method="post" action="{{ url_for('settings.delete_key') }}" data-confirm="{{ t('settings.key_delete_confirm') }}">
+        <button type="submit" class="btn btn-ghost">{{ t('settings.key_delete') }}</button>
+      </form>
+    </div>
+    {% endif %}
+    <p class="hint">{{ t('settings.key_hint') }}</p>
+  </div>
+
+  {# ④ 隐私说明 #}
+  <div class="letter-form card">
+    <h2>{{ t('settings.privacy_title') }}</h2>
+    <ul class="privacy-list">
+      <li>{{ t('settings.privacy_1') }}</li>
+      <li>{{ t('settings.privacy_2') }}</li>
+      <li>{{ t('settings.privacy_3') }}</li>
+    </ul>
+  </div>
+
+  {# ⑤ 退出登录 #}
+  <form method="post" action="{{ url_for('auth.logout') }}" class="settings-logout">
+    <button type="submit" class="btn btn-secondary">{{ icon('logout', 18) }}<span>{{ t('nav.logout') }}</span></button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if members|length < 2 %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endif %}
+<script>
+  // 删除 key 前先确认
+  document.querySelectorAll("form[data-confirm]").forEach(function (form) {
+    form.addEventListener("submit", function (event) {
+      if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+    });
+  });
+</script>
+{% endblock %}

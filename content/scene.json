@@ -1,0 +1,69 @@
+{
+  "_说明": [
+    "第三版美术素材（docs/ui-v3/）的接入配置。素材在 static/usland/assets/，下面所有路径都相对这个目录。",
+    "坐标来自 content/scene_anchors.json（= docs/ui-v3/integration/scene_anchors.json 原样复制，队友更新后直接覆盖这个文件）。",
+    "这里只写 scene_anchors.json 里没有的东西：五个入口对应哪个热区和柔光层、名称标签放在哪、回忆小屋里的三个互动区域。",
+    "{mode} 会被替换成 desktop（横版 2560×1440）或 mobile（竖版 1440×2560，宽度 ≤700px 时使用）。",
+    "labels：五个入口常驻名称标签的中心点，单位是底图像素（和 scene_anchors.json 一样）。",
+    "player_slot_pivot：测试前占位剪影（512×512 SVG）脚底在画布中的高度比例。",
+    "pending：还没交付的素材。文件放到对应路径后刷新页面就会自动使用，不用改代码。",
+    "打开 http://localhost:8080/?hotspots=1 会显示热区（红框）和动物站位（虚线），方便对齐。"
+  ],
+  "island": {
+    "base": "scenes/island/{mode}/island_base_{mode}.webp",
+    "statue_shadow": "scenes/island/{mode}/statue_pedestals_{mode}.png",
+    "player_slot": "scenes/island/shared/player_slot_{side}.svg",
+    "player_slot_pivot": 0.8,
+    "regions": {
+      "memory_cottage": {"anchor": "cottage", "glow": "scenes/island/{mode}/hotspots/memory_cottage_{mode}.png",
+                         "state": "scenes/island/{mode}/states/memory_cottage_glow_{mode}.png"},
+      "whisper_pier": {"anchor": "pier", "glow": "scenes/island/{mode}/hotspots/whisper_pier_{mode}.png"},
+      "quest_board": {"anchor": "quest", "glow": "scenes/island/{mode}/hotspots/quest_board_{mode}.png"},
+      "first_meet_forest": {"anchor": "forest", "glow": "scenes/island/{mode}/hotspots/first_meet_forest_{mode}.png"},
+      "mailbox": {"anchor": "mailbox", "glow": "scenes/island/{mode}/hotspots/mailbox_{mode}.png"}
+    },
+    "labels": {
+      "desktop": {
+        "memory_cottage": [2055, 590],
+        "whisper_pier": [520, 1180],
+        "quest_board": [1160, 250],
+        "first_meet_forest": [445, 590],
+        "mailbox": [2290, 925]
+      },
+      "mobile": {
+        "memory_cottage": [1090, 420],
+        "whisper_pier": [425, 2180],
+        "quest_board": [690, 865],
+        "first_meet_forest": [215, 860],
+        "mailbox": [1245, 1365]
+      }
+    }
+  },
+  "memory_room": {
+    "_说明": "回忆小屋的三个互动区域：rect 是可点击范围 [左, 上, 右, 下]（底图像素），glow 是悬停时显示的柔光层。手机版交付的柔光层位置和画面对不上（相框的光在窗户上），所以手机版暂时不用柔光层（glow 为 null），改用 CSS 描边光，等队友修正后填回路径即可。",
+    "background": "scenes/memory/memory_room_{mode}.webp",
+    "spots": {
+      "desktop": {
+        "frames": {"rect": [823, 123, 1328, 558], "glow": "scenes/memory/interactive/memory_frames_desktop.png"},
+        "album": {"rect": [503, 893, 975, 1208], "glow": "scenes/memory/interactive/memory_album_desktop.png"},
+        "postcards": {"rect": [980, 903, 1388, 1218], "glow": "scenes/memory/interactive/memory_postcards_desktop.png"}
+      },
+      "mobile": {
+        "frames": {"rect": [890, 210, 1430, 680], "glow": null},
+        "album": {"rect": [370, 1850, 1008, 2080], "glow": null},
+        "postcards": {"rect": [1012, 1920, 1330, 2100], "glow": null}
+      }
+    }
+  },
+  "page_backgrounds": {
+    "_说明": "五个功能页的背景（横版 / 竖版），宽度 ≤700px 用竖版",
+    "whisper": "scenes/whisper/whisper_room_{mode}.webp",
+    "quest": "scenes/quest/quest_board_{mode}.webp",
+    "forest": "scenes/forest/forest_quiz_{mode}.webp",
+    "memory": "scenes/memory/memory_room_{mode}.webp",
+    "mailbox": "scenes/mailbox/mailbox_settings_{mode}.webp"
+  },
+  "pending": {
+    "island_waves_video": "scenes/island/{mode}/island_waves_{mode}.mp4"
+  }
+}

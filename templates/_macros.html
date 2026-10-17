@@ -1,0 +1,38 @@
+{# 可复用的表单片段。用法：{% from "_macros.html" import text_field, pin_fields, error_box %} #}
+
+{# 错误提示框 #}
+{% macro error_box(error) %}
+  {% if error %}
+    <p class="form-error" role="alert">{{ error }}</p>
+  {% endif %}
+{% endmacro %}
+
+{# 普通文本输入框 #}
+{% macro text_field(name, label, value="", placeholder="", maxlength=30, autocomplete="off", extra="") %}
+  <label class="field">
+    <span class="field-label">{{ label }}</span>
+    <input type="text" name="{{ name }}" value="{{ value }}" placeholder="{{ placeholder }}"
+           maxlength="{{ maxlength }}" autocomplete="{{ autocomplete }}" required {{ extra }}>
+  </label>
+{% endmacro %}
+
+{# PIN 输入框（可选"再输入一次"），附带"显示 PIN"开关 #}
+{% macro pin_fields(confirm=True, autocomplete="new-password") %}
+  <label class="field">
+    <span class="field-label">{{ t('form.pin') }}</span>
+    <input type="password" name="pin" class="pin-input" inputmode="numeric" pattern="[0-9]{4,6}"
+           minlength="4" maxlength="6" autocomplete="{{ autocomplete }}" required>
+    {% if confirm %}<span class="field-hint">{{ t('form.pin_hint') }}</span>{% endif %}
+  </label>
+  {% if confirm %}
+  <label class="field">
+    <span class="field-label">{{ t('form.pin_confirm') }}</span>
+    <input type="password" name="pin_confirm" class="pin-input" inputmode="numeric" pattern="[0-9]{4,6}"
+           minlength="4" maxlength="6" autocomplete="new-password" required>
+  </label>
+  {% endif %}
+  <label class="check">
+    <input type="checkbox" class="show-pin-toggle">
+    <span>{{ t('form.show_pin') }}</span>
+  </label>
+{% endmacro %}

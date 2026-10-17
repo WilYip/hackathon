@@ -1,0 +1,9 @@
+{
+  "errors": [],
+  "warnings": [],
+  "assetBytes": 19214700,
+  "resultAnimals": 16,
+  "status": "PASS",
+  "scope": "Static asset decoding, dimensions, alpha, SVG parsing, anchor bounds and hotspot overlaps. Not a browser or business acceptance test.",
+  "browserVerification": "NOT_COMPLETED: Chrome headless launch aborted with SIGABRT in this environment. Do not claim browser screenshots or full responsive interaction validation."
+}

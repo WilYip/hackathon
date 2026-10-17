@@ -1,0 +1,1021 @@
+{
+  "pack": "Usland audio pack",
+  "version": 1,
+  "file_count": 37,
+  "assets": [
+    {
+      "id": "bgm_welcome",
+      "label_zh": "欢迎与登录",
+      "category": "bgm",
+      "path": "static/audio/bgm/bgm_welcome.mp3",
+      "duration_seconds": 80.386,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 2,
+      "trigger": "欢迎、创建、加入及登录",
+      "sources": [
+        {
+          "source_id": "cozy",
+          "title": "Snowy Cozyness (Calm Piano/Guitar)",
+          "author": "MouthlessGames",
+          "license": "CC BY 3.0",
+          "source_page": "https://opengameart.org/content/snowy-cozyness-calm-pianoguitar",
+          "original_file": "A Warm Fireplace_0.ogg",
+          "original_sha256": "39e7599f1419cb12dfb21ff1b45750bd514be0054516102a9235b869b9313d10"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。",
+      "attribution_required": true
+    },
+    {
+      "id": "bgm_island",
+      "label_zh": "小岛首页",
+      "category": "bgm",
+      "path": "static/audio/bgm/bgm_island.mp3",
+      "duration_seconds": 329.68,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 2,
+      "trigger": "小岛首页",
+      "sources": [
+        {
+          "source_id": "sunset",
+          "title": "Sunset Plains",
+          "author": "Yoiyami",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/sunset-plains",
+          "original_file": "sunset_plains.wav",
+          "original_sha256": "f3750f8eda8bf42662b12f5726404675689b50f05ccaa968c5cb2e33d9172a62"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。",
+      "attribution_required": false
+    },
+    {
+      "id": "bgm_whisper",
+      "label_zh": "温柔传话",
+      "category": "bgm",
+      "path": "static/audio/bgm/bgm_whisper.mp3",
+      "duration_seconds": 84.811,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 2,
+      "trigger": "温柔传话，建议降低音量",
+      "sources": [
+        {
+          "source_id": "revelation",
+          "title": "Revelation",
+          "author": "Indieteur",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/revelation",
+          "original_file": "Revelation_0.mp3",
+          "original_sha256": "b6111a64fa948e76b01d08fc5de53177885a8d8db0dea65330946760892feb43"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。",
+      "attribution_required": false
+    },
+    {
+      "id": "bgm_quest",
+      "label_zh": "约会任务",
+      "category": "bgm",
+      "path": "static/audio/bgm/bgm_quest.mp3",
+      "duration_seconds": 71.831,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 2,
+      "trigger": "约会选择与推荐",
+      "sources": [
+        {
+          "source_id": "cozy",
+          "title": "Snowy Cozyness (Calm Piano/Guitar)",
+          "author": "MouthlessGames",
+          "license": "CC BY 3.0",
+          "source_page": "https://opengameart.org/content/snowy-cozyness-calm-pianoguitar",
+          "original_file": "It's Getting Freezing Cold_0.ogg",
+          "original_sha256": "cb18f95f631dd74b98aed7b9d9cf40ce011b5b6f7aa08d93a0a2c0e720fc3ac5"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。",
+      "attribution_required": true
+    },
+    {
+      "id": "bgm_forest",
+      "label_zh": "初见森林",
+      "category": "bgm",
+      "path": "static/audio/bgm/bgm_forest.mp3",
+      "duration_seconds": 44.736,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 2,
+      "trigger": "性格测试与森林",
+      "sources": [
+        {
+          "source_id": "forest_music",
+          "title": "Forest Ambience",
+          "author": "TinyWorlds",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/forest-ambience",
+          "original_file": "Forest_Ambience.mp3",
+          "original_sha256": "9850aa1d0d5d66bd9c5daf8bb77c6d852e01f2f4de22f283bd5621e8bed13b75"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。",
+      "attribution_required": false
+    },
+    {
+      "id": "bgm_memories",
+      "label_zh": "回忆小屋",
+      "category": "bgm",
+      "path": "static/audio/bgm/bgm_memories.mp3",
+      "duration_seconds": 81.197,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 2,
+      "trigger": "回忆相册",
+      "sources": [
+        {
+          "source_id": "cozy",
+          "title": "Snowy Cozyness (Calm Piano/Guitar)",
+          "author": "MouthlessGames",
+          "license": "CC BY 3.0",
+          "source_page": "https://opengameart.org/content/snowy-cozyness-calm-pianoguitar",
+          "original_file": "I Never Came Home Again_0.ogg",
+          "original_sha256": "e4b2645b993c7f6ec91317f8de4164e30560c4e3165c501090fedcc882135c00"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。",
+      "attribution_required": true
+    },
+    {
+      "id": "amb_ocean",
+      "label_zh": "平静海浪",
+      "category": "ambience",
+      "path": "static/audio/ambience/amb_ocean.mp3",
+      "duration_seconds": 45.0,
+      "loop": true,
+      "recommended_volume": 0.45,
+      "loop_crossfade_seconds": 1,
+      "trigger": "首页环境",
+      "sources": [
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_01_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "fcfca178eca2eac536e8c2a4ed5cf8096e44c921acd587047b3d9f1d7845435c"
+        },
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_02_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "53b5c28c0edc36f049e77e65f2cf8a86135103328c44c1507c416e6469d18096"
+        },
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_03_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "fc795f95f352b354867d69a587daecb8815334e28e3b56a7798c5f3005349054"
+        },
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_04_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "3c490e736365fdd617ce8405470d8878fc6146d9a8dba448d622addb01cfff3b"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。多段海浪交叉拼接与循环处理。",
+      "attribution_required": false
+    },
+    {
+      "id": "amb_forest",
+      "label_zh": "自然树林氛围",
+      "category": "ambience",
+      "path": "static/audio/ambience/amb_forest.mp3",
+      "duration_seconds": 45.0,
+      "loop": true,
+      "recommended_volume": 0.45,
+      "loop_crossfade_seconds": 1,
+      "trigger": "初见森林环境",
+      "sources": [
+        {
+          "source_id": "park",
+          "title": "Park ambiences",
+          "author": "Thimras",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/park-ambiences",
+          "original_file": "park_ambience_birds.wav",
+          "original_sha256": "dc1a5ac34b89cab7f8f261b53a23da7c1c5e3cc895aae4cb6fb4a1a04001b2af"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。来自阿德莱德公园实录，截取并制作循环。",
+      "attribution_required": false
+    },
+    {
+      "id": "amb_dock",
+      "label_zh": "码头近处水声",
+      "category": "ambience",
+      "path": "static/audio/ambience/amb_dock.mp3",
+      "duration_seconds": 40.0,
+      "loop": true,
+      "recommended_volume": 0.45,
+      "loop_crossfade_seconds": 1,
+      "trigger": "传话码头环境",
+      "sources": [
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_02_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "53b5c28c0edc36f049e77e65f2cf8a86135103328c44c1507c416e6469d18096"
+        }
+      ],
+      "processing": "海浪片段重复适配码头、低通、音量降低、首尾淡化；循环建议播放器交叉淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "amb_cottage",
+      "label_zh": "小屋内远海声",
+      "category": "ambience",
+      "path": "static/audio/ambience/amb_cottage.mp3",
+      "duration_seconds": 45.0,
+      "loop": true,
+      "recommended_volume": 0.24,
+      "loop_crossfade_seconds": 1,
+      "trigger": "回忆小屋环境",
+      "sources": [
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_01_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "fcfca178eca2eac536e8c2a4ed5cf8096e44c921acd587047b3d9f1d7845435c"
+        },
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_02_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "53b5c28c0edc36f049e77e65f2cf8a86135103328c44c1507c416e6469d18096"
+        },
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_03_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "fc795f95f352b354867d69a587daecb8815334e28e3b56a7798c5f3005349054"
+        },
+        {
+          "source_id": "ocean",
+          "title": "Beach Ocean Waves",
+          "author": "jasinski (submitted by qubodup)",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/beach-ocean-waves",
+          "original_file": "wave_04_cc0-18363__jasinski__alkaibeach.flac",
+          "original_sha256": "3c490e736365fdd617ce8405470d8878fc6146d9a8dba448d622addb01cfff3b"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。低通处理海浪，模拟隔窗远海；不是独立室内实录。",
+      "attribution_required": false
+    },
+    {
+      "id": "env_breeze",
+      "label_zh": "一阵海岛微风",
+      "category": "ambience",
+      "path": "static/audio/ambience/env_breeze.mp3",
+      "duration_seconds": 7.0,
+      "loop": false,
+      "recommended_volume": 0.35,
+      "loop_crossfade_seconds": 0,
+      "trigger": "首页偶发风声",
+      "sources": [
+        {
+          "source_id": "park",
+          "title": "Park ambiences",
+          "author": "Thimras",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/park-ambiences",
+          "original_file": "park_ambience_wind.wav",
+          "original_sha256": "5c381856745b4706e7eba55eb9271a61a530e90c05df8126adb2db89ecfa6c5a"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。截取公园风声；保留自然环境背景。",
+      "attribution_required": false
+    },
+    {
+      "id": "env_birds",
+      "label_zh": "短鸟鸣",
+      "category": "ambience",
+      "path": "static/audio/ambience/env_birds.mp3",
+      "duration_seconds": 3.0,
+      "loop": false,
+      "recommended_volume": 0.3,
+      "loop_crossfade_seconds": 0,
+      "trigger": "森林偶发鸟鸣",
+      "sources": [
+        {
+          "source_id": "park",
+          "title": "Park ambiences",
+          "author": "Thimras",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/park-ambiences",
+          "original_file": "park_ambience_birds.wav",
+          "original_sha256": "dc1a5ac34b89cab7f8f261b53a23da7c1c5e3cc895aae4cb6fb4a1a04001b2af"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。自然鸟鸣片段，仍含少量环境底声。",
+      "attribution_required": false
+    },
+    {
+      "id": "env_boat_creak",
+      "label_zh": "船体轻响适配音",
+      "category": "ambience",
+      "path": "static/audio/ambience/env_boat_creak.mp3",
+      "duration_seconds": 0.947,
+      "loop": false,
+      "recommended_volume": 0.28,
+      "loop_crossfade_seconds": 0,
+      "trigger": "小船摇晃时偶发",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "creak2.ogg",
+          "original_sha256": "8a990afdc03aebb91d528f5385e2f95582dbfa8e2c12c71098ab01be9142294a"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。由木质吱呀声降调适配，非船体实录。",
+      "attribution_required": false
+    },
+    {
+      "id": "env_fireplace",
+      "label_zh": "壁炉木柴声",
+      "category": "ambience",
+      "path": "static/audio/ambience/env_fireplace.mp3",
+      "duration_seconds": 45.0,
+      "loop": true,
+      "recommended_volume": 0.32,
+      "loop_crossfade_seconds": 1,
+      "trigger": "仅有壁炉画面时启用",
+      "sources": [
+        {
+          "source_id": "fire",
+          "title": "Fireplace Sound loop",
+          "author": "PagDev",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/fireplace-sound-loop",
+          "original_file": "fire.wav",
+          "original_sha256": "85ca0cc60d0c037fff8b185e31ad1fcdbda6ce45eee17c3ee1318d1b8f59e330"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。循环适配。",
+      "attribution_required": false
+    },
+    {
+      "id": "cottage_open",
+      "label_zh": "木屋开门",
+      "category": "sfx",
+      "path": "static/audio/sfx/cottage_open.mp3",
+      "duration_seconds": 0.919,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "进入回忆小屋",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "doorOpen_1.ogg",
+          "original_sha256": "4ab93bab96522d8eb109ff96dc57cb6765deb02448fe14c10472084be5bb2a0b"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "board_open",
+      "label_zh": "告示牌纸页展开",
+      "category": "sfx",
+      "path": "static/audio/sfx/board_open.mp3",
+      "duration_seconds": 0.151,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "进入约会告示牌",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookOpen.ogg",
+          "original_sha256": "953390534377222bee89ac8cd9e60a58fdc037c71a4d7c18c43cd647c7f34ba8"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "forest_enter",
+      "label_zh": "森林轻脚步",
+      "category": "sfx",
+      "path": "static/audio/sfx/forest_enter.mp3",
+      "duration_seconds": 0.659,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "进入初见森林",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "footstep00.ogg",
+          "original_sha256": "6fe61ef1fc3bcf0e253bf2eb64759db6cb69e2fe452f4d88cc597ecf78a3d601"
+        },
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "footstep01.ogg",
+          "original_sha256": "313472dba31fd0c855376069fa368bb5a198c27251cc8398ef464578b7047a4c"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。通用脚步适配森林，非独立草地实录。",
+      "attribution_required": false
+    },
+    {
+      "id": "dock_enter",
+      "label_zh": "码头轻脚步",
+      "category": "sfx",
+      "path": "static/audio/sfx/dock_enter.mp3",
+      "duration_seconds": 0.64,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "进入传话码头",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "footstep06.ogg",
+          "original_sha256": "6cabfe7ae95d227a84066c6e17014ac31cc7c89b14ef51d7877e98352d4a64fb"
+        },
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "footstep07.ogg",
+          "original_sha256": "42924cdbf998d5b3db180a339fd74afc94c570d594a536687e337ef1bdfdb346"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。通用脚步适配木质码头。",
+      "attribution_required": false
+    },
+    {
+      "id": "mailbox_open",
+      "label_zh": "信箱盖轻开",
+      "category": "sfx",
+      "path": "static/audio/sfx/mailbox_open.mp3",
+      "duration_seconds": 0.425,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "进入小信箱设置",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "metalLatch.ogg",
+          "original_sha256": "ba9ba60b172b3ebc131a940f25793cd2e207aca7af73dc80d637277f060f1708"
+        },
+        {
+          "source_id": "sfx100",
+          "title": "100 CC0 SFX",
+          "author": "rubberduck",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/100-cc0-sfx",
+          "original_file": "wooded_box_open.ogg",
+          "original_sha256": "f564d93620fa150f6a85f86f26c3dc61ca42b62c887bc833b3af3a564897796f"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。锁扣与木盒开盖组合适配，不是信箱实录。",
+      "attribution_required": false
+    },
+    {
+      "id": "ui_select",
+      "label_zh": "轻选择",
+      "category": "sfx",
+      "path": "static/audio/sfx/ui_select.mp3",
+      "duration_seconds": 0.073,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "选择选项、按钮",
+      "sources": [
+        {
+          "source_id": "interface",
+          "title": "Interface Sounds",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/interface-sounds",
+          "original_file": "click_001.ogg",
+          "original_sha256": "ccfb7fa0cccdd9faec0eb16033c732b1e308d139d80f799161495d58f7adcdb9"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "ui_close",
+      "label_zh": "轻合拢",
+      "category": "sfx",
+      "path": "static/audio/sfx/ui_close.mp3",
+      "duration_seconds": 0.203,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "关闭面板",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookClose.ogg",
+          "original_sha256": "81e976532565f4372abd14e83d2684195fa548d0a28d345de221e56052454f32"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "ui_success",
+      "label_zh": "温和确认",
+      "category": "sfx",
+      "path": "static/audio/sfx/ui_success.mp3",
+      "duration_seconds": 0.29,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "创建、加入、复制、保存成功",
+      "sources": [
+        {
+          "source_id": "interface",
+          "title": "Interface Sounds",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/interface-sounds",
+          "original_file": "confirmation_001.ogg",
+          "original_sha256": "063564703b6094d70718a3e787a55cc9141611e4ecd6b6637f8828f79b4a8c3a"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "ui_error",
+      "label_zh": "低刺激错误反馈",
+      "category": "sfx",
+      "path": "static/audio/sfx/ui_error.mp3",
+      "duration_seconds": 0.162,
+      "loop": false,
+      "recommended_volume": 0.3,
+      "loop_crossfade_seconds": 0,
+      "trigger": "主动提交失败，可关闭",
+      "sources": [
+        {
+          "source_id": "interface",
+          "title": "Interface Sounds",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/interface-sounds",
+          "original_file": "error_001.ogg",
+          "original_sha256": "46e67425d16339772e8d328fb36a49426c9467418686e11beeb71ff84b0f6433"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "message_send",
+      "label_zh": "信件发送",
+      "category": "sfx",
+      "path": "static/audio/sfx/message_send.mp3",
+      "duration_seconds": 0.421,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "发送成功",
+      "sources": [
+        {
+          "source_id": "sfx100",
+          "title": "100 CC0 SFX",
+          "author": "rubberduck",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/100-cc0-sfx",
+          "original_file": "paper_01.ogg",
+          "original_sha256": "b2b2b55e44761c7a45283bce0196f41f72207180fb08c970d7dcf93b705d280c"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。纸张拟音适配信件发送。",
+      "attribution_required": false
+    },
+    {
+      "id": "message_receive",
+      "label_zh": "收到来信",
+      "category": "sfx",
+      "path": "static/audio/sfx/message_receive.mp3",
+      "duration_seconds": 0.1,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "收到新消息/提议，每事件一次",
+      "sources": [
+        {
+          "source_id": "interface",
+          "title": "Interface Sounds",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/interface-sounds",
+          "original_file": "pluck_001.ogg",
+          "original_sha256": "be97ec4893a02d6eccfb678daa76c83e34cb2583b834ec2593d2641def739fa4"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "draft_ready",
+      "label_zh": "草稿展开",
+      "category": "sfx",
+      "path": "static/audio/sfx/draft_ready.mp3",
+      "duration_seconds": 0.685,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "改写草稿预览出现",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookFlip1.ogg",
+          "original_sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "reconcile_invite",
+      "label_zh": "和好邀请",
+      "category": "sfx",
+      "path": "static/audio/sfx/reconcile_invite.mp3",
+      "duration_seconds": 0.505,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "收到新和好邀请",
+      "sources": [
+        {
+          "source_id": "jingles",
+          "title": "Music Jingles",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/music-jingles",
+          "original_file": "jingles_PIZZI05.ogg",
+          "original_sha256": "017e600a154f504039b302b4848a5ad5870248280b4320b037f1d82324988bf5"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "reconcile_complete",
+      "label_zh": "和好拥抱",
+      "category": "sfx",
+      "path": "static/audio/sfx/reconcile_complete.mp3",
+      "duration_seconds": 1.631,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "双方确认和好",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "cloth2.ogg",
+          "original_sha256": "8a7451193c38bc05483aec25dd193e163a15d44cf7fff04ac7912573231b0201"
+        },
+        {
+          "source_id": "jingles",
+          "title": "Music Jingles",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/music-jingles",
+          "original_file": "jingles_PIZZI07.ogg",
+          "original_sha256": "91870588924e0e498c6eb8d4f4ccf8595c9e7dc51fb553797b551062e642ce7c"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。布料与拨弦短乐句组合。",
+      "attribution_required": false
+    },
+    {
+      "id": "quest_reveal",
+      "label_zh": "推荐任务展开",
+      "category": "sfx",
+      "path": "static/audio/sfx/quest_reveal.mp3",
+      "duration_seconds": 1.427,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "三个推荐首次展示",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookFlip1.ogg",
+          "original_sha256": "fa81ac2fedc8c641661b87e349630a36c9800e795e0c800e029214efdbe26a7d"
+        },
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookFlip2.ogg",
+          "original_sha256": "3409042acbfaebc24c1a6327dc073e36f9250841712e96c5040da566a97df73c"
+        },
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookFlip3.ogg",
+          "original_sha256": "c85db5dceb3f1df073e960630277eaa88a5afda0477c1ddd68dad707621767be"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "quest_agreed",
+      "label_zh": "共同确认约会",
+      "category": "sfx",
+      "path": "static/audio/sfx/quest_agreed.mp3",
+      "duration_seconds": 1.002,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "双方同意同一任务",
+      "sources": [
+        {
+          "source_id": "jingles",
+          "title": "Music Jingles",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/music-jingles",
+          "original_file": "jingles_PIZZI01.ogg",
+          "original_sha256": "3f8f2534a297d19386c233a7ee4fa8737cc40870dd206010263760e1983dde46"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "quest_complete",
+      "label_zh": "约会完成",
+      "category": "sfx",
+      "path": "static/audio/sfx/quest_complete.mp3",
+      "duration_seconds": 1.099,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "任务及回忆保存成功",
+      "sources": [
+        {
+          "source_id": "jingles",
+          "title": "Music Jingles",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/music-jingles",
+          "original_file": "jingles_PIZZI03.ogg",
+          "original_sha256": "88da900ec74a79fb845f2dcf2068383998833a9ee1b87a23f074924781af5700"
+        },
+        {
+          "source_id": "sfx100",
+          "title": "100 CC0 SFX",
+          "author": "rubberduck",
+          "license": "CC0 1.0",
+          "source_page": "https://opengameart.org/content/100-cc0-sfx",
+          "original_file": "paper_03.ogg",
+          "original_sha256": "90147dde68b9e2082404f439165bbcb6f7c2364e88e9373d1cd1f7446a37f7b2"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。短乐句与纸张拟音组合。",
+      "attribution_required": false
+    },
+    {
+      "id": "animal_reveal",
+      "label_zh": "动物结果揭晓",
+      "category": "sfx",
+      "path": "static/audio/sfx/animal_reveal.mp3",
+      "duration_seconds": 1.081,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "个人测试结果首次揭晓",
+      "sources": [
+        {
+          "source_id": "jingles",
+          "title": "Music Jingles",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/music-jingles",
+          "original_file": "jingles_PIZZI12.ogg",
+          "original_sha256": "f5fc4c01b106e6317acaee1bffb51704e41c85b0fa7529dff86b447bdabf150c"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "pair_reveal",
+      "label_zh": "双人组合揭晓",
+      "category": "sfx",
+      "path": "static/audio/sfx/pair_reveal.mp3",
+      "duration_seconds": 1.073,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "双人组合首次出现",
+      "sources": [
+        {
+          "source_id": "jingles",
+          "title": "Music Jingles",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/music-jingles",
+          "original_file": "jingles_PIZZI02.ogg",
+          "original_sha256": "4967dc3cd31257716f455ef50f8980378726ce086954c7a5563c0c57ee129e3e"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "memory_save",
+      "label_zh": "回忆放入相册",
+      "category": "sfx",
+      "path": "static/audio/sfx/memory_save.mp3",
+      "duration_seconds": 0.234,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "手动回忆保存成功",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookPlace1.ogg",
+          "original_sha256": "26f3ce60fbde85b678b0ad7f6624d80535fe540d88232ad1e38e47a96662d977"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "memory_open",
+      "label_zh": "翻开回忆",
+      "category": "sfx",
+      "path": "static/audio/sfx/memory_open.mp3",
+      "duration_seconds": 0.427,
+      "loop": false,
+      "recommended_volume": 0.6,
+      "loop_crossfade_seconds": 0,
+      "trigger": "打开回忆或照片大图",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "bookFlip2.ogg",
+          "original_sha256": "3409042acbfaebc24c1a6327dc073e36f9250841712e96c5040da566a97df73c"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。",
+      "attribution_required": false
+    },
+    {
+      "id": "pet_touch",
+      "label_zh": "轻抚宠物",
+      "category": "sfx",
+      "path": "static/audio/sfx/pet_touch.mp3",
+      "duration_seconds": 0.576,
+      "loop": false,
+      "recommended_volume": 0.4,
+      "loop_crossfade_seconds": 0,
+      "trigger": "主动点击宠物",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "cloth1.ogg",
+          "original_sha256": "ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。布料拟音适配抚摸，非真实宠物录音。",
+      "attribution_required": false
+    },
+    {
+      "id": "pet_steps",
+      "label_zh": "宠物小步",
+      "category": "sfx",
+      "path": "static/audio/sfx/pet_steps.mp3",
+      "duration_seconds": 0.531,
+      "loop": false,
+      "recommended_volume": 0.35,
+      "loop_crossfade_seconds": 0,
+      "trigger": "宠物实际移动时",
+      "sources": [
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "footstep02.ogg",
+          "original_sha256": "2d9575b7dead6e1217ca113991fc5229e9b6d998ea0726ebbb277e7398ab888f"
+        },
+        {
+          "source_id": "rpg",
+          "title": "RPG Audio",
+          "author": "Kenney",
+          "license": "CC0 1.0",
+          "source_page": "https://kenney.nl/assets/rpg-audio",
+          "original_file": "footstep03.ogg",
+          "original_sha256": "a86756b9af9f370455ab47844239bb07fd1bee7a113068c91f0fcd9b72703fae"
+        }
+      ],
+      "processing": "MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。通用脚步变速适配，非真实动物爪步。",
+      "attribution_required": false
+    }
+  ]
+}

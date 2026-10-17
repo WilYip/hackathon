@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% set scene_bg = 'forest' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+
+{# 刚测完时标题先不写动物名，免得揭晓前就被看到 #}
+{% block title %}{% if is_new %}{{ t('forest.subtitle') }}{% else %}{{ animal.name }}{% endif %} · {{ t('forest.title') }}{% endblock %}
+{% block body_class %}page-forest{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_forest{% endblock %}
+{% block amb %}amb_forest{% endblock %}
+{% block amb_extra %}env_birds{% endblock %}
+{% block sound_region %}forest{% endblock %}
+{% block sound_enter %}forest_enter{% endblock %}
+
+{% block content %}
+{# 结果页：电脑端左侧大幅动物形象、右侧文字；手机端上下排列。
+   刚测完（is_new）时：动物先藏在灌木丛后面，点一下灌木丛摇晃，再点一下动物蹦出来、飘落树叶
+   （static/js/forest_reveal.js；没有 JavaScript 时直接显示结果；随时可以"直接揭晓"） #}
+<section class="forest">
+  <header class="quest-head">
+    <a class="back-link" href="{{ url_for('forest.index') }}">{{ icon('back', 20) }}<span>{{ t('forest.back_forest') }}</span></a>
+  </header>
+
+  <article class="result card{% if is_new %} is-new{% endif %}" {% if is_new %}data-reveal{% endif %}>
+    <div class="result-figure">
+      {% if is_new %}
+        <div class="bush-stage" data-bush-stage>
+          <span class="bush-animal">{{ avatar(person, 'avatar-hero') }}</span>
+          <button type="button" class="bush js-only" data-bush aria-label="{{ t('forest.reveal.bush_label') }}" aria-describedby="bush-hint">
+            <span class="bush-blob bush-blob-1"></span>
+            <span class="bush-blob bush-blob-2"></span>
+            <span class="bush-blob bush-blob-3"></span>
+            <span class="bush-blob bush-blob-4"></span>
+          </button>
+          <span class="leaf-fall" data-leaf-fall aria-hidden="true"></span>
+        </div>
+        <p class="bush-hint js-only" id="bush-hint" data-bush-hint aria-live="polite"
+           data-hint2="{{ t('forest.reveal.hint_2') }}" data-done="{{ t('forest.reveal.hint_done') }}">{{ t('forest.reveal.hint_1') }}</p>
+        <button type="button" class="btn btn-ghost btn-small js-only bush-skip" data-reveal-skip>{{ t('forest.reveal.skip') }}</button>
+      {% else %}
+        {{ avatar(person, 'avatar-hero') }}
+      {% endif %}
+    </div>
+
+    <div class="result-text" data-reveal-text>
+      <p class="result-kicker">{{ t('forest.you_are') if is_me else t('forest.they_are', name=person.nickname) }}</p>
+      <h1 class="result-name" tabindex="-1" data-result-name>{{ animal.name }}</h1>
+      <p class="result-trait">{{ animal.trait }}</p>
+
+      <h2>{{ t('forest.dims_title') if is_me else t('forest.dims_title_partner', name=person.nickname) }}</h2>
+      <ul class="trait-bars">
+        {% for bar in bars %}
+        <li class="trait-bar">
+          <span class="trait-end{% if bar.winner == 'first' %} is-winner{% endif %}">{{ bar.first }} <small>{{ bar.first_votes }}</small></span>
+          <span class="trait-track" role="img"
+                aria-label="{{ bar.label }}：{{ bar.first }} {{ bar.first_votes }}，{{ bar.second }} {{ bar.second_votes }}">
+            <span class="trait-fill" style="width: {{ bar.percent }}%"></span>
+          </span>
+          <span class="trait-end trait-end-right{% if bar.winner == 'second' %} is-winner{% endif %}"><small>{{ bar.second_votes }}</small> {{ bar.second }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <h2>{{ t('forest.love_title_me') if is_me else t('forest.love_title_partner', name=person.nickname) }}</h2>
+      <p>{{ animal.love }}</p>
+
+      <h2>{{ t('forest.tips_title_me') if is_me else t('forest.tips_title_partner', name=person.nickname) }}</h2>
+      <ul class="tips-list">
+        {% for tip in animal.tips %}<li>{{ icon('heart', 16) }}<span>{{ tip }}</span></li>{% endfor %}
+      </ul>
+
+      {% if is_me %}<p class="hint">{{ t('forest.avatar_note') }}</p>{% endif %}
+
+      <div class="quest-actions result-actions">
+        <a class="btn btn-secondary" href="{{ url_for('forest.index') }}">{{ t('forest.back_forest') }}</a>
+        {% if is_me %}<a class="btn btn-primary" href="{{ url_for('forest.quiz') }}">{{ t('forest.retake') }}</a>{% endif %}
+      </div>
+    </div>
+  </article>
+
+  {# 猜猜看：我已经测完、另一半还没测时，猜 TA 会是 16 种动物里的哪一种（揭晓前可以改） #}
+  {% if guess %}
+  <form method="post" action="{{ url_for('forest.guess') }}" class="guess-card card" id="guess" data-reveal-text>
+    <h2>{{ t('forest.guess.title', name=guess.partner) }}</h2>
+    <p class="hint">{{ t('forest.guess.intro', name=guess.partner) }}</p>
+    <fieldset class="guess-grid">
+      <legend class="visually-hidden">{{ t('forest.guess.title', name=guess.partner) }}</legend>
+      {% for a in guess.choices %}
+      <label class="guess-option">
+        <input type="radio" name="code" value="{{ a.code }}" required {% if a.code == guess.current %}checked{% endif %}>
+        <span class="guess-body">
+          {{ avatar(a, 'avatar-sm') }}
+          <span class="guess-name">{{ a.name }}</span>
+        </span>
+      </label>
+      {% endfor %}
+    </fieldset>
+    <button type="submit" class="btn btn-primary">{{ t('forest.guess.submit') }}</button>
+  </form>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if is_new %}<script src="{{ url_for('static', filename='js/forest_reveal.js') }}"></script>{% endif %}
+{% endblock %}

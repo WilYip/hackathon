@@ -1,0 +1,5204 @@
+/* =========================================================
+   Usland 全站样式（视觉规范见 VISUAL_DESIGN.md）
+   写法：先写手机端样式，再用媒体查询逐级增强
+   断点：平板 ≥ 768px，电脑 ≥ 1024px
+   小岛首页 / 回忆小屋场景：宽度 ≤700px 用竖版构图，其余用横版（第三版素材约定）
+   颜色、圆角、阴影、动效时长来自 static/usland/tokens.css（第三版视觉变量）
+   ========================================================= */
+
+/* ---------- 设计色与尺寸 ---------- */
+:root {
+  /* 第三版配色（明亮午后黏土风）：基础变量来自 static/usland/tokens.css
+     （= docs/ui-v3/integration/tokens.css，队友更新后直接覆盖）。
+     这里只起别名、用 color-mix 调出同色系的浅色，不再写新的颜色值。 */
+  --cream: var(--usland-warm-white); /* 页面底色 */
+  --paper: color-mix(in srgb, var(--usland-warm-white) 45%, #fff); /* 不透明的浅色面板 */
+  --sea: color-mix(in srgb, var(--usland-bay) 45%, #fff);
+  --grass: color-mix(in srgb, var(--usland-sage) 40%, #fff);
+  --mint: color-mix(in srgb, var(--usland-sage) 45%, #fff); /* 浅鼠尾草绿：描边 */
+  --mint-soft: color-mix(in srgb, var(--usland-sage) 16%, #fff);
+  --mint-deep: color-mix(in srgb, var(--usland-sage) 55%, var(--usland-deep-sea)); /* 图标、链接 */
+  --pink: var(--usland-amber); /* 主按钮：琥珀色 */
+  --pink-soft: color-mix(in srgb, var(--usland-terracotta) 16%, #fff);
+  --pink-deep: color-mix(in srgb, var(--usland-terracotta) 70%, var(--usland-deep-sea)); /* 强调文字（白底对比度 ≥ 4.5） */
+  --lilac: var(--usland-sand);
+  --yellow: color-mix(in srgb, var(--usland-amber) 55%, #fff);
+  --yellow-soft: color-mix(in srgb, var(--usland-amber) 22%, #fff);
+  --amber-soft: color-mix(in srgb, var(--usland-amber) 55%, #fff);
+  --amber-deep: color-mix(in srgb, var(--usland-amber) 55%, var(--usland-honey-wood));
+  --text: var(--usland-deep-sea); /* 深色正文 */
+  --text-soft: color-mix(in srgb, var(--usland-deep-sea) 80%, #fff); /* 次要文字（仍保持足够对比度） */
+  --card: var(--paper);
+  --line: color-mix(in srgb, var(--usland-sand) 60%, #fff);
+  --focus: var(--usland-deep-sea);
+
+  --radius-card: var(--usland-radius-panel);
+  --radius-btn: var(--usland-radius-button);
+  --radius-sm: 12px;
+  --shadow: var(--usland-shadow-panel);
+  --shadow-lift: 0 22px 60px rgb(38 63 70 / 22%);
+
+  --fast: var(--usland-motion-fast); /* 普通反馈 */
+  --scene: var(--usland-motion-scene); /* 场景转场 */
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}
+
+/* ---------- 基础 ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* 带 hidden 属性的元素一定隐藏（否则 .btn 之类的 display 设置会让它重新显示出来） */
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  line-height: 1.6;
+  /* 暖白底色上叠几团很淡的鼠尾草绿 / 陶土 / 海湾色光（明亮午后的感觉） */
+  background-color: var(--cream);
+  background-image: radial-gradient(circle at 12% 8%, rgb(127 146 121 / 0.16), transparent 40%),
+    radial-gradient(circle at 92% 18%, rgb(230 185 117 / 0.18), transparent 38%),
+    radial-gradient(circle at 70% 100%, rgb(111 147 148 / 0.16), transparent 45%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  /* iPhone Safari 地址栏问题：先写 100vh 作为回退，再用 100dvh */
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+img,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.3;
+}
+
+/* 文字段落最大行宽约 70 个字符 */
+p {
+  max-width: 70ch;
+}
+
+a {
+  color: inherit;
+}
+
+/* 键盘聚焦时有清晰的焦点框 */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* ---------- 卡片 ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+/* 半透明磨砂玻璃（顶部栏、底部导航、浮在场景上的小面板） */
+.glass {
+  background: rgb(248 245 239 / 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+}
+
+/* ---------- 按钮：柔和、略带立体感 ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px; /* 手机端点击区域不小于 44×44 */
+  min-width: 44px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-btn);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform var(--fast) ease, box-shadow var(--fast) ease, background var(--fast) ease;
+}
+
+.btn-primary {
+  color: var(--text);
+  background: linear-gradient(180deg, var(--amber-soft) 0%, var(--pink) 100%);
+  /* 底部一条深一点的"厚度"，像软软的实体按钮 */
+  box-shadow: 0 4px 0 var(--amber-deep), 0 10px 20px rgb(185 120 112 / 0.18);
+}
+
+.btn-primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--amber-deep), 0 4px 10px rgb(185 120 112 / 0.18);
+}
+
+.btn-secondary {
+  color: var(--text);
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--mint) inset, 0 3px 0 var(--mint);
+}
+
+.btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 2px var(--mint) inset;
+}
+
+.btn-small {
+  min-height: 44px;
+  padding: 6px 14px;
+  font-size: 0.92rem;
+}
+
+.btn-large {
+  min-height: 56px;
+  padding: 12px 32px;
+  font-size: 1.08rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--fast) ease, transform var(--fast) ease;
+}
+
+.pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--yellow);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* ---------- 顶部栏 ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 10px 10px 0;
+  padding-top: max(10px, env(safe-area-inset-top));
+}
+
+.topbar-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 12px;
+  border-radius: 22px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 0;
+  font-weight: 800;
+  font-size: 1.08rem;
+  text-decoration: none;
+}
+
+.brand-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 36vw;
+}
+
+.topnav {
+  display: none; /* 手机 / 平板用底部导航 */
+}
+
+.topbar-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 两人头像：小圆叠在一起（整块是一个链接，点了去初见森林） */
+.couple {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 4px;
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.couple-member {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.couple-member + .couple-member {
+  margin-left: -6px;
+}
+
+.couple-name {
+  display: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lang-switch {
+  display: flex;
+  background: rgb(38 63 70 / 0.06);
+  border-radius: 14px;
+  padding: 3px;
+}
+
+.lang-btn {
+  min-width: 40px;
+  min-height: 38px;
+  border: none;
+  border-radius: 11px;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background var(--fast) ease, color var(--fast) ease;
+}
+
+.lang-btn.active {
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 2px 6px rgb(38 63 70 / 0.12);
+}
+
+/* ---------- 底部导航（手机 / 平板） ---------- */
+.bottom-nav {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 100;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-radius: 22px;
+  padding: 4px;
+}
+
+.bottom-nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 54px;
+  border-radius: 18px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text-soft);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.bottom-nav-link.active {
+  background: #fff;
+  color: var(--pink-deep);
+  box-shadow: 0 2px 8px rgb(38 63 70 / 0.1);
+}
+
+body.logged-in .main {
+  padding-bottom: 96px; /* 给底部导航留空间 */
+}
+
+/* ---------- 主体与底部 ---------- */
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  padding: 12px 16px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+body.logged-in .footer {
+  padding-bottom: 96px;
+}
+
+.footer p {
+  margin: 0 auto;
+}
+
+.hint {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+}
+
+/* ---------- 头像（M6 起换成动物形象；现在是柔和底色 + 首字） ---------- */
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+  /* 径向渐变 + 内阴影：圆润有体积 */
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--lilac) 70%);
+  box-shadow: inset 0 -3px 6px rgb(38 63 70 / 0.12), 0 3px 8px rgb(38 63 70 / 0.12);
+  border: 2px solid #fff;
+}
+
+.avatar-2 {
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--grass) 70%);
+}
+
+.avatar-sm {
+  width: 36px;
+  height: 36px;
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   小岛首页场景（第三版素材：明亮午后黏土风，说明见 docs/ui-v3/）
+   - 屏幕宽度 ≤700px 用竖版构图（1440×2560），其余用横版（2560×1440）
+   - 场景容器保持底图原比例，整张图完整显示（不用 cover 裁切）；
+     容器外用和海面协调的底色填充
+   - 所有图层、热区、动物都用百分比定位，和底图像素坐标一一对应
+   ========================================================= */
+body.page-map {
+  /* 容器外的底色：从主岛底图的天空和海面取色，上浅下深 */
+  --island-sky: #a9c4dc;
+  --island-sea: #3a87b9;
+  --island-deep: #276fa3;
+  background: linear-gradient(180deg, var(--island-sky) 0%, var(--island-sea) 42%, var(--island-deep) 100%);
+  background-attachment: fixed;
+}
+
+.page-map .main {
+  max-width: none; /* 大屏幕上场景可以更宽 */
+  padding: 8px 0 0;
+}
+
+body.logged-in.page-map .main {
+  padding-bottom: 84px; /* 手机 / 平板：给底部导航留空间 */
+}
+
+.map-wrap {
+  /* 顶部栏 + 底部导航 + 边距的总高度：场景高度不超过"屏幕高度 - 这些" */
+  --map-chrome: 160px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - var(--map-chrome));
+  min-height: calc(100dvh - var(--map-chrome));
+}
+
+.layout-mobile {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .layout-desktop {
+    display: none;
+  }
+
+  .layout-mobile {
+    display: block;
+  }
+}
+
+.map-stage {
+  position: relative;
+  margin: 0 auto;
+  aspect-ratio: var(--ratio);
+  /* 等比完整显示：宽度不超过屏幕宽度，也不超过"可用高度 × 宽高比" */
+  width: min(100%, calc((100vh - var(--map-chrome)) * var(--ratio-num)));
+  width: min(100%, calc((100dvh - var(--map-chrome)) * var(--ratio-num)));
+  /* clip 而不是 hidden：hidden 的容器仍然可以被"滚动"，键盘聚焦时可能被滚偏 */
+  overflow: hidden;
+  overflow: clip;
+  background: var(--island-sea); /* 图片还没出来时也像一片海 */
+  /* 让标签字号可以用 cqw（舞台宽度的百分比）随场景一起缩放 */
+  container-type: inline-size;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 701px) {
+  .map-stage {
+    border-radius: var(--usland-radius-panel);
+    box-shadow: var(--usland-shadow-panel);
+  }
+}
+
+/* 图片加载中：一道柔光扫过 */
+.map-stage.is-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  pointer-events: none;
+}
+
+/* 和底图一样大的图层：底图、海浪视频、柔光层、石像阴影 */
+.scene-base,
+.scene-waves,
+.scene-glow,
+.statue-shadow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  pointer-events: none;
+}
+
+.scene-waves {
+  object-fit: cover; /* 视频和底图同比例，cover 不会裁到东西 */
+}
+
+/* 五个入口的透明柔光：平时看不见，悬停 / 聚焦时淡入，按下时更亮一点 */
+.scene-glow {
+  z-index: 5;
+  opacity: 0;
+  transition: opacity var(--fast) ease, filter var(--fast) ease;
+}
+
+.scene-glow.is-hover,
+.scene-glow.is-pressed {
+  opacity: 1;
+}
+
+.scene-glow.is-pressed {
+  filter: brightness(1.25) saturate(1.1);
+}
+
+/* ---------- 森林石像 ---------- */
+.statue-shadow {
+  z-index: 8;
+}
+
+.statue {
+  position: absolute;
+  z-index: 9;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ---------- 热区：透明的 HTML 按钮区域 ---------- */
+.hotspot {
+  position: absolute;
+  z-index: 20;
+  border-radius: var(--usland-radius-panel);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 键盘聚焦时：柔光层亮起 + 名称标签出现焦点框（见 .region-label.is-focus），热区本身不画大方框 */
+.hotspot:focus-visible {
+  outline: none;
+}
+
+/* ---------- 常驻名称标签 ---------- */
+.region-label,
+.name-chip {
+  position: absolute;
+  z-index: 60;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  padding: 0.35em 0.95em;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--text);
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: 0 0.3cqw 0.9cqw rgb(38 63 70 / 0.2);
+  transition: transform var(--fast) ease, box-shadow var(--fast) ease;
+}
+
+.region-label {
+  font-size: clamp(12px, 1.2cqw, 18px);
+  min-height: 32px;
+  cursor: pointer;
+}
+
+.region-label .icon {
+  color: var(--usland-terracotta);
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.region-label.is-hover {
+  transform: translate(-50%, -62%);
+  box-shadow: 0 0.6cqw 1.4cqw rgb(38 63 70 / 0.24);
+}
+
+.region-label.is-focus {
+  box-shadow: var(--usland-focus);
+}
+
+/* 按压反馈：标签往下一压 */
+.region-label.is-pressed {
+  transform: translate(-50%, -45%) scale(0.95);
+}
+
+/* 还没做测试：森林的名称标签轻轻呼吸，提示"从这里开始" */
+.region-label.is-guide {
+  animation: guide-glow 2.6s ease-in-out infinite;
+}
+
+@keyframes guide-glow {
+  0%,
+  100% {
+    box-shadow: 0 0.3cqw 0.9cqw rgb(38 63 70 / 0.2), 0 0 0 0 rgb(230 185 117 / 0.6);
+  }
+  50% {
+    box-shadow: 0 0.3cqw 0.9cqw rgb(38 63 70 / 0.2), 0 0 0 8px rgb(230 185 117 / 0);
+  }
+}
+
+/* 标签上方的小提示：未读传话 / 轮到你选 / 从这里开始 */
+.map-badge {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--pink-deep);
+  color: #fff;
+  font-size: clamp(11px, 0.95cqw, 14px);
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+}
+
+.map-badge .icon {
+  color: #fff;
+}
+
+.name-chip {
+  z-index: 45;
+  font-size: clamp(11px, 1.05cqw, 16px);
+  pointer-events: none;
+  /* --nudge-x：两张名牌太近时由 map.js 往外推开的距离（不加过渡，map.js 要立刻量到真实位置） */
+  transform: translate(calc(-50% + var(--nudge-x, 0px)), -50%);
+  transition: none;
+}
+
+/* 心情文字放在名牌正下方，不把名牌撑宽（两只动物离得很近） */
+.name-chip .chip-mood {
+  position: absolute;
+  top: calc(100% + 0.3em);
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 6px rgb(38 63 70 / 0.16);
+}
+
+.name-chip.is-waiting {
+  color: var(--text-soft);
+  background: rgb(250 248 243 / 0.92);
+  border: 1.5px dashed var(--usland-sand);
+}
+
+/* ---------- 野餐垫上的两只动物 ---------- */
+.animal {
+  position: absolute;
+  z-index: 30; /* 在热区上面：点动物不会误进约会告示牌 */
+  display: block;
+  padding: 0;
+  border: none;
+  background: none;
+  border-radius: 40%;
+  cursor: pointer;
+  transform-origin: 50% 94%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.animal:disabled {
+  cursor: default;
+}
+
+.animal-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  transform-origin: 50% 94%;
+  /* 脚下贴地的一点阴影，让立绘"站"在野餐垫上 */
+  filter: drop-shadow(0 0.2cqw 0.25cqw rgb(38 63 70 / 0.22));
+  animation: breathe 3.6s ease-in-out infinite;
+}
+
+/* 没做测试的占位剪影：安静地等着，不呼吸 */
+.animal.is-slot .animal-img {
+  animation: none;
+  filter: none;
+}
+
+.animal:focus-visible {
+  outline: none;
+}
+
+.animal:focus-visible .animal-img {
+  filter: drop-shadow(0 0 0.3cqw #fff) drop-shadow(0 0 0.35cqw var(--usland-deep-sea));
+}
+
+.animal.react-wave {
+  animation: react-wave 700ms ease;
+}
+
+.animal.react-tilt {
+  animation: react-tilt 700ms ease;
+}
+
+.animal.react-hop {
+  animation: react-hop 600ms ease;
+}
+
+/* 点动物时飘出的小爱心 */
+.float-heart {
+  position: absolute;
+  z-index: 65;
+  width: clamp(16px, 1.8cqw, 28px);
+  height: clamp(16px, 1.8cqw, 28px);
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  background: no-repeat center / contain
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z' fill='%23b97870'/%3E%3C/svg%3E");
+  animation: float-up 1.2s ease-out forwards;
+}
+
+/* 进入森林时探头的小动物 */
+.peek {
+  position: absolute;
+  z-index: 12;
+  width: 7cqw;
+  aspect-ratio: 1;
+  transform: translate(-50%, 20%) scale(0.4);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.peek img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.is-peeking .peek {
+  animation: peek 480ms ease forwards;
+}
+
+/* ---------- 失败、调试 ---------- */
+.scene-error {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  z-index: 90;
+  transform: translateX(-50%);
+  width: min(90%, 460px);
+  padding: 12px 16px;
+  border-radius: var(--usland-radius-panel);
+  align-items: center;
+  gap: 12px;
+}
+
+.scene-error p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.img-failed .scene-error {
+  display: flex;
+}
+
+.debug .hotspot {
+  outline: 2px solid #e5484d;
+  background: rgb(229 72 77 / 0.12);
+}
+
+.debug .animal,
+.debug .statue {
+  outline: 2px dashed #8b5cf6;
+}
+
+.debug-id {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 1px 6px;
+  background: #e5484d;
+  color: #fff;
+  font: 700 11px/1.4 ui-monospace, Consolas, monospace;
+  border-radius: 0 0 6px 0;
+}
+
+/* 新用户第一次进入小岛：去初见森林的温和引导 */
+.forest-intro {
+  text-align: center;
+}
+
+.forest-intro-icon {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 4px;
+  color: var(--usland-sage);
+}
+
+.forest-intro > p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 电脑：只有顶部栏，没有底部导航 */
+@media (min-width: 1024px) {
+  .map-wrap {
+    --map-chrome: 96px;
+  }
+
+  body.logged-in.page-map .main {
+    padding-bottom: 16px;
+  }
+}
+
+/* ---------- 只有一人时：等 TA 加入 ---------- */
+.waiting-card {
+  padding: 20px;
+  text-align: center;
+}
+
+.waiting-card h2 {
+  font-size: 1.08rem;
+  margin: 0 0 8px;
+}
+
+.waiting-card p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.waiting-compact {
+  margin: 12px auto 0;
+  max-width: 560px;
+  padding: 12px 16px;
+}
+
+.waiting-compact .copy-status:empty {
+  display: none;
+}
+
+/* ---------- 面板（<dialog>） ---------- */
+.panel {
+  border: none;
+  padding: 28px 24px 24px;
+  width: calc(100% - 32px);
+  max-width: 520px;
+  border-radius: 28px;
+  background: var(--cream);
+  color: var(--text);
+  box-shadow: var(--shadow-lift);
+}
+
+.panel[open] {
+  animation: panel-in 250ms ease;
+}
+
+/* 注意：不要给 ::backdrop 加 backdrop-filter 模糊——在部分 Chromium 版本里会把弹窗本身也一起糊掉 */
+.panel::backdrop {
+  background: rgb(38 63 70 / 0.36);
+}
+
+.panel h2 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+}
+
+.panel > p {
+  margin: 0 0 16px;
+  color: var(--text-soft);
+}
+
+.panel-close-form {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  margin: 0;
+}
+
+.note-cards {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+/* 便签风格的任务卡片 */
+.note-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  box-shadow: 0 6px 14px rgb(38 63 70 / 0.1);
+  font-weight: 600;
+}
+
+.note-card strong {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.note-yellow {
+  background: var(--yellow);
+  transform: rotate(-1deg);
+}
+
+.note-pink {
+  background: var(--pink-soft);
+  transform: rotate(0.8deg);
+}
+
+.note-mint {
+  background: #d3ecd9;
+  transform: rotate(-0.6deg);
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.panel-actions .btn {
+  width: 100%;
+}
+
+.panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.panel-list form {
+  margin: 0;
+}
+
+.panel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 54px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line) inset;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--fast) ease;
+}
+
+.panel-row span {
+  flex: 1;
+}
+
+.panel-row .icon:last-child:not(:first-child) {
+  transform: rotate(180deg); /* 返回箭头翻转成"进入" */
+  color: var(--text-soft);
+}
+
+/* 手机：面板从底部弹出 */
+@media (max-width: 767px) {
+  .panel {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 28px 28px 0 0;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .panel[open] {
+    animation: sheet-in 280ms ease;
+  }
+}
+
+/* =========================================================
+   表单页面（创建 / 加入 / 登录 / 邀请码）
+   ========================================================= */
+.form-card {
+  width: 100%;
+  max-width: 480px;
+  margin: 8px auto;
+  padding: 26px 20px;
+}
+
+.form-card h1 {
+  margin: 0 0 12px;
+  font-size: 1.5rem;
+}
+
+.form-intro {
+  color: var(--text-soft);
+  margin: -6px 0 16px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.field-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+.field-hint {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.field input[type="text"],
+.field input[type="password"] {
+  min-height: 50px;
+  padding: 10px 14px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  box-shadow: inset 0 2px 4px rgb(38 63 70 / 0.05);
+  font: inherit;
+  /* 16px 以上避免 iPhone Safari 聚焦时自动放大页面 */
+  font-size: 1rem;
+  color: var(--text);
+  width: 100%;
+  transition: border-color var(--fast) ease, box-shadow var(--fast) ease;
+}
+
+.field input:focus {
+  border-color: var(--mint-deep);
+  outline: none;
+  box-shadow: 0 0 0 4px rgb(127 146 121 / 0.7);
+}
+
+.code-input {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace !important;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--mint-deep);
+}
+
+.form-error {
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin: 0 0 16px;
+  font-weight: 600;
+}
+
+.form-footer {
+  text-align: center;
+  margin: 16px auto 0;
+}
+
+.form-footer a {
+  display: inline-block;
+  padding: 10px 0;
+  color: var(--pink-deep);
+  font-weight: 700;
+}
+
+/* 中文 / English 两个并排的选项、登录时选择成员：选中时抬起并显示勾，不只靠颜色区分 */
+.segmented {
+  display: flex;
+  gap: 8px;
+}
+
+.segmented label,
+.member-choice {
+  position: relative; /* 让隐藏的单选框定位在卡片内部 */
+  flex: 1;
+  cursor: pointer;
+}
+
+.segmented input,
+.member-choice input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-weight: 700;
+  transition: transform var(--fast) ease, border-color var(--fast) ease;
+}
+
+.segmented input:checked + span,
+.member-choice input:checked + .member-card {
+  border-color: var(--mint-deep);
+  background: var(--mint-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgb(38 63 70 / 0.1);
+}
+
+.segmented input:checked + span::before,
+.member-choice input:checked + .member-card::before {
+  content: "✓";
+  margin-right: 6px;
+  color: var(--mint-deep);
+  font-weight: 800;
+}
+
+.member-choice input:checked + .member-card::before {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  margin: 0;
+}
+
+.segmented input:focus-visible + span,
+.member-choice input:focus-visible + .member-card {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.member-choices {
+  display: flex;
+  gap: 12px;
+}
+
+.member-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  transition: transform var(--fast) ease, border-color var(--fast) ease;
+}
+
+.member-name {
+  font-weight: 700;
+  word-break: break-all;
+  text-align: center;
+}
+
+/* ---------- 邀请码 ---------- */
+.invite-page {
+  text-align: center;
+}
+
+.invite-page p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.invite-art {
+  width: min(100%, 300px);
+  margin: 0 auto 12px;
+}
+
+.invite-code-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px 0 4px;
+}
+
+.invite-code {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  background: var(--yellow);
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  box-shadow: inset 0 -3px 0 rgba(90, 66, 16, 0.12);
+}
+
+.invite-code-big {
+  font-size: 2rem;
+}
+
+.copy-status {
+  min-height: 1.6em;
+  margin: 0 auto;
+  color: var(--pink-deep);
+  font-weight: 700;
+}
+
+.invite-page .btn-block {
+  margin-top: 12px;
+}
+
+/* ---------- 小岛插图预览（欢迎页 / 邀请页） ---------- */
+.scene-preview {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  overflow: clip;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-lift);
+  background: var(--usland-bay);
+}
+
+.scene-preview img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--ratio);
+}
+
+@media (max-width: 700px) {
+  .scene-preview img {
+    aspect-ratio: var(--ratio-mobile);
+  }
+}
+
+/* ---------- 欢迎页 ---------- */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.welcome-logo {
+  width: 208px;
+  height: auto;
+  margin: 0 auto 4px;
+}
+
+.welcome-art {
+  width: 100%;
+  max-width: 760px;
+}
+
+.welcome-text {
+  width: 100%;
+  max-width: 560px;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.welcome h1 {
+  margin: 0 0 6px;
+  font-size: 1.75rem;
+}
+
+.welcome .tagline {
+  color: var(--pink-deep);
+  font-weight: 700;
+  margin: 0 auto 8px;
+}
+
+.welcome-text p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* ---------- 功能占位页 ---------- */
+.feature {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 12px 0 4px;
+  border-radius: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text-soft);
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.feature-art {
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--mint-soft), var(--mint));
+}
+
+.feature-art img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+}
+
+.feature-art-crop {
+  background-repeat: no-repeat;
+  max-height: 340px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.feature-art-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  color: var(--mint-deep);
+}
+
+.feature-text h1 {
+  margin: 8px 0 6px;
+  font-size: 1.6rem;
+}
+
+.feature-text form {
+  margin-top: 16px;
+}
+
+/* =========================================================
+   动画
+   ========================================================= */
+@keyframes shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-3%) rotate(-1.2deg);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.03, 0.98);
+  }
+}
+
+@keyframes react-wave {
+  20% {
+    transform: rotate(-9deg);
+  }
+  45% {
+    transform: rotate(8deg);
+  }
+  70% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes react-tilt {
+  30%,
+  70% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes react-hop {
+  40% {
+    transform: translateY(-14%);
+  }
+  70% {
+    transform: translateY(0) scale(1.05, 0.95);
+  }
+}
+
+@keyframes float-up {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -180%) scale(1.1);
+  }
+}
+
+@keyframes peek {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20%) scale(0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -30%) scale(1);
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* 尊重系统"减少动态效果"设置：关闭动画，功能不受影响 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 小信箱里手动打开"减少动态效果"（Cookie，见 app.py 的 reduce_motion）：效果同上 */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* =========================================================
+   平板 ≥ 768px
+   ========================================================= */
+@media (min-width: 768px) {
+  .topbar {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .main {
+    padding: 24px;
+  }
+
+  .brand-name {
+    max-width: 260px;
+  }
+
+  .form-card {
+    padding: 34px 36px;
+  }
+
+  .welcome-text {
+    padding: 32px;
+  }
+
+  .feature-card {
+    flex-direction: row;
+    align-items: center;
+    padding: 28px;
+  }
+
+  .feature-art {
+    flex: 0 0 44%;
+  }
+
+  .note-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .note-card {
+    flex-direction: column;
+    text-align: center;
+    min-height: 150px;
+    justify-content: center;
+  }
+
+  .panel-actions .btn {
+    width: auto;
+  }
+}
+
+/* =========================================================
+   电脑 ≥ 1024px
+   ========================================================= */
+@media (min-width: 1024px) {
+  .topbar-inner {
+    padding: 6px 8px 6px 16px;
+    gap: 16px;
+  }
+
+  /* 完整横向导航 */
+  .topnav {
+    display: flex;
+    gap: 2px;
+  }
+
+  .topnav-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: var(--text-soft);
+    transition: background var(--fast) ease, color var(--fast) ease;
+  }
+
+  .topnav-link:hover {
+    background: rgb(127 146 121 / 0.35);
+    color: var(--text);
+  }
+
+  .topnav-link.active {
+    background: var(--mint);
+    color: var(--text);
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  body.logged-in .main,
+  body.logged-in .footer {
+    padding-bottom: 24px;
+  }
+
+  body.logged-in.page-map .main {
+    padding-bottom: 16px;
+  }
+
+  /* 只有一人时的邀请横幅浮在场景底部，不额外占高度 */
+  .map-wrap .waiting-compact {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    z-index: 95;
+    transform: translateX(-50%);
+    margin: 0;
+    width: max-content;
+    max-width: 90%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+  }
+
+  .map-wrap .waiting-compact h2 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .map-wrap .waiting-compact .invite-code-row {
+    margin: 0;
+  }
+
+  .map-wrap .waiting-compact .copy-status {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    text-align: center;
+  }
+
+  /* 悬停效果 */
+  .btn:not(:disabled):hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-primary:not(:disabled):hover {
+    box-shadow: 0 6px 0 var(--amber-deep), 0 14px 26px rgb(185 120 112 / 0.22);
+  }
+
+  .icon-btn:hover,
+  .back-link:hover {
+    background: rgb(127 146 121 / 0.35);
+    color: var(--text);
+  }
+
+  .panel-row:hover {
+    background: var(--mint-soft);
+  }
+
+  .member-choice:hover .member-card {
+    transform: translateY(-2px);
+    border-color: var(--mint);
+  }
+
+  .lang-btn:not(.active):hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  /* 欢迎页：左图右文 */
+  .page-welcome .main {
+    display: flex;
+    align-items: center;
+  }
+
+  .welcome {
+    flex-direction: row;
+    justify-content: center;
+    gap: 48px;
+    width: 100%;
+  }
+
+  .welcome.no-art .welcome-text {
+    max-width: 640px;
+  }
+
+  .welcome-art {
+    flex: 1 1 58%;
+  }
+
+  .welcome-text {
+    flex: 1 1 42%;
+    text-align: left;
+    padding: 40px;
+  }
+
+  .welcome-text p {
+    margin-left: 0;
+  }
+
+  .welcome h1 {
+    font-size: 2.3rem;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+}
+
+/* 宽屏：顶部栏显示两人昵称 */
+@media (min-width: 1280px) {
+  .couple-name {
+    display: inline;
+  }
+
+  .couple-member + .couple-member {
+    margin-left: 10px;
+  }
+}
+
+/* =========================================================
+   温柔传话（M4）
+   手机：聊天区占满屏幕，底部导航隐藏；电脑：左侧状态栏 + 中间聊天区（最大约 760px）
+   视觉细节待统一打磨，见 PROGRESS.md 的"视觉待办"
+   ========================================================= */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 背景只保留柔和的海景色调 */
+body.page-whisper {
+  background-image: radial-gradient(circle at 10% 0%, rgb(111 147 148 / 0.55), transparent 45%),
+    radial-gradient(circle at 100% 100%, rgb(127 146 121 / 0.45), transparent 45%);
+}
+
+.page-whisper .main {
+  padding: 8px 8px 0;
+}
+
+body.logged-in.page-whisper .main {
+  padding-bottom: 0;
+}
+
+.page-whisper .bottom-nav {
+  display: none; /* 聊天时把空间留给输入框 */
+}
+
+.whisper {
+  position: relative;
+  /* 高度 = 可见区域 - 顶部栏；--vvh 由 whisper.js 根据键盘弹起后的真实可见高度设置 */
+  height: calc(100vh - 76px);
+  height: calc(var(--vvh, 100dvh) - 76px);
+}
+
+.whisper-side {
+  display: none; /* 手机端隐藏，顶部的 chat-head 显示对方和"和好" */
+}
+
+.whisper-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 8px 10px 6px;
+  border-radius: 22px;
+}
+
+/* 手机端聊天区顶部 */
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chat-head-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* "和好"按下后的样子：不只靠颜色，还有粉色描边 */
+[data-reconcile][aria-pressed="true"] {
+  background: var(--pink-soft);
+  box-shadow: 0 0 0 2px var(--pink) inset;
+  color: var(--pink-deep);
+}
+
+.partner-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px auto 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+  font-weight: 700;
+  font-size: 0.92rem;
+  animation: panel-in 250ms ease;
+}
+
+.partner-banner[hidden] {
+  display: none;
+}
+
+/* ---------- 消息 ---------- */
+.chat-log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 4px;
+  overscroll-behavior: contain;
+}
+
+.chat-state {
+  margin: auto;
+  text-align: center;
+  color: var(--text-soft);
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 82%;
+  animation: panel-in 200ms ease;
+}
+
+.msg-mine {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.msg-theirs {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+/* 圆润的信纸气泡：自己的偏粉，对方的偏白 + 薄荷描边 */
+.bubble {
+  padding: 10px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgb(38 63 70 / 0.08);
+}
+
+.msg-mine .bubble {
+  background: var(--pink-soft);
+  border-bottom-right-radius: 6px;
+}
+
+.msg-theirs .bubble {
+  background: #fff;
+  box-shadow: 0 0 0 1.5px var(--mint) inset, 0 4px 12px rgb(38 63 70 / 0.06);
+  border-bottom-left-radius: 6px;
+}
+
+.bubble-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bubble-original {
+  margin: 8px 0 0;
+  padding-top: 6px;
+  border-top: 1px dashed rgb(38 63 70 / 0.25);
+  font-size: 0.86rem;
+  color: var(--text-soft);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.original-toggle {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin-top: 2px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--pink-deep);
+  cursor: pointer;
+}
+
+.msg-time {
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+}
+
+/* ---------- 输入区 ---------- */
+.composer {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.composer textarea {
+  width: 100%;
+  min-height: 52px;
+  max-height: 30vh;
+  padding: 10px 14px;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  font: inherit;
+  font-size: 1rem; /* 16px 以上，iPhone 聚焦时不会自动放大 */
+  color: var(--text);
+  resize: vertical;
+}
+
+.composer textarea:focus {
+  outline: none;
+  border-color: var(--mint-deep);
+  box-shadow: 0 0 0 4px rgb(127 146 121 / 0.7);
+}
+
+.composer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.char-count {
+  margin-right: auto;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+.composer-error {
+  margin: 4px 0 0;
+  min-height: 1.2em;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--pink-deep);
+}
+
+.composer-error:empty {
+  display: none;
+}
+
+.not-counseling {
+  margin: 4px auto 0;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-soft);
+}
+
+.need-key {
+  margin: 8px 0;
+  padding: 18px;
+  text-align: center;
+}
+
+.need-key h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.need-key p {
+  margin: 0 auto 12px;
+  color: var(--text-soft);
+}
+
+.need-key[hidden],
+.composer[hidden] {
+  display: none;
+}
+
+/* 送信小动画：一个信封从输入区飞出去 */
+.send-flight {
+  position: absolute;
+  right: 40px;
+  bottom: 90px;
+  color: var(--pink-deep);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.send-flight.is-flying {
+  animation: send-fly 900ms ease-out;
+}
+
+@keyframes send-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.8) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-60px, -160px) scale(1.2) rotate(-14deg);
+  }
+}
+
+/* ---------- 左侧栏（电脑端） ---------- */
+.whisper-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.whisper-people li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.person-name {
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.person-name small {
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.avatar-img {
+  object-fit: contain;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--mint) 80%);
+}
+
+.reconcile-status {
+  min-height: 1.4em;
+  margin: 6px 0 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--pink-deep);
+}
+
+.whisper-tips h2 {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.whisper-tips ul {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 0.86rem;
+  color: var(--text-soft);
+}
+
+.whisper-tips li + li {
+  margin-top: 6px;
+}
+
+.key-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: auto 0 0;
+  font-size: 0.8rem;
+  color: var(--mint-deep);
+}
+
+.key-status[hidden] {
+  display: none;
+}
+
+/* ---------- 弹窗：API key ---------- */
+.key-tutorial {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line) inset;
+}
+
+.key-tutorial summary {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.key-tutorial ol {
+  margin: 8px 0 4px;
+  padding-left: 1.3em;
+  font-size: 0.92rem;
+}
+
+.key-tutorial li + li {
+  margin-top: 6px;
+}
+
+.key-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.key-input-row input {
+  flex: 1;
+  min-width: 0;
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace !important;
+}
+
+.key-message {
+  min-height: 1.4em;
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.key-message.is-error {
+  color: var(--pink-deep);
+}
+
+.key-message.is-success {
+  color: var(--mint-deep);
+}
+
+/* ---------- 弹窗：温柔转达预览 ---------- */
+.preview-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 0 12px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.preview-loading[hidden] {
+  display: none;
+}
+
+.loading-envelope {
+  color: var(--pink-deep);
+  animation: bob 1.4s ease-in-out infinite;
+}
+
+.original-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgb(38 63 70 / 0.05);
+  font-size: 0.86rem;
+  color: var(--text-soft);
+}
+
+.original-note p {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* 主要信纸：最终会发出去的版本 */
+.letter-card {
+  display: block;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  border: none;
+  border-radius: 18px;
+  background-color: var(--paper);
+  /* 淡淡的信纸横线 */
+  background-image: repeating-linear-gradient(transparent 0 31px, rgb(185 120 112 / 0.12) 31px 32px);
+  box-shadow: 0 0 0 1.5px var(--pink) inset, 0 8px 18px rgb(38 63 70 / 0.08);
+  font: inherit;
+  font-size: 1.12rem;
+  line-height: 32px;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.letter-edit {
+  resize: vertical;
+}
+
+.letter-edit:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--mint-deep) inset, 0 0 0 4px rgb(127 146 121 / 0.6);
+}
+
+.preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.preview-error {
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+/* ---------- 弹窗：安全卡片 ---------- */
+.help-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.help-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 8px 8px 14px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line) inset;
+  font-size: 0.92rem;
+}
+
+.help-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: var(--yellow);
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ---------- 和好：拥抱动画 ---------- */
+.hug-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgb(242 237 227 / 0.92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.hug-overlay[hidden] {
+  display: none;
+}
+
+.hug-stage {
+  position: relative;
+  width: min(86vw, 420px);
+  height: 170px;
+}
+
+.hug-animal {
+  position: absolute;
+  bottom: 0;
+}
+
+.hug-animal .avatar {
+  width: 120px;
+  height: 120px;
+  font-size: 2.6rem;
+}
+
+/* 和好姿态（队友交付后自动使用）：侧身图，右边的那只镜像翻转，面对面 */
+.hug-pose {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+.hug-right .hug-pose {
+  transform: scaleX(-1);
+}
+
+.hug-left {
+  left: calc(50% - 112px);
+}
+
+.hug-right {
+  right: calc(50% - 112px);
+}
+
+.hug-hearts {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  color: var(--usland-terracotta);
+}
+
+.hug-heart {
+  position: absolute;
+  opacity: 0;
+}
+
+.hug-text {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--pink-deep);
+}
+
+/* 从两侧走近 → 拥抱时轻轻一挤 → 爱心飘出 */
+.hug-overlay.is-playing .hug-left {
+  animation: hug-from-left 1.4s ease-out both;
+}
+
+.hug-overlay.is-playing .hug-right {
+  animation: hug-from-right 1.4s ease-out both;
+}
+
+.hug-overlay.is-playing .hug-heart {
+  animation: hug-heart 1.6s ease-out both;
+  animation-delay: calc(1.1s + var(--i) * 0.18s);
+}
+
+.hug-overlay.is-playing .hug-text {
+  animation: panel-in 400ms ease 1.2s both;
+}
+
+@keyframes hug-from-left {
+  0% {
+    transform: translateX(-46vw);
+  }
+  70% {
+    transform: translateX(10px);
+  }
+  85% {
+    transform: translateX(14px) scale(1.06, 0.95);
+  }
+  100% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes hug-from-right {
+  0% {
+    transform: translateX(46vw);
+  }
+  70% {
+    transform: translateX(-10px);
+  }
+  85% {
+    transform: translateX(-14px) scale(1.06, 0.95);
+  }
+  100% {
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes hug-heart {
+  0% {
+    opacity: 0;
+    transform: translate(calc((var(--i) - 2) * 26px), 40px) scale(0.5);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc((var(--i) - 2) * 40px), -70px) scale(1.2);
+  }
+}
+
+/* 手机：预览弹窗的按钮竖排，主要按钮在最上面 */
+@media (max-width: 767px) {
+  .preview-actions {
+    flex-direction: column-reverse;
+  }
+
+  .preview-actions .btn {
+    width: 100%;
+  }
+
+  .composer-row .btn-primary {
+    flex: 1;
+  }
+}
+
+/* 电脑：左侧状态栏 + 中间聊天区 */
+@media (min-width: 1024px) {
+  .page-whisper .main {
+    padding: 16px 24px 0;
+  }
+
+  .whisper {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 760px);
+    justify-content: center;
+    gap: 24px;
+    height: calc(100vh - 104px);
+    height: calc(100dvh - 104px);
+  }
+
+  .whisper-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .whisper-side .back-link {
+    margin: -6px 0 0 -6px;
+  }
+
+  .chat-head {
+    display: none;
+  }
+
+  /* 电脑端左侧栏已经显示"等 TA 回应"，横幅只用来提示"TA 想和好啦" */
+  .partner-banner.is-mine {
+    display: none;
+  }
+
+  .whisper-main {
+    padding: 12px 20px 8px;
+  }
+
+  .original-toggle:hover {
+    text-decoration: underline;
+  }
+}
+
+/* =========================================================
+   通用：一次性提示、只在有 JavaScript 时显示的元素
+   ========================================================= */
+.flash-list {
+  max-width: 760px;
+  margin: 0 auto 12px;
+}
+
+.flash {
+  margin: 0 0 8px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  font-weight: 600;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.flash-error {
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+}
+
+.flash-info {
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
+/* 没有 JavaScript 时：隐藏"下一步"等按钮，问题和表单全部直接显示 */
+.js-only {
+  display: none !important;
+}
+
+html.js .js-only:not([hidden]) {
+  display: inline-flex !important;
+}
+
+html.js .js-collapsed {
+  display: none;
+}
+
+.field textarea {
+  width: 100%;
+  min-height: 90px;
+  padding: 10px 14px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  resize: vertical;
+}
+
+.field textarea:focus {
+  outline: none;
+  border-color: var(--mint-deep);
+  box-shadow: 0 0 0 4px rgb(127 146 121 / 0.7);
+}
+
+.field-error {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+.field-error:empty {
+  display: none;
+}
+
+/* =========================================================
+   约会选选选（M5）：木质告示牌、彩色便签、旅行任务卡
+   视觉细节待统一打磨，见 PROGRESS.md 的"视觉待办"
+   ========================================================= */
+body.page-quest {
+  background-image: radial-gradient(circle at 0% 0%, rgb(230 185 117 / 0.5), transparent 42%),
+    radial-gradient(circle at 100% 30%, rgb(185 120 112 / 0.3), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgb(127 146 121 / 0.4), transparent 45%);
+}
+
+.quest {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.quest-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+
+.quest-head h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.quest-cancel {
+  margin: 0 0 0 auto;
+}
+
+.quest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.quest-actions form {
+  margin: 0;
+}
+
+/* 木质告示牌：木框 + 浅色软木板 */
+.board-card {
+  padding: 22px 18px;
+  background: linear-gradient(180deg, var(--yellow-soft) 0%, #f4e0bd 100%);
+  border: 8px solid #d9a877;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6), var(--shadow-lift);
+}
+
+.board-lead {
+  margin: 0 auto 16px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ---------- 一步一题 ---------- */
+.wizard {
+  padding: 20px 16px;
+}
+
+.wizard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wizard-progress {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+/* 进度：一串小脚印，答过的点亮 */
+.footprints {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footprints li {
+  width: 14px;
+  height: 18px;
+  border-radius: 50% 50% 45% 45%;
+  background: #e8e0d4;
+  transform: rotate(-12deg);
+  transition: background var(--fast) ease, transform var(--fast) ease;
+}
+
+.footprints li:nth-child(even) {
+  transform: rotate(12deg) translateY(5px);
+}
+
+.footprints li.is-done {
+  background: var(--mint-deep);
+}
+
+.footprints li.is-current {
+  box-shadow: 0 0 0 3px rgb(127 146 121 / 0.3);
+}
+
+.partner-ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.wizard-step {
+  border: none;
+  margin: 18px 0 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.wizard-question {
+  padding: 0;
+  margin-bottom: 14px;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+/* 选项卡片：手机竖排；电脑一行 3–5 个 */
+.option-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.option-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.option-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.option-body {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+  min-height: 64px;
+  padding: 12px 44px 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform var(--fast) ease, border-color var(--fast) ease, box-shadow var(--fast) ease,
+    background var(--fast) ease;
+}
+
+.option-emoji {
+  grid-row: 1 / 3;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.option-label {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.option-hint {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+/* 选中：抬起 + 右上角勾选标记，不只靠颜色区分 */
+.option-check {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  margin-top: -13px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--mint-deep);
+  color: #fff;
+}
+
+.option-card input:checked + .option-body {
+  border-color: var(--mint-deep);
+  background: var(--mint-soft);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgb(38 63 70 / 0.14);
+}
+
+.option-card input:checked + .option-body .option-check {
+  display: flex;
+}
+
+.option-card input:focus-visible + .option-body {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.wizard-error {
+  margin: 12px 0 0;
+  min-height: 1.4em;
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+.wizard-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ---------- 等待对方 ---------- */
+.waiting-board {
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.waiting-board h2 {
+  margin: 12px 0 6px;
+  font-size: 1.25rem;
+}
+
+.waiting-board p {
+  margin: 0 auto;
+  color: var(--text-soft);
+}
+
+.board-scene {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 14px;
+}
+
+.board-sign {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 84px;
+  border: 6px solid #d9a877;
+  border-radius: 16px;
+  background: var(--yellow-soft);
+  color: #b9774a;
+}
+
+.board-pet .avatar {
+  width: 64px;
+  height: 64px;
+  animation: breathe 3.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+/* ---------- 你们的选择 ---------- */
+.choices-summary {
+  padding: 16px 18px;
+}
+
+.choices-summary h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.choices-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.choices-row + .choices-row {
+  margin-top: 8px;
+}
+
+.choices-row .who {
+  font-weight: 800;
+  min-width: 3em;
+}
+
+.choice-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.choice-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--cream);
+  box-shadow: 0 0 0 1px var(--line) inset;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+/* ---------- 共同选择：状态说明条 ---------- */
+.decide-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line) inset;
+  font-weight: 700;
+}
+
+.decide-status.is-mine {
+  background: var(--pink-soft);
+  box-shadow: 0 0 0 2px var(--pink-deep) inset;
+  border: 0;
+  outline: 2px dashed transparent;
+  color: var(--pink-deep);
+}
+
+.decide-status.is-theirs {
+  background: var(--mint-soft);
+  box-shadow: 0 0 0 2px var(--mint-deep) inset;
+  color: var(--mint-deep);
+}
+
+/* ---------- 旅行任务卡 ---------- */
+.task-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.task-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 16px;
+  border-radius: 24px;
+  border-top: 10px solid var(--yellow);
+  background: #fff;
+  box-shadow: var(--shadow);
+  transition: transform var(--fast) ease, box-shadow var(--fast) ease;
+}
+
+.task-grid .task-card:nth-child(2) {
+  border-top-color: var(--pink);
+}
+
+.task-grid .task-card:nth-child(3) {
+  border-top-color: var(--mint);
+}
+
+.task-head h3 {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.task-meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--cream);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.task-rules {
+  margin: 14px 0;
+  padding-left: 1.3em;
+}
+
+.task-rules li + li {
+  margin-top: 6px;
+}
+
+/* 推荐理由写在一张黄色小便签上 */
+.task-reason {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--yellow-soft);
+  font-size: 0.92rem;
+  transform: rotate(-0.6deg);
+}
+
+.task-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-foot form {
+  margin: 0;
+}
+
+.relaxed-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+}
+
+/* 三种状态：形状、图标、文字都不同，不只靠颜色区分 */
+.task-card.is-proposed-mine {
+  outline: 3px dashed var(--pink-deep);
+  outline-offset: 3px;
+  transform: translateY(-4px);
+}
+
+.task-card.is-proposed-theirs {
+  outline: 3px solid var(--mint-deep);
+  outline-offset: 3px;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+.state-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+}
+
+.state-badge strong,
+.state-badge small {
+  display: block;
+}
+
+.state-badge small {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* 已提议（我提的，等对方确认）：粉色虚线 + 沙漏 */
+.badge-proposed {
+  border: 2px dashed var(--pink-deep);
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+}
+
+/* 等待你确认（对方提的）：薄荷实线 + 纸飞机 */
+.badge-waiting {
+  border: 2px solid var(--mint-deep);
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
+/* 已共同确定：像盖了一个章 */
+.badge-confirmed {
+  align-self: flex-start;
+  border: 4px double var(--mint-deep);
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+  transform: rotate(-3deg);
+}
+
+.badge-confirmed strong {
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- 已共同确定 + 完成表单 ---------- */
+.confirmed-wrap {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+.task-card.is-confirmed {
+  border-top-color: var(--mint-deep);
+}
+
+.task-card-big .task-head h3 {
+  font-size: 1.6rem;
+}
+
+.complete-box {
+  padding: 20px 18px;
+}
+
+.complete-box h2 {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+}
+
+.complete-box > p {
+  margin: 0 0 14px;
+  color: var(--text-soft);
+}
+
+.complete-form {
+  margin-top: 8px;
+}
+
+.complete-form h3 {
+  margin: 0;
+}
+
+.photo-field .field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.photo-field input[type="file"] {
+  min-height: 44px;
+  padding: 8px;
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  font: inherit;
+  font-size: 0.92rem;
+}
+
+.photo-preview {
+  max-height: 220px;
+  width: auto;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+/* ---------- 完成：拍立得风格的回忆预览 ---------- */
+.celebrate {
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.celebrate h2 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  color: var(--pink-deep);
+}
+
+.celebrate > p {
+  margin: 0 auto 16px;
+}
+
+.memory-preview {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 12px 12px 18px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 10px 26px rgb(38 63 70 / 0.16);
+  transform: rotate(-2deg);
+}
+
+.memory-preview img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain; /* 不裁掉照片的重要内容 */
+  background: var(--cream);
+}
+
+.memory-preview figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.last-quest {
+  padding: 18px;
+}
+
+.last-quest h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  color: var(--text-soft);
+}
+
+/* 撒花 */
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti {
+  position: absolute;
+  top: -20px;
+  width: 9px;
+  height: 14px;
+  border-radius: 3px;
+  animation-name: confetti-fall;
+  animation-timing-function: cubic-bezier(0.3, 0.6, 0.5, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes confetti-fall {
+  to {
+    transform: translateY(110vh) rotate(var(--spin, 360deg));
+  }
+}
+
+@media (min-width: 768px) {
+  .wizard {
+    padding: 28px;
+  }
+
+  /* 电脑 / 平板：选项卡片横向网格（一行 3–5 个），内容竖排居中 */
+  .option-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .option-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    justify-items: center;
+    text-align: center;
+    row-gap: 4px;
+    min-height: 150px;
+    padding: 20px 14px;
+  }
+
+  .option-emoji {
+    grid-row: auto;
+    font-size: 2.4rem;
+  }
+
+  .option-check {
+    top: 10px;
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .quest-head h1 {
+    font-size: 2rem;
+  }
+
+  /* 3 个推荐任务并排三列 */
+  .task-grid {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+  }
+
+  .confirmed-wrap {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  }
+
+  .board-card {
+    padding: 32px;
+  }
+
+  .task-card:not(.is-proposed-mine):not(.is-proposed-theirs):hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .option-card:hover .option-body {
+    border-color: var(--mint);
+    transform: translateY(-2px);
+  }
+}
+
+/* =========================================================
+   动物头像（M6）：首页名牌上的小头像
+   ========================================================= */
+.name-chip .chip-avatar {
+  width: 1.7em;
+  height: 1.7em;
+  margin-left: -0.55em;
+  font-size: 0.78em;
+  border-width: 1.5px;
+  box-shadow: none;
+}
+
+.avatar-img {
+  border: none;
+}
+
+/* =========================================================
+   初见森林（M6）：简化的毛绒森林背景 + 清楚的内容卡片
+   视觉细节待统一打磨（黄昏黏土风素材到位后），见 PROGRESS.md 的"视觉待办"
+   ========================================================= */
+body.page-forest {
+  background-image: radial-gradient(circle at 0% 0%, rgb(127 146 121 / 0.6), transparent 45%),
+    radial-gradient(circle at 100% 10%, rgb(216 199 173 / 0.45), transparent 42%),
+    radial-gradient(circle at 50% 100%, rgb(230 185 117 / 0.4), transparent 45%);
+}
+
+.forest {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.forest .quest-head h1 {
+  margin: 0;
+}
+
+.forest-sub {
+  margin: 0;
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+/* 双人森林场景：两只动物站在森林空地上 */
+.forest-stage {
+  position: relative;
+  overflow: hidden;
+  padding: 28px 16px 20px;
+  /* 上面是傍晚的天空，下面是草地空地（等团队的森林素材后可以换成背景图） */
+  background: radial-gradient(ellipse 70% 38% at 50% 92%, rgb(127 146 121 / 0.95), rgb(127 146 121 / 0) 70%),
+    linear-gradient(180deg, var(--yellow-soft) 0%, var(--pink-soft) 45%, var(--mint-soft) 100%);
+}
+
+.forest-clearing {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(16px, 6vw, 80px);
+}
+
+.standee {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
+}
+
+.standee-figure {
+  position: relative;
+  animation: breathe 3.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+.standee-right .standee-figure {
+  animation-delay: -1.8s;
+}
+
+/* 脚下的小阴影 */
+.standee-figure::after {
+  content: "";
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  bottom: -8px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgb(38 63 70 / 0.14);
+  filter: blur(3px);
+  z-index: -1;
+}
+
+.avatar-standee {
+  width: clamp(110px, 28vw, 180px);
+  height: clamp(110px, 28vw, 180px);
+  font-size: clamp(2.2rem, 7vw, 3.6rem);
+}
+
+img.avatar-standee {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.avatar-empty {
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px dashed var(--mint-deep);
+  color: var(--text-soft);
+}
+
+.standee-name {
+  margin: 14px 0 0;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 3px 8px rgb(38 63 70 / 0.12);
+  font-weight: 800;
+}
+
+.standee-animal {
+  margin: 6px 0 0;
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+.standee .is-unknown {
+  color: var(--text-soft);
+  font-weight: 600;
+}
+
+.combo-card {
+  padding: 20px;
+  text-align: center;
+}
+
+.combo-card h2 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.combo-names {
+  margin: 0 auto 8px;
+  font-weight: 800;
+  color: var(--pink-deep);
+}
+
+.combo-card p:last-child {
+  margin: 0 auto;
+}
+
+.forest-actions {
+  padding: 18px;
+  text-align: center;
+}
+
+.forest-actions > p {
+  margin: 0 auto;
+}
+
+/* 森林小精灵：图标 + 对话气泡 */
+.spirit {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.spirit-face {
+  flex-shrink: 0;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--grass));
+  color: var(--mint-deep);
+  box-shadow: var(--shadow);
+}
+
+.spirit-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.spirit-bubble {
+  position: relative;
+  margin: 4px 0 0;
+  padding: 12px 16px;
+  border-radius: 18px;
+  border-top-left-radius: 6px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  font-weight: 600;
+}
+
+/* 12 题的小脚印：小一点、可以换行 */
+.footprints-many {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 60%;
+}
+
+.footprints-many li {
+  width: 10px;
+  height: 13px;
+}
+
+/* 两个大选项：手机上下排，电脑左右并排 */
+.option-grid-two {
+  grid-template-columns: 1fr;
+}
+
+.option-card-big .option-label {
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
+
+/* ---------- 结果页 ---------- */
+.result {
+  display: grid;
+  gap: 20px;
+  padding: 22px 18px;
+}
+
+.result-figure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  border-radius: 24px;
+  background: radial-gradient(ellipse 60% 30% at 50% 88%, rgb(127 146 121 / 0.9), rgb(127 146 121 / 0) 70%),
+    linear-gradient(180deg, var(--yellow-soft), var(--mint-soft));
+}
+
+.avatar-hero {
+  width: clamp(150px, 45vw, 260px);
+  height: clamp(150px, 45vw, 260px);
+  font-size: clamp(3rem, 12vw, 5rem);
+}
+
+img.avatar-hero {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.result-kicker {
+  margin: 0;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.result-name {
+  margin: 2px 0 6px;
+  font-size: 2rem;
+}
+
+.result-trait {
+  margin: 0 0 18px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+.result-text h2 {
+  margin: 20px 0 8px;
+  font-size: 1.05rem;
+}
+
+/* 四个维度的可爱进度条 */
+.trait-bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.trait-bar {
+  display: grid;
+  grid-template-columns: minmax(5.5em, auto) 1fr minmax(5.5em, auto);
+  align-items: center;
+  gap: 10px;
+}
+
+.trait-end {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.trait-end small {
+  font-weight: 700;
+}
+
+.trait-end-right {
+  text-align: right;
+}
+
+/* 票多的一端：加粗 + 深色（不只靠颜色，也靠粗细） */
+.trait-end.is-winner {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.trait-track {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--pink-soft);
+  overflow: hidden;
+}
+
+.trait-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--mint-deep), var(--mint));
+}
+
+.tips-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tips-list li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--cream);
+}
+
+.tips-list .icon {
+  margin-top: 4px;
+  color: var(--usland-terracotta);
+}
+
+.result-actions {
+  justify-content: flex-start;
+}
+
+@media (min-width: 768px) {
+  .option-grid-two {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .option-card-big .option-body {
+    min-height: 190px;
+    padding: 24px 20px;
+  }
+
+  .option-card-big .option-emoji {
+    font-size: 3rem;
+  }
+
+  .forest-stage {
+    padding: 44px 24px 30px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* 结果页两栏：左侧大幅动物形象，右侧文字 */
+  .result {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: start;
+    padding: 28px;
+  }
+
+  .result-figure {
+    position: sticky;
+    top: 96px;
+    min-height: 420px;
+  }
+
+  /* 双人森林场景横向展开 */
+  .forest-stage {
+    min-height: 340px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .forest-clearing {
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  .couple:hover {
+    background: rgb(127 146 121 / 0.35);
+  }
+}
+
+/* =========================================================
+   回忆小屋（M7）：奶油色相册 + 拍立得卡片 + 轻微纸张纹理
+   视觉细节待统一打磨，见 PROGRESS.md 的"视觉待办"
+   ========================================================= */
+body.page-memories {
+  /* 很淡的纸张纹理（细小的点） */
+  background-image: radial-gradient(rgb(38 63 70 / 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 0% 0%, rgb(230 185 117 / 0.45), transparent 45%),
+    radial-gradient(circle at 100% 100%, rgb(185 120 112 / 0.3), transparent 45%);
+  background-size: 6px 6px, auto, auto;
+}
+
+.memories {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.memories .quest-head h1 {
+  margin: 0;
+}
+
+/* 手机单列，平板 2 列，电脑 3 列 */
+.memory-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 80px;
+  display: grid;
+  gap: 18px;
+}
+
+.memory-card {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 16px;
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 10px 24px rgb(38 63 70 / 0.12);
+  transform: rotate(-0.8deg);
+}
+
+.memory-card:nth-child(even) {
+  transform: rotate(0.9deg);
+}
+
+.memory-photo {
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: var(--cream);
+  cursor: zoom-in;
+  overflow: hidden;
+}
+
+.memory-photo img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain; /* 不裁掉照片里的重要内容 */
+}
+
+.memory-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--cream);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.memory-reconcile .memory-kind {
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+}
+
+.memory-forest .memory-kind {
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
+.memory-quest .memory-kind {
+  background: var(--yellow-soft);
+  color: color-mix(in srgb, var(--usland-honey-wood) 45%, var(--usland-deep-sea));
+}
+
+.memory-title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.memory-subtitle {
+  margin: 4px 0 0;
+  font-weight: 700;
+  color: var(--pink-deep);
+}
+
+.memory-note {
+  margin: 8px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.memory-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 12px 0 0;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+}
+
+.memory-empty {
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.memory-empty-icon {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 8px;
+  color: var(--mint-deep);
+}
+
+.memory-empty h2,
+.memory-empty h3 {
+  margin: 0 0 6px;
+}
+
+.memory-empty p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 右下角的"＋" */
+.fab {
+  position: fixed;
+  right: 18px;
+  bottom: calc(96px + env(safe-area-inset-bottom)); /* 在底部导航上方 */
+  z-index: 110;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--amber-soft), var(--pink));
+  box-shadow: 0 4px 0 var(--amber-deep), 0 12px 24px rgb(185 120 112 / 0.25);
+  transition: transform var(--fast) ease;
+}
+
+.fab:active {
+  transform: translateY(3px);
+}
+
+/* 没有 JavaScript 时，点"＋"跳到 #add-memory，直接把表单显示出来 */
+dialog#add-memory:target {
+  display: block;
+  position: static;
+  margin: 16px auto;
+}
+
+/* 照片大图 */
+.lightbox {
+  border: none;
+  padding: 0;
+  max-width: min(94vw, 1100px);
+  max-height: 92vh;
+  border-radius: 14px;
+  background: #1f2a26;
+  overflow: hidden;
+}
+
+.lightbox::backdrop {
+  background: rgba(20, 28, 25, 0.75);
+}
+
+.lightbox img {
+  max-width: min(94vw, 1100px);
+  max-height: 92vh;
+  object-fit: contain;
+}
+
+.lightbox form {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  margin: 0;
+}
+
+.lightbox-close {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* =========================================================
+   小信箱（设置，M7）：居中的信纸表单卡片，最大宽度约 640px
+   ========================================================= */
+.settings {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings .quest-head h1 {
+  margin: 0;
+}
+
+.letter-form {
+  padding: 22px 20px;
+  background-color: var(--paper);
+  /* 信纸：左侧一条淡粉色竖线 */
+  background-image: linear-gradient(90deg, transparent 22px, rgb(185 120 112 / 0.55) 22px 24px, transparent 24px);
+  padding-left: 40px;
+}
+
+.letter-form h2 {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+}
+
+.letter-form .field input[type="text"],
+.letter-form .field input[type="password"] {
+  background: #fff;
+}
+
+.letter-form > .btn,
+.letter-form form .btn {
+  align-self: flex-start;
+}
+
+.key-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+.key-state.is-on {
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
+.key-state.is-off {
+  background: var(--pink-soft);
+  color: var(--pink-deep);
+}
+
+.key-state code {
+  font-size: 0.95rem;
+}
+
+.key-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.key-actions form {
+  margin: 0;
+}
+
+.privacy-list {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.privacy-list li + li {
+  margin-top: 8px;
+}
+
+.settings-logout {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 24px;
+}
+
+@media (min-width: 768px) {
+  .memory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .memory-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .fab {
+    right: 32px;
+    bottom: 32px;
+  }
+
+  .fab:hover {
+    transform: translateY(-2px) scale(1.04);
+  }
+
+  .memory-card:hover {
+    transform: rotate(0deg) translateY(-3px);
+    box-shadow: 0 16px 30px rgb(38 63 70 / 0.16);
+  }
+}
+
+/* =========================================================
+   情绪状态（VISUAL_DESIGN 13.4）：只由用户自己选择
+   开心 → 时不时挥爪；委屈 → 垂下脑袋（垂耳）；需要空间 → 缩小并显示小窝；平静 → 正常
+   用单张图片 + CSS 变换实现，不需要额外的姿势图片
+   ========================================================= */
+.animal.mood-happy .animal-img,
+.animal.mood-happy .animal-placeholder,
+.mood-wrap.mood-happy .avatar {
+  animation: mood-wave 3.2s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+
+.animal.mood-wronged .animal-img,
+.animal.mood-wronged .animal-placeholder,
+.mood-wrap.mood-wronged .avatar {
+  animation: none;
+  transform: rotate(-7deg) translateY(5%) scale(0.94);
+  transform-origin: 50% 100%;
+  filter: saturate(0.8);
+}
+
+.animal.mood-need_space .animal-img,
+.animal.mood-need_space .animal-placeholder {
+  animation: none;
+  transform: scale(0.7) translateY(20%);
+  transform-origin: 50% 100%;
+}
+
+.mood-wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.mood-wrap .avatar {
+  transition: transform var(--scene) ease;
+}
+
+.mood-wrap.mood-need_space .avatar {
+  transform: scale(0.8);
+}
+
+@keyframes mood-wave {
+  0%,
+  62%,
+  100% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(-8deg);
+  }
+  80% {
+    transform: rotate(7deg);
+  }
+  90% {
+    transform: rotate(-4deg);
+  }
+}
+
+/* 首页动物旁边的心情小标记 */
+.mood-badge {
+  position: absolute;
+  top: -4%;
+  right: -10%;
+  z-index: 2;
+  width: clamp(24px, 2.4cqw, 36px);
+  height: clamp(24px, 2.4cqw, 36px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  box-shadow: 0 3px 8px rgb(38 63 70 / 0.18);
+  pointer-events: none;
+}
+
+.mood-badge .icon {
+  width: 62%;
+  height: 62%;
+}
+
+.mood-badge-happy {
+  color: var(--usland-honey-wood);
+}
+
+.mood-badge-wronged {
+  color: var(--usland-bay);
+}
+
+/* 需要空间：小窝放在动物脚边 */
+.mood-badge-need_space {
+  top: auto;
+  bottom: 0;
+  right: -18%;
+  width: clamp(30px, 3cqw, 44px);
+  height: clamp(30px, 3cqw, 44px);
+  color: var(--mint-deep);
+}
+
+/* 名牌上的心情文字（不只靠图标和颜色） */
+.chip-mood,
+.mood-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.8em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chip-mood-happy,
+.mood-pill-happy {
+  background: var(--yellow-soft);
+  color: color-mix(in srgb, var(--usland-honey-wood) 45%, var(--usland-deep-sea));
+}
+
+.chip-mood-wronged,
+.mood-pill-wronged {
+  background: color-mix(in srgb, var(--usland-bay) 18%, #fff);
+  color: var(--usland-deep-sea);
+}
+
+.chip-mood-need_space,
+.mood-pill-need_space {
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
+.mood-pill-calm {
+  background: rgb(38 63 70 / 0.06);
+  color: var(--text-soft);
+}
+
+.person-name .mood-pill {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.chat-head-name .mood-pill {
+  margin-left: 6px;
+  font-size: 0.75rem;
+}
+
+.mood-hint {
+  margin: -6px 0 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--cream);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+/* 心情选择窗口：四个大按钮，选中的有勾 */
+.mood-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.mood-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 96px;
+  padding: 12px;
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  font: inherit;
+  font-weight: 800;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform var(--fast) ease, border-color var(--fast) ease;
+}
+
+.mood-option[aria-pressed="true"] {
+  border-color: var(--mint-deep);
+  background: var(--mint-soft);
+  transform: translateY(-2px);
+}
+
+.mood-option-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mint-deep);
+  color: #fff;
+}
+
+.mood-option-happy .mood-option-icon {
+  color: var(--usland-honey-wood);
+}
+
+.mood-option-wronged .mood-option-icon {
+  color: var(--usland-bay);
+}
+
+.mood-option-need_space .mood-option-icon {
+  color: var(--mint-deep);
+}
+
+.mood-option-calm .mood-option-icon {
+  color: var(--text-soft);
+}
+
+@media (min-width: 1024px) {
+  .mood-option:hover {
+    border-color: var(--mint);
+    transform: translateY(-2px);
+  }
+
+  /* 自己的动物可以点（选心情）：悬停时提示 */
+  .animal.is-me:hover {
+    background: radial-gradient(closest-side, rgba(255, 246, 214, 0.55), transparent);
+  }
+}
+
+/* =========================================================
+   情绪状态：清除心情
+   ========================================================= */
+.mood-tap-again {
+  grid-column: 1 / -1;
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-soft);
+}
+
+.mood-clear {
+  grid-column: 1 / -1;
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mood-clear:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* 小信箱：减少动态效果开关 */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.check-row input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--mint-deep);
+}
+
+/* 只有 JavaScript 时才显示的整块内容（没有 JS 时 12 题一起显示，不需要小路） */
+.js-block {
+  display: none;
+}
+
+html.js .js-block {
+  display: block;
+}
+
+/* =========================================================
+   初见森林 · 森林散步（测试页）
+   小路、路标、小角色、清晨 → 白天 → 黄昏的天空，全部用 CSS 画，不需要新素材
+   --progress / --day / --dusk 由 forest_quiz.js 设置（0–1）
+   ========================================================= */
+.walk-scene {
+  position: relative;
+  height: 160px;
+  margin: 0 0 14px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  /* 清晨：淡粉 + 晨雾 */
+  background: linear-gradient(180deg, #ffd9cf 0%, #ffeedd 45%, var(--mint-soft) 100%);
+  box-shadow: var(--shadow);
+}
+
+.walk-sky {
+  position: absolute;
+  inset: 0;
+  transition: opacity 900ms ease;
+}
+
+.walk-sky-day {
+  background: linear-gradient(180deg, #bfe6f2 0%, var(--mint-soft) 50%, var(--mint-soft) 100%);
+  opacity: var(--day, 0);
+}
+
+.walk-sky-dusk {
+  background: linear-gradient(180deg, #7b6fa6 0%, #f19e86 45%, #f8cf8f 75%, #e6dcb0 100%);
+  opacity: var(--dusk, 0);
+}
+
+/* 太阳沿一条弧线从左边升起、从右边落下 */
+.walk-sun {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  left: calc(8% + var(--progress, 0) * 84%);
+  top: calc(14% + (var(--progress, 0) - 0.5) * (var(--progress, 0) - 0.5) * 80%);
+  background: radial-gradient(circle at 40% 40%, var(--yellow-soft), #ffc96b 70%);
+  box-shadow: 0 0 24px 8px rgba(255, 214, 120, 0.55);
+  transition: left 900ms ease, top 900ms ease;
+}
+
+.walk-hill {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  border-radius: 50% 50% 0 0;
+}
+
+.walk-hill-back {
+  top: 40%;
+  bottom: -40%;
+  background: #cfe3b4;
+}
+
+.walk-hill-front {
+  top: 52%;
+  bottom: -60%;
+  left: -30%;
+  background: #b9d79f;
+}
+
+.walk-tree {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  color: var(--mint-deep);
+  opacity: 0.85;
+}
+
+.walk-tree .icon {
+  width: clamp(20px, 3.4vw, 34px);
+  height: clamp(20px, 3.4vw, 34px);
+}
+
+.walk-path {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.walk-path path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+
+.walk-path-edge {
+  stroke: rgba(150, 118, 82, 0.35);
+  stroke-width: 16px;
+}
+
+.walk-path-line {
+  stroke: #f3e2c4;
+  stroke-width: 11px;
+}
+
+.walk-posts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 路标：小木牌 + 数字；走过的点亮，当前所在的放大 */
+.walk-post {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.walk-post span {
+  min-width: 20px;
+  padding: 1px 4px;
+  border-radius: 6px;
+  background: var(--paper);
+  border: 1.5px solid #c9a27a;
+  color: #7a5a3a;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+  transition: background var(--fast) ease, color var(--fast) ease, transform var(--fast) ease;
+}
+
+.walk-post::after {
+  content: "";
+  width: 2px;
+  height: 8px;
+  background: #a97e56;
+}
+
+.walk-post.is-trailhead span {
+  font-size: 10px;
+  padding: 1px 5px;
+}
+
+.walk-post.is-passed span {
+  background: var(--mint-deep);
+  border-color: var(--mint-deep);
+  color: #fff;
+}
+
+.walk-post.is-here span {
+  transform: scale(1.15);
+}
+
+/* 小角色：站在路标上方 */
+.walker {
+  position: absolute;
+  z-index: 2;
+  transform: translate(-50%, -112%);
+  transition: left 700ms ease, top 700ms ease;
+  pointer-events: none;
+}
+
+.avatar-walker {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgb(38 63 70 / 0.25);
+}
+
+img.avatar-walker {
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  filter: drop-shadow(0 3px 4px rgb(38 63 70 / 0.25));
+}
+
+.walker.is-walking .avatar-walker {
+  animation: walker-hop 700ms ease;
+}
+
+@keyframes walker-hop {
+  0%, 100% { transform: none; }
+  25% { transform: translateY(-8px) rotate(-6deg); }
+  50% { transform: none; }
+  75% { transform: translateY(-6px) rotate(6deg); }
+}
+
+/* 小精灵的气泡：说话时轻轻弹一下；等待自动跳题时可以点 */
+.walk-spirit {
+  margin-bottom: 12px;
+}
+
+.walk-spirit .spirit-bubble {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  min-height: 3.2em;
+}
+
+.spirit-text {
+  margin: 0;
+  flex: 1 1 12em;
+}
+
+.spirit-bubble.is-waiting {
+  cursor: pointer;
+}
+
+.spirit-bubble.is-talking {
+  animation: bubble-pop 320ms ease;
+}
+
+@keyframes bubble-pop {
+  from { transform: scale(0.94); opacity: 0.4; }
+  to { transform: none; opacity: 1; }
+}
+
+.spirit-skip {
+  margin-left: auto;
+  padding: 4px 12px;
+  border: 1.5px solid var(--mint-deep);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--mint-deep);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.spirit-skip:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* 选项的小动画：a 像果子被摘下（晃一晃、跳起来），b 像小门被打开 */
+.walk-option .option-emoji {
+  position: relative;
+  display: inline-block;
+}
+
+.effect-fruit input:checked + .option-body .option-emoji {
+  animation: fruit-pick 650ms ease both;
+}
+
+@keyframes fruit-pick {
+  0% { transform: none; }
+  20% { transform: rotate(-14deg); }
+  40% { transform: rotate(12deg); }
+  70% { transform: translateY(-20px) scale(1.18); }
+  100% { transform: none; }
+}
+
+.option-door {
+  position: absolute;
+  inset: -6px -8px;
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(90deg, #c9a27a, #b78b62);
+  box-shadow: inset 0 0 0 2px #a97e56;
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 门把手 */
+.option-door::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+
+.effect-door input:checked + .option-body .option-door {
+  animation: door-open 700ms ease both;
+}
+
+@keyframes door-open {
+  0% { opacity: 1; transform: perspective(160px) rotateY(0); }
+  70% { opacity: 1; transform: perspective(160px) rotateY(-105deg); }
+  100% { opacity: 0; transform: perspective(160px) rotateY(-115deg); }
+}
+
+/* 森林发现卡片 */
+.discovery-card {
+  max-width: 420px;
+  text-align: center;
+  background: linear-gradient(180deg, var(--paper), var(--mint-soft));
+}
+
+.discovery-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.discovery-card h2 {
+  color: var(--pink-deep);
+}
+
+.discovery-text {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.discovery-votes {
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.discovery-card .panel-actions {
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .walk-scene {
+    height: 200px;
+  }
+
+  .walk-post span {
+    min-width: 24px;
+    font-size: 12px;
+  }
+
+  .avatar-walker {
+    width: 52px;
+    height: 52px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .walk-scene {
+    height: 230px;
+  }
+}
+
+/* =========================================================
+   初见森林 · 结果揭晓：灌木丛（CSS 画的几团叶子）+ 飘落的树叶
+   没有 JavaScript 时：灌木丛按钮不显示，动物直接站好（这也是揭晓后的样子）
+   ========================================================= */
+.bush-stage {
+  position: relative;
+  width: min(320px, 86%);
+  height: calc(clamp(150px, 45vw, 260px) + 70px);
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 0 0 24px 24px;
+}
+
+.bush-animal {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+}
+
+/* 揭晓前：动物藏在灌木丛下面（被裁掉，看不到是谁） */
+body.is-veiled .bush-animal {
+  transform: translate(-50%, 110%);
+}
+
+.is-revealed .bush-animal {
+  animation: animal-pop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes animal-pop {
+  0% { transform: translate(-50%, 110%); }
+  60% { transform: translate(-50%, -14%); }
+  100% { transform: translateX(-50%); }
+}
+
+.bush {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 54%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transform-origin: 50% 100%;
+}
+
+html.js .bush.js-only:not([hidden]) {
+  display: block !important;
+}
+
+.bush:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+  border-radius: 24px;
+}
+
+/* 揭晓后：灌木丛只露出下面一点，挡住动物的脚 */
+.is-revealed .bush {
+  cursor: default;
+  height: 22%;
+  transition: height 500ms ease;
+}
+
+.bush-blob {
+  position: absolute;
+  bottom: 0;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(circle at 35% 30%, #a9d99a, var(--usland-sage) 70%);
+  box-shadow: inset -6px -8px 0 rgb(38 63 70 / 0.18);
+}
+
+.bush-blob-1 { left: 0; width: 42%; height: 72%; }
+.bush-blob-2 { left: 22%; width: 52%; height: 100%; background: radial-gradient(circle at 40% 30%, #b6e2a5, #79bf88 70%); }
+.bush-blob-3 { right: 0; width: 44%; height: 80%; }
+.bush-blob-4 { left: 10%; right: 10%; height: 38%; border-radius: 30px 30px 0 0; }
+
+.is-shaking .bush {
+  animation: bush-shake 600ms ease;
+}
+
+@keyframes bush-shake {
+  0%, 100% { transform: none; }
+  20% { transform: rotate(-4deg); }
+  40% { transform: rotate(4deg); }
+  60% { transform: rotate(-3deg); }
+  80% { transform: rotate(2deg); }
+}
+
+.leaf-fall {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.falling-leaf {
+  position: absolute;
+  top: -12px;
+  width: 14px;
+  height: 9px;
+  border-radius: 0 100% 0 100%;
+  background: #8cc98a;
+  animation: leaf-fall 2s ease-in both;
+}
+
+.falling-leaf:nth-child(3n) { background: #f2b46b; }
+.falling-leaf:nth-child(3n + 1) { background: var(--usland-sage); }
+
+@keyframes leaf-fall {
+  from { transform: translate(0, 0) rotate(0); opacity: 1; }
+  to { transform: translate(var(--drift, 0px), 320px) rotate(var(--spin, 180deg)); opacity: 0; }
+}
+
+.bush-hint {
+  justify-content: center;
+  width: 100%;
+  margin: 10px 0 0;
+  font-weight: 700;
+  color: var(--text-soft);
+  text-align: center;
+}
+
+.bush-skip {
+  margin: 6px auto 0;
+}
+
+.result-figure:has(.bush-stage) {
+  flex-direction: column;
+}
+
+/* 揭晓前：结果文字、猜猜看卡片、顶部栏里自己的新头像先藏起来；卡片只显示灌木丛（单栏） */
+body.is-veiled [data-reveal-text] {
+  display: none;
+}
+
+body.is-veiled .result {
+  grid-template-columns: 1fr;
+}
+
+body.is-veiled .result-figure {
+  position: static;
+}
+
+body.is-veiled .couple-member.is-me .avatar {
+  visibility: hidden;
+}
+
+.result-name:focus {
+  outline: none;
+}
+
+.result-name:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* =========================================================
+   初见森林 · 猜猜 TA 是哪只小动物
+   ========================================================= */
+.guess-card {
+  margin-top: 16px;
+  padding: 20px 18px;
+}
+
+.guess-card h2 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.guess-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 16px;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+
+.guess-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.guess-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.guess-body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 6px 10px;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  transition: border-color var(--fast) ease, background var(--fast) ease, transform var(--fast) ease;
+}
+
+.guess-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.guess-option input:checked + .guess-body {
+  border-color: var(--mint-deep);
+  background: var(--mint-soft);
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 1px var(--mint-deep);
+}
+
+.guess-option input:focus-visible + .guess-body {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.guess-note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 18px;
+  font-weight: 600;
+}
+
+.guess-note .icon {
+  color: var(--mint-deep);
+}
+
+.guess-note a {
+  margin-left: auto;
+  font-weight: 800;
+  color: var(--mint-deep);
+}
+
+.guess-reveal {
+  padding: 20px;
+  text-align: center;
+}
+
+.guess-reveal h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.guess-reveal .icon {
+  color: var(--mint-deep);
+}
+
+.guess-reveal-main {
+  margin: 0;
+  font-weight: 700;
+}
+
+.guess-reveal.is-right .guess-reveal-main {
+  color: var(--pink-deep);
+}
+
+.guess-reveal .hint {
+  margin: 6px 0 0;
+}
+
+@media (min-width: 768px) {
+  .guess-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   声音：首页开关（地图左上角）、小信箱里的声音设置
+   ========================================================= */
+.sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 14px 6px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--text-soft);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--fast) ease, color var(--fast) ease, border-color var(--fast) ease;
+}
+
+.sound-toggle[hidden] {
+  display: none;
+}
+
+.sound-toggle:hover {
+  border-color: var(--mint);
+}
+
+.sound-toggle:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.sound-toggle .sound-icon {
+  display: inline-flex;
+}
+
+.sound-toggle .sound-icon-on,
+.sound-toggle.is-on .sound-icon-off {
+  display: none;
+}
+
+.sound-toggle.is-on .sound-icon-on {
+  display: inline-flex;
+}
+
+.sound-toggle.is-on {
+  border-color: var(--mint-deep);
+  background: var(--mint-soft);
+  color: var(--mint-deep);
+}
+
+/* 首页：浮在地图左上角，半透明，不抢眼 */
+.sound-toggle-map {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 90;
+  background: rgb(250 248 243 / 0.82);
+  box-shadow: 0 3px 10px rgb(38 63 70 / 0.12);
+}
+
+.sound-toggle-inline {
+  margin-top: 12px;
+}
+
+.sound-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0 8px;
+}
+
+.sound-row {
+  display: grid;
+  grid-template-columns: minmax(8em, auto) 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.sound-volume {
+  width: 100%;
+  accent-color: var(--mint-deep);
+}
+
+/* 总开关关着时：下面的细项看起来淡一点（仍然可以先调好） */
+.sound-settings.is-off .sound-rows {
+  opacity: 0.55;
+}
+
+.sound-credits {
+  margin-top: 8px;
+}
+
+@media (max-width: 420px) {
+  .sound-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* =========================================================
+   第三版素材：功能页背景、不透明内容面板、回忆小屋房间
+   ========================================================= */
+
+/* 功能页背景（base.html 根据 scene_bg 输出 --scene-bg / --scene-bg-mobile）：
+   固定铺满整个窗口，只做氛围；文字、表单、消息、照片都放在不透明的浅色面板上 */
+body.has-scene-bg {
+  background: var(--cream);
+}
+
+body.has-scene-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--cream) var(--scene-bg) center / cover no-repeat;
+}
+
+@media (max-width: 700px) {
+  body.has-scene-bg::before {
+    background-image: var(--scene-bg-mobile);
+  }
+}
+
+/* 不透明的浅色面板：页面标题区、照片墙标题等直接放在背景图上的文字 */
+.page-panel,
+body.has-scene-bg .quest-head {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  padding: 12px 16px;
+}
+
+/* 背景图上的卡片、页脚也必须不透明 */
+body.has-scene-bg .card,
+body.has-scene-bg .glass:not(.topbar-inner):not(.bottom-nav) {
+  background: var(--paper);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+body.has-scene-bg .footer p {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--paper);
+}
+
+/* ---------- 回忆小屋：房间场景 ---------- */
+.memory-room {
+  width: 100%;
+}
+
+.room-stage {
+  position: relative;
+  margin: 0 auto;
+  aspect-ratio: var(--ratio);
+  /* 保持原比例完整显示：电脑不超过一屏的约 70% 高 */
+  width: min(100%, calc(70vh * var(--ratio-num)));
+  width: min(100%, calc(70dvh * var(--ratio-num)));
+  overflow: hidden;
+  overflow: clip;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-lift);
+  background: var(--usland-sand);
+  container-type: inline-size;
+}
+
+.room-stage.layout-mobile {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .room-stage.layout-desktop {
+    display: none;
+  }
+
+  .room-stage.layout-mobile {
+    display: block;
+  }
+}
+
+.room-base,
+.room-glow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  pointer-events: none;
+}
+
+/* 发光层：悬停 / 键盘聚焦对应的互动区域时淡入 */
+.room-glow {
+  opacity: 0;
+  transition: opacity var(--fast) ease;
+}
+
+.room-stage:has([data-room-spot="frames"]:is(:hover, :focus-visible)) [data-room-glow="frames"],
+.room-stage:has([data-room-spot="album"]:is(:hover, :focus-visible)) [data-room-glow="album"],
+.room-stage:has([data-room-spot="postcards"]:is(:hover, :focus-visible)) [data-room-glow="postcards"] {
+  opacity: 1;
+}
+
+.room-spot {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-radius: var(--radius-card);
+  text-decoration: none;
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.room-spot:focus-visible {
+  outline: none;
+}
+
+/* 手机版没有对齐的发光层：用一圈柔和的暖光代替 */
+.room-spot.no-glow:hover,
+.room-spot.no-glow:focus-visible {
+  background: radial-gradient(closest-side, rgb(255 244 214 / 0.45), transparent);
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.7);
+}
+
+/* 常驻的小标签，说明点了会打开什么 */
+.room-spot-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  transform: translateY(50%);
+  padding: 0.3em 0.85em;
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: clamp(11px, 1.15cqw, 15px);
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgb(38 63 70 / 0.18);
+  transition: transform var(--fast) ease, box-shadow var(--fast) ease;
+}
+
+.room-spot-label .icon {
+  color: var(--usland-terracotta);
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.room-spot:hover .room-spot-label {
+  transform: translateY(35%);
+}
+
+.room-spot:focus-visible .room-spot-label {
+  box-shadow: var(--usland-focus);
+}
+
+/* 按压反馈 */
+.room-spot:active .room-spot-label {
+  scale: 0.94;
+}
+
+/* 明信片的标签放在上方，避免和相册的标签挤在一起 */
+.room-spot[data-room-spot="postcards"] {
+  align-items: flex-start;
+}
+
+.room-spot[data-room-spot="postcards"] .room-spot-label {
+  transform: translateY(-50%);
+}
+
+.room-spot[data-room-spot="postcards"]:hover .room-spot-label {
+  transform: translateY(-65%);
+}
+
+/* 手机：房间不超过一屏的 60% 高，下面的回忆能早一点看到 */
+@media (max-width: 700px) {
+  .room-stage {
+    width: min(100%, calc(60vh * var(--ratio-num)));
+    width: min(100%, calc(60dvh * var(--ratio-num)));
+  }
+}
+
+/* ---------- 回忆小屋：时间线 / 照片墙 ---------- */
+.memory-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-margin-top: 80px;
+}
+
+.memory-view:focus {
+  outline: none;
+}
+
+.memory-view-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.memory-view-title .icon {
+  color: var(--usland-terracotta);
+}
+
+.photo-wall {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.photo-frame {
+  padding: 10px 10px 12px;
+  border-radius: 6px;
+  background: var(--paper);
+  border: 6px solid var(--usland-honey-wood);
+  box-shadow: 0 10px 24px rgb(38 63 70 / 0.14);
+}
+
+.photo-frame .memory-photo {
+  margin-bottom: 8px;
+}
+
+.photo-caption {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+}
+
+.photo-empty-art {
+  margin: 0 auto 12px;
+  border-radius: var(--radius-sm);
+}
+
+/* 测试前的中性占位头像：不加白边和渐变 */
+.avatar-placeholder {
+  background: var(--cream);
+}
+
+/* 新手引导窗口：两个按钮上下排，主要按钮在上 */
+.forest-intro .panel-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.forest-intro .panel-actions form,
+.forest-intro .panel-actions .btn {
+  width: 100%;
+}

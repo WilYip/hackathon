@@ -1,0 +1,1 @@
+{"status":"NOT_COMPLETED","reason":"Chrome headless launch aborted with SIGABRT in this environment before page load.","requestedWidths":[375,768,1280,1920],"screenshots":[],"remaining":"Run demo in browser at all four widths; verify five entries, Tab/Enter/Esc, loading failure, both animal selections and actual Flask integration."}

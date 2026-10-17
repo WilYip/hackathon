@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% set scene_bg = 'forest' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+
+{% block title %}{{ t('forest.title') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-forest{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_forest{% endblock %}
+{% block amb %}amb_forest{% endblock %}
+{% block amb_extra %}env_birds{% endblock %}
+{% block sound_region %}forest{% endblock %}
+{% block sound_enter %}forest_enter{% endblock %}
+
+{# 一个人站在森林空地上：动物形象 + 昵称 + 动物名 #}
+{% macro standee(p, side) %}
+  <div class="standee standee-{{ side }}">
+    {% if p %}
+      <div class="standee-figure">{{ avatar(p, 'avatar-standee') }}</div>
+      <p class="standee-name">{{ p.nickname }}</p>
+      {% if p.animal %}
+        <p class="standee-animal">{{ p.animal.name }}</p>
+      {% else %}
+        <p class="standee-animal is-unknown">{{ t('forest.not_yet') }}</p>
+      {% endif %}
+    {% else %}
+      <div class="standee-figure"><span class="avatar avatar-standee avatar-empty" aria-hidden="true">?</span></div>
+      <p class="standee-name is-unknown">{{ t('map.waiting_partner') }}</p>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% block content %}
+<section class="forest" data-forest data-version="{{ version }}" data-state-url="{{ url_for('forest.api_state') }}">
+  <header class="quest-head">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    <div>
+      <h1>{{ t('forest.title') }}</h1>
+      <p class="forest-sub">{{ t('forest.subtitle') }}</p>
+    </div>
+  </header>
+
+  {# 双人森林场景：两只动物站在森林空地上（电脑横向展开） #}
+  <div class="forest-stage card">
+    <div class="forest-clearing">
+      {{ standee(me, 'left') }}
+      {{ standee(partner, 'right') }}
+    </div>
+  </div>
+
+  {% if combo %}
+    {# 两人都测完：你们的组合 #}
+    <div class="combo-card card">
+      <h2>{{ t('forest.combo_title') }}</h2>
+      <p class="combo-names">{{ combo.names[0] }} <span aria-hidden="true">×</span> {{ combo.names[1] }}</p>
+      <p>{{ combo.text }}</p>
+    </div>
+  {% endif %}
+
+  {# 猜猜看：两人都测完后揭晓（是否猜中 + 有几个小特点一样）；还没揭晓时显示等待的提示 #}
+  {% if reveal %}
+    <div class="guess-reveal card{% if reveal.correct %} is-right{% endif %}">
+      <h2>{{ icon('tree', 20) }}<span>{{ t('forest.guess.reveal_title') }}</span></h2>
+      {% if reveal.correct %}
+        <p class="guess-reveal-main">{{ t('forest.guess.reveal_right', guesser=reveal.guesser, target=reveal.target, guess=reveal.guess) }}</p>
+      {% else %}
+        <p class="guess-reveal-main">{{ t('forest.guess.reveal_wrong', guesser=reveal.guesser, target=reveal.target, guess=reveal.guess, actual=reveal.actual) }}</p>
+        <p class="hint">{{ t('forest.guess.reveal_matching', n=reveal.matching) }}</p>
+      {% endif %}
+    </div>
+  {% elif my_guess %}
+    <p class="guess-note card">{{ icon('leaf', 18) }}<span>{{ t('forest.guess.pending_note', name=partner.nickname, animal=my_guess) }}</span>
+      <a href="{{ url_for('forest.result') }}#guess">{{ t('forest.guess.change') }}</a></p>
+  {% elif can_guess %}
+    <p class="guess-note card">{{ icon('leaf', 18) }}<span>{{ t('forest.guess.invite', name=partner.nickname) }}</span>
+      <a href="{{ url_for('forest.result') }}#guess">{{ t('forest.guess.go') }}</a></p>
+  {% elif guessed_me and partner %}
+    <p class="guess-note card">{{ icon('leaf', 18) }}<span>{{ t('forest.guess.guessed_me', name=partner.nickname) }}</span></p>
+  {% endif %}
+
+  <div class="forest-actions card">
+    <p>{{ t('forest.intro') }}</p>
+    <div class="quest-actions">
+      {% if me.animal %}
+        <a class="btn btn-primary" href="{{ url_for('forest.result') }}">{{ t('forest.my_result') }}</a>
+        <a class="btn btn-secondary" href="{{ url_for('forest.quiz') }}">{{ t('forest.retake') }}</a>
+      {% else %}
+        <a class="btn btn-primary btn-large" href="{{ url_for('forest.quiz') }}">{{ t('forest.start') }}</a>
+      {% endif %}
+      {% if partner and partner.animal %}
+        <a class="btn btn-secondary" href="{{ url_for('forest.result', who='partner') }}">{{ t('forest.partner_result', name=partner.nickname) }}</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if not partner %}
+    {% include "_waiting_partner.html" %}
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if not partner %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endif %}
+<script src="{{ url_for('static', filename='js/forest.js') }}"></script>
+{% endblock %}

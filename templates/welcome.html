@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "_scene_preview.html" import scene_preview %}
+
+{% block body_class %}page-welcome{% endblock %}
+
+{% block content %}
+<section class="welcome{% if not preview %} no-art{% endif %}">
+  {% if preview %}
+  <div class="welcome-art">
+    {{ scene_preview(preview, t('welcome.illustration_alt')) }}
+  </div>
+  {% endif %}
+
+  <div class="welcome-text card">
+    {# 第三版 Logo #}
+    <img class="welcome-logo" src="{{ asset_url('ui/brand/logo_usland.svg') }}" alt="Usland" width="208" height="51">
+    <h1>{{ t('welcome.title') }}</h1>
+    <p class="tagline">{{ t('app.tagline') }}</p>
+    <p>{{ t('welcome.intro') }}</p>
+
+    {# 只有还没有小岛时才会看到欢迎页，所以这里只有"创建"。
+       小岛建好后，第二个人打开网址会看到登录页，从那里"用邀请码加入" #}
+    <div class="actions">
+      <a class="btn btn-primary btn-large" href="{{ url_for('auth.create') }}">{{ t('welcome.create') }}</a>
+    </div>
+    {% with extra_class = 'sound-toggle-inline' %}{% include "_sound_toggle.html" %}{% endwith %}
+  </div>
+</section>
+{% endblock %}

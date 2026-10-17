@@ -1,0 +1,38 @@
+﻿id,中文名称,类别,相对路径,时长秒,循环,触发,来源,授权,加工说明
+bgm_welcome,欢迎与登录,bgm,static/audio/bgm/bgm_welcome.mp3,80.386,True,欢迎、创建、加入及登录,https://opengameart.org/content/snowy-cozyness-calm-pianoguitar,CC BY 3.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。
+bgm_island,小岛首页,bgm,static/audio/bgm/bgm_island.mp3,329.68,True,小岛首页,https://opengameart.org/content/sunset-plains,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。
+bgm_whisper,温柔传话,bgm,static/audio/bgm/bgm_whisper.mp3,84.811,True,温柔传话，建议降低音量,https://opengameart.org/content/revelation,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。
+bgm_quest,约会任务,bgm,static/audio/bgm/bgm_quest.mp3,71.831,True,约会选择与推荐,https://opengameart.org/content/snowy-cozyness-calm-pianoguitar,CC BY 3.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。
+bgm_forest,初见森林,bgm,static/audio/bgm/bgm_forest.mp3,44.736,True,性格测试与森林,https://opengameart.org/content/forest-ambience,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。
+bgm_memories,回忆小屋,bgm,static/audio/bgm/bgm_memories.mp3,81.197,True,回忆相册,https://opengameart.org/content/snowy-cozyness-calm-pianoguitar,CC BY 3.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。保留完整曲目，处理了首尾淡化；循环建议交叉淡化，未宣称音乐节拍级无缝。
+amb_ocean,平静海浪,ambience,static/audio/ambience/amb_ocean.mp3,45.0,True,首页环境,https://opengameart.org/content/beach-ocean-waves; https://opengameart.org/content/beach-ocean-waves; https://opengameart.org/content/beach-ocean-waves; https://opengameart.org/content/beach-ocean-waves,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。多段海浪交叉拼接与循环处理。
+amb_forest,自然树林氛围,ambience,static/audio/ambience/amb_forest.mp3,45.0,True,初见森林环境,https://opengameart.org/content/park-ambiences,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。来自阿德莱德公园实录，截取并制作循环。
+amb_dock,码头近处水声,ambience,static/audio/ambience/amb_dock.mp3,40.0,True,传话码头环境,https://opengameart.org/content/beach-ocean-waves,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。海浪录音适配码头；不包含单独录制的码头机械声。
+amb_cottage,小屋内远海声,ambience,static/audio/ambience/amb_cottage.mp3,45.0,True,回忆小屋环境,https://opengameart.org/content/beach-ocean-waves; https://opengameart.org/content/beach-ocean-waves; https://opengameart.org/content/beach-ocean-waves; https://opengameart.org/content/beach-ocean-waves,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。低通处理海浪，模拟隔窗远海；不是独立室内实录。
+env_breeze,一阵海岛微风,ambience,static/audio/ambience/env_breeze.mp3,7.0,False,首页偶发风声,https://opengameart.org/content/park-ambiences,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。截取公园风声；保留自然环境背景。
+env_birds,短鸟鸣,ambience,static/audio/ambience/env_birds.mp3,3.0,False,森林偶发鸟鸣,https://opengameart.org/content/park-ambiences,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。自然鸟鸣片段，仍含少量环境底声。
+env_boat_creak,船体轻响适配音,ambience,static/audio/ambience/env_boat_creak.mp3,0.947,False,小船摇晃时偶发,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。由木质吱呀声降调适配，非船体实录。
+env_fireplace,壁炉木柴声,ambience,static/audio/ambience/env_fireplace.mp3,45.0,True,仅有壁炉画面时启用,https://opengameart.org/content/fireplace-sound-loop,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。循环适配。
+cottage_open,木屋开门,sfx,static/audio/sfx/cottage_open.mp3,0.919,False,进入回忆小屋,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+board_open,告示牌纸页展开,sfx,static/audio/sfx/board_open.mp3,0.151,False,进入约会告示牌,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+forest_enter,森林轻脚步,sfx,static/audio/sfx/forest_enter.mp3,0.659,False,进入初见森林,https://kenney.nl/assets/rpg-audio; https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。通用脚步适配森林，非独立草地实录。
+dock_enter,码头轻脚步,sfx,static/audio/sfx/dock_enter.mp3,0.64,False,进入传话码头,https://kenney.nl/assets/rpg-audio; https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。通用脚步适配木质码头。
+mailbox_open,信箱盖轻开,sfx,static/audio/sfx/mailbox_open.mp3,0.425,False,进入小信箱设置,https://kenney.nl/assets/rpg-audio; https://opengameart.org/content/100-cc0-sfx,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。锁扣与木盒开盖组合适配，不是信箱实录。
+ui_select,轻选择,sfx,static/audio/sfx/ui_select.mp3,0.073,False,选择选项、按钮,https://kenney.nl/assets/interface-sounds,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+ui_close,轻合拢,sfx,static/audio/sfx/ui_close.mp3,0.203,False,关闭面板,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+ui_success,温和确认,sfx,static/audio/sfx/ui_success.mp3,0.29,False,创建、加入、复制、保存成功,https://kenney.nl/assets/interface-sounds,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+ui_error,低刺激错误反馈,sfx,static/audio/sfx/ui_error.mp3,0.162,False,主动提交失败，可关闭,https://kenney.nl/assets/interface-sounds,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+message_send,信件发送,sfx,static/audio/sfx/message_send.mp3,0.421,False,发送成功,https://opengameart.org/content/100-cc0-sfx,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。纸张拟音适配信件发送。
+message_receive,收到来信,sfx,static/audio/sfx/message_receive.mp3,0.1,False,收到新消息/提议，每事件一次,https://kenney.nl/assets/interface-sounds,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+draft_ready,草稿展开,sfx,static/audio/sfx/draft_ready.mp3,0.685,False,改写草稿预览出现,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+reconcile_invite,和好邀请,sfx,static/audio/sfx/reconcile_invite.mp3,0.505,False,收到新和好邀请,https://kenney.nl/assets/music-jingles,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+reconcile_complete,和好拥抱,sfx,static/audio/sfx/reconcile_complete.mp3,1.631,False,双方确认和好,https://kenney.nl/assets/rpg-audio; https://kenney.nl/assets/music-jingles,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。布料与拨弦短乐句组合。
+quest_reveal,推荐任务展开,sfx,static/audio/sfx/quest_reveal.mp3,1.427,False,三个推荐首次展示,https://kenney.nl/assets/rpg-audio; https://kenney.nl/assets/rpg-audio; https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+quest_agreed,共同确认约会,sfx,static/audio/sfx/quest_agreed.mp3,1.002,False,双方同意同一任务,https://kenney.nl/assets/music-jingles,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+quest_complete,约会完成,sfx,static/audio/sfx/quest_complete.mp3,1.099,False,任务及回忆保存成功,https://kenney.nl/assets/music-jingles; https://opengameart.org/content/100-cc0-sfx,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。短乐句与纸张拟音组合。
+animal_reveal,动物结果揭晓,sfx,static/audio/sfx/animal_reveal.mp3,1.081,False,个人测试结果首次揭晓,https://kenney.nl/assets/music-jingles,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+pair_reveal,双人组合揭晓,sfx,static/audio/sfx/pair_reveal.mp3,1.073,False,双人组合首次出现,https://kenney.nl/assets/music-jingles,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+memory_save,回忆放入相册,sfx,static/audio/sfx/memory_save.mp3,0.234,False,手动回忆保存成功,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+memory_open,翻开回忆,sfx,static/audio/sfx/memory_open.mp3,0.427,False,打开回忆或照片大图,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。
+pet_touch,轻抚宠物,sfx,static/audio/sfx/pet_touch.mp3,0.576,False,主动点击宠物,https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。布料拟音适配抚摸，非真实宠物录音。
+pet_steps,宠物小步,sfx,static/audio/sfx/pet_steps.mp3,0.531,False,宠物实际移动时,https://kenney.nl/assets/rpg-audio; https://kenney.nl/assets/rpg-audio,CC0 1.0,MP3转换；去直流偏移；温和高频处理；响度/峰值控制；短音首尾淡化。通用脚步变速适配，非真实动物爪步。
