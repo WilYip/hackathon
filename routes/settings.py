@@ -6,11 +6,12 @@
 - POST /settings/key/test        测试当前保存的 key 还能不能用
 - POST /settings/key/delete      删除 key
 - POST /settings/motion          减少动态效果（只存在这台设备的 Cookie 里）
+- POST /settings/reset-code      另一半忘记 PIN 时，为 TA 生成一次性重置码（只显示一次）
 退出登录用 auth.logout（POST /logout）。
 API key 永远不返回给前端：页面上只显示末尾 4 位，例如 sk-****a3f9。
 """
 
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 
 from db import get_db
 from services import ai, auth, sound, whisper
@@ -18,6 +19,9 @@ from services.auth import login_required
 from services.i18n import LANG_COOKIE, SUPPORTED_LANGS, t
 
 bp = Blueprint("settings", __name__)
+
+# 刚生成的重置码：存在 session 里，设置页显示一次后就删掉（数据库里只有哈希）
+RESET_CODE_SHOWN = "reset_code_shown"
 
 # "减少动态效果"开关的 Cookie：值为 reduce 时全站关闭动画（系统设置了减少动态效果时也会关闭）
 MOTION_COOKIE = "motion"
@@ -35,7 +39,24 @@ def index():
         "settings.html",
         masked_key=whisper.mask_key(key),  # 只有末尾 4 位
         has_key=key is not None,
+        partner=auth.get_partner(g.user["id"]),
+        reset_minutes=auth.RESET_CODE_MINUTES,
+        new_reset_code=session.pop(RESET_CODE_SHOWN, None),
     )
+
+
+@bp.post("/settings/reset-code")
+@login_required
+def reset_code():
+    """另一半忘记了 PIN：生成一次性重置码，跳回设置页显示一次。"""
+    partner = auth.get_partner(g.user["id"])
+    if partner is None:
+        flash(t("settings.reset_needs_partner"), "error")
+        return _back()
+    code, _expires = auth.create_reset_code(partner["id"])
+    session[RESET_CODE_SHOWN] = code
+    sound.cue("ui_success")
+    return _back()
 
 
 @bp.post("/settings/profile")

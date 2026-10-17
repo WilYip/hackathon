@@ -33,7 +33,8 @@
     "title": "创建你们的小岛",
     "intro": "先给小岛起个名字吧，创建后把邀请码发给 TA。",
     "submit": "创建小岛",
-    "have_code": "已经有邀请码？加入小岛"
+    "have_code": "已经有邀请码？加入小岛",
+    "back": "返回"
   },
   "invite": {
     "title": "小岛建好啦！",
@@ -56,7 +57,12 @@
     "title": "回到 {island}",
     "who": "你是谁？",
     "submit": "登录",
-    "join_link": "还没加入？用邀请码加入小岛"
+    "join_link": "还没加入？用邀请码加入小岛",
+    "forgot": "忘记 PIN？",
+    "change_pin": "修改 PIN",
+    "new_character": "创建新角色",
+    "back": "返回登录",
+    "more": "其他操作"
   },
   "waiting": {
     "title": "等 TA 加入后就能一起玩啦",
@@ -78,7 +84,10 @@
     "nickname_taken": "这个昵称已经被 TA 用了，换一个吧",
     "choose_member": "请先选择你是谁",
     "pin_wrong": "PIN 不正确，还可以再试 {left} 次",
-    "locked": "错误次数太多啦，请 {minutes} 分钟后再试"
+    "locked": "错误次数太多啦，请 {minutes} 分钟后再试",
+    "reset_none": "现在没有可用的重置码（可能已经用过，或者超过了 30 分钟），请 TA 重新生成一个。",
+    "reset_wrong": "重置码不正确，还可以再试 {left} 次",
+    "confirm_rebuild": "请先勾选确认，再创建新角色"
   },
   "map": {
     "alt": "{island}的小岛",
@@ -374,7 +383,13 @@
     "motion_title": "动态效果",
     "motion_label": "减少动态效果",
     "motion_hint": "打开后，散步、揭晓、撒花等动画都不再播放，功能不受影响。只对这台设备有效；系统里开启了「减少动态效果」时也会自动生效。",
-    "motion_saved": "动态效果设置已保存。"
+    "motion_saved": "动态效果设置已保存。",
+    "reset_title": "帮 {name} 重置 PIN",
+    "reset_intro": "{name} 忘记 PIN 时，在这里生成一个重置码告诉 TA。重置码 {minutes} 分钟内有效，只能用一次；再生成一次，旧的就作废。",
+    "reset_button": "生成重置码",
+    "reset_code_for": "给 {name} 的重置码",
+    "reset_code_hint": "只显示这一次。请当面或用聊天软件告诉 TA，在登录页点「忘记 PIN？」使用。",
+    "reset_needs_partner": "另一半加入小岛后才能帮 TA 重置 PIN。"
   },
   "mood": {
     "title": "你现在的心情",
@@ -420,5 +435,29 @@
     "text": "先去初见森林走一走吧：回答 12 个小问题，就能遇见属于你的小动物，它会站在野餐垫上陪着你们。不着急，什么时候想去都可以。",
     "go": "去初见森林",
     "later": "先逛逛小岛"
+  },
+  "pin": {
+    "change_title": "修改 PIN",
+    "change_intro": "先输入现在的 PIN，再设置一个新的。",
+    "current": "现在的 PIN",
+    "new": "新的 PIN（4–6 位数字）",
+    "change_submit": "保存新 PIN",
+    "changed": "PIN 已经换好啦，用新的 PIN 登录吧。",
+    "forgot_title": "忘记 PIN",
+    "forgot_intro": "请 TA 登录后打开「小信箱 → 帮 TA 重置 PIN」，拿到一串 8 位重置码（30 分钟内有效），填在下面，再设置新的 PIN。",
+    "forgot_solo": "小岛上现在只有你一个人，没有人能帮你生成重置码。请让运行这座小岛的人在服务器的项目文件夹里执行：",
+    "reset_code": "重置码",
+    "reset_code_placeholder": "8 位字母和数字",
+    "forgot_submit": "设置新 PIN",
+    "reset_done": "新的 PIN 设置好啦，现在可以登录了。"
+  },
+  "character": {
+    "title": "创建新角色",
+    "intro": "换一个昵称，重新开始你的角色：你在初见森林测出的小动物和心情会被清空，回到默认形象，之后可以再去森林重新测试。你们的回忆、消息和约会记录都会保留。",
+    "who": "要重建哪个角色？",
+    "nickname": "新的昵称",
+    "confirm": "我知道我的小动物和心情会被清空",
+    "submit": "创建新角色",
+    "done": "新角色创建好啦！去初见森林认识新的自己吧。"
   }
 }

@@ -122,6 +122,24 @@
     </ul>
   </div>
 
+  {# ④½ 帮另一半重置 PIN：TA 忘记 PIN 时生成一次性重置码，TA 在登录页「忘记 PIN？」里使用 #}
+  {% if partner %}
+  <div class="letter-form card">
+    <h2>{{ t('settings.reset_title', name=partner.nickname) }}</h2>
+    <p class="hint">{{ t('settings.reset_intro', name=partner.nickname, minutes=reset_minutes) }}</p>
+    {% if new_reset_code %}
+    <div class="reset-code-box" role="status">
+      <span class="reset-code-label">{{ t('settings.reset_code_for', name=partner.nickname) }}</span>
+      <code class="reset-code">{{ new_reset_code }}</code>
+      <span class="hint">{{ t('settings.reset_code_hint') }}</span>
+    </div>
+    {% endif %}
+    <form method="post" action="{{ url_for('settings.reset_code') }}">
+      <button type="submit" class="btn btn-secondary">{{ icon('lock', 18) }}<span>{{ t('settings.reset_button') }}</span></button>
+    </form>
+  </div>
+  {% endif %}
+
   {# ⑤ 退出登录 #}
   <form method="post" action="{{ url_for('auth.logout') }}" class="settings-logout">
     <button type="submit" class="btn btn-secondary">{{ icon('logout', 18) }}<span>{{ t('nav.logout') }}</span></button>

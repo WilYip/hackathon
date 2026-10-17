@@ -4,7 +4,7 @@
 - 坐标全部来自 content/scene_anchors.json（底图像素），这里换算成百分比：
   场景容器保持底图原比例，所有东西用百分比定位，所以任何屏幕大小下都和底图对齐
 - 五个入口：HTML 热区（可以 Tab 聚焦）+ 悬停 / 聚焦时显示的透明柔光层
-- 两只动物站在野餐垫上：做过测试 → 海岛姿态（有的话）或结果立绘；没做测试 → 中性占位剪影
+- 两只动物站在野餐垫上：做过测试 → 海岛姿态（有的话）或结果立绘；没做测试 → 默认形象（白色黏土小人，左睁眼、右眯眼笑）
 - 森林里的两座石像：做过测试并且石像图片存在时才显示，下面先垫一层接触阴影；否则保持空底座
 
 脚底换算（交付必读第 3 条）：图片显示宽度 = 1024 × scale（底图像素），
@@ -70,7 +70,7 @@ def foot_box(anchor, pivot, canvas):
 
 
 def _player_sprite(member, side):
-    """一只动物在地图上用哪张图：海岛姿态 → 结果立绘 → 占位剪影（没做测试）。"""
+    """一只动物在地图上用哪张图：海岛姿态 → 结果立绘 → 默认形象（没做测试）。"""
     code = member["animal_code"] if member is not None else None
     if code and animals.animal_info(code):
         for kind in ("island", "result"):

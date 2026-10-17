@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-{% from "_macros.html" import text_field, pin_fields, error_box %}
+{% from "_macros.html" import text_field, pin_fields, error_box, back_link %}
 
 {% block title %}{{ t('join.title') }} · {{ t('app.name') }}{% endblock %}
 
 {% block content %}
 <section class="form-card card">
+  {# 返回登录页（小岛住满时下面也有"去登录"按钮） #}
+  {{ back_link(url_for('auth.login'), t('login.back')) }}
   {% if full %}
     {# 两人已到齐，不再接受加入 #}
     <h1>{{ t('join.full_title') }}</h1>

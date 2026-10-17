@@ -28,8 +28,8 @@
     "status": "awaiting_teammate"
   },
   "preQuiz": {
-    "left": "assets/scenes/island/shared/player_slot_left.svg",
-    "right": "assets/scenes/island/shared/player_slot_right.svg",
+    "left": "assets/scenes/island/shared/player_slot_left.png",
+    "right": "assets/scenes/island/shared/player_slot_right.png",
     "rule": "Do not show a personality animal before that player finishes the quiz."
   }
 }

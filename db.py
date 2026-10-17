@@ -146,6 +146,9 @@ NEW_COLUMNS = [
     # 情绪状态（VISUAL_DESIGN 13.4）：happy 开心 / wronged 委屈 / need_space 需要空间 / calm 平静
     ("members", "mood", "TEXT"),
     ("members", "mood_set_at", "TEXT"),  # 选择的时间（UTC），24 小时后自动恢复平静
+    # 忘记 PIN：另一半在小信箱生成的一次性重置码（只存哈希）和过期时间（UTC ISO 格式）
+    ("members", "reset_code_hash", "TEXT"),
+    ("members", "reset_code_expires", "TEXT"),
 ]
 
 

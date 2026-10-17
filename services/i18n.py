@@ -13,6 +13,8 @@ from flask import g, request
 SUPPORTED_LANGS = ("zh", "en")
 DEFAULT_LANG = "zh"
 LANG_COOKIE = "lang"
+# 还没登录时在页面右上角切换的语言也记在 session 里，登录成功后存成这位成员的语言
+PICKED_LANG = "picked_lang"
 
 I18N_DIR = Path(__file__).resolve().parent.parent / "i18n"
 

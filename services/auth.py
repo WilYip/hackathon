@@ -1,4 +1,5 @@
-"""账号相关的工具函数：读取小岛和成员、登录状态、邀请码、PIN 锁定。
+"""账号相关的工具函数：读取小岛和成员、登录状态、邀请码、PIN 锁定、
+修改 PIN、忘记 PIN 的重置码、重建自己的角色。
 
 其他功能（温柔传话、约会选选选……）需要"必须登录"时：
     from services.auth import login_required
@@ -25,6 +26,10 @@ LOCK_MINUTES = 5  # ……锁定 5 分钟
 # 邀请码字符：大写字母 + 数字，去掉容易看错的 0 / O / 1 / I
 INVITE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
 INVITE_LENGTH = 6
+
+# 忘记 PIN：另一半生成的重置码，8 位（字符和邀请码一样），30 分钟内有效，用一次就作废
+RESET_CODE_LENGTH = 8
+RESET_CODE_MINUTES = 30
 
 PIN_PATTERN = re.compile(r"^\d{4,6}$")
 ISLAND_NAME_MAX = 30
@@ -150,13 +155,18 @@ def locked_minutes_left(member):
 def check_pin(member, pin):
     """校验 PIN 并处理锁定计数。
     返回 ("ok", 0) / ("locked", 剩余分钟) / ("wrong", 剩余可尝试次数)。"""
+    return _check_secret(member, lambda: check_password_hash(member["pin_hash"], pin or ""))
+
+
+def _check_secret(member, is_correct):
+    """PIN 和重置码共用的锁定计数：连续错 5 次锁 5 分钟。is_correct 是一个返回 True / False 的函数。"""
     db = get_db()
 
     minutes = locked_minutes_left(member)
     if minutes:
         return "locked", minutes
 
-    if check_password_hash(member["pin_hash"], pin or ""):
+    if is_correct():
         db.execute("UPDATE members SET failed_attempts = 0, locked_until = NULL WHERE id = ?", (member["id"],))
         db.commit()
         return "ok", 0
@@ -172,3 +182,64 @@ def check_pin(member, pin):
     db.execute("UPDATE members SET failed_attempts = ?, locked_until = NULL WHERE id = ?", (failed, member["id"]))
     db.commit()
     return "wrong", MAX_FAILED_ATTEMPTS - failed
+
+
+# ---------- 修改 PIN / 忘记 PIN ----------
+
+
+def set_pin(member_id, pin):
+    """把 PIN 换成新的：同时清掉错误计数、锁定和没用过的重置码。"""
+    db = get_db()
+    db.execute(
+        "UPDATE members SET pin_hash = ?, failed_attempts = 0, locked_until = NULL, "
+        "reset_code_hash = NULL, reset_code_expires = NULL WHERE id = ?",
+        (hash_pin(pin), member_id),
+    )
+    db.commit()
+
+
+def create_reset_code(target_id):
+    """另一半忘记了 PIN：为 TA 生成一次性重置码（30 分钟有效）。
+    数据库里只存哈希；再生成一次时旧的码作废。返回 (重置码, 过期时间)。"""
+    code = "".join(secrets.choice(INVITE_ALPHABET) for _ in range(RESET_CODE_LENGTH))
+    expires = _now() + timedelta(minutes=RESET_CODE_MINUTES)
+    db = get_db()
+    db.execute(
+        "UPDATE members SET reset_code_hash = ?, reset_code_expires = ? WHERE id = ?",
+        (generate_password_hash(code), expires.isoformat(), target_id),
+    )
+    db.commit()
+    return code, expires
+
+
+def has_valid_reset_code(member):
+    """这位成员有没有还没过期的重置码。"""
+    if not member["reset_code_hash"] or not member["reset_code_expires"]:
+        return False
+    return datetime.fromisoformat(member["reset_code_expires"]) > _now()
+
+
+def check_reset_code(member, code):
+    """用重置码设置新 PIN 之前的校验，和 PIN 一样计入错误次数和锁定。
+    返回 ("ok", 0) / ("none", 0) 没有可用的码 / ("locked", 剩余分钟) / ("wrong", 剩余可尝试次数)。"""
+    if not has_valid_reset_code(member):
+        return "none", 0
+    code = normalize_invite_code(code)  # 和邀请码一样：忽略空格、横线和大小写
+    return _check_secret(member, lambda: check_password_hash(member["reset_code_hash"], code))
+
+
+# ---------- 重建自己的角色 ----------
+
+
+def rebuild_character(member_id, nickname):
+    """重新开始自己的角色：换昵称，清掉初见森林测出的动物（回到默认形象）和心情。
+    回忆、消息、约会记录都保留；已经揭晓的"猜猜看"也保留（它们在回忆里），
+    只删掉自己还没揭晓的猜测（重新测之前不能猜）。"""
+    db = get_db()
+    db.execute(
+        "UPDATE members SET nickname = ?, animal_code = NULL, mood = NULL, mood_set_at = NULL WHERE id = ?",
+        (nickname, member_id),
+    )
+    db.execute("DELETE FROM forest_results WHERE member_id = ?", (member_id,))
+    db.execute("DELETE FROM forest_guesses WHERE guesser_id = ? AND actual_code IS NULL", (member_id,))
+    db.commit()

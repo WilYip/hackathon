@@ -5,15 +5,15 @@
     "这里只写 scene_anchors.json 里没有的东西：五个入口对应哪个热区和柔光层、名称标签放在哪、回忆小屋里的三个互动区域。",
     "{mode} 会被替换成 desktop（横版 2560×1440）或 mobile（竖版 1440×2560，宽度 ≤700px 时使用）。",
     "labels：五个入口常驻名称标签的中心点，单位是底图像素（和 scene_anchors.json 一样）。",
-    "player_slot_pivot：测试前占位剪影（512×512 SVG）脚底在画布中的高度比例。",
+    "player_slot_pivot：测试前默认形象（1024×1024 PNG，左边睁眼、右边眯眼笑，摆放方式和动物结果立绘一样，脚底在 y=963）脚底在画布中的高度比例。",
     "pending：还没交付的素材。文件放到对应路径后刷新页面就会自动使用，不用改代码。",
     "打开 http://localhost:8080/?hotspots=1 会显示热区（红框）和动物站位（虚线），方便对齐。"
   ],
   "island": {
     "base": "scenes/island/{mode}/island_base_{mode}.webp",
     "statue_shadow": "scenes/island/{mode}/statue_pedestals_{mode}.png",
-    "player_slot": "scenes/island/shared/player_slot_{side}.svg",
-    "player_slot_pivot": 0.8,
+    "player_slot": "scenes/island/shared/player_slot_{side}.png",
+    "player_slot_pivot": 0.94043,
     "regions": {
       "memory_cottage": {"anchor": "cottage", "glow": "scenes/island/{mode}/hotspots/memory_cottage_{mode}.png",
                          "state": "scenes/island/{mode}/states/memory_cottage_glow_{mode}.png"},

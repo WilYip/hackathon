@@ -1,4 +1,4 @@
-{# 可复用的表单片段。用法：{% from "_macros.html" import text_field, pin_fields, error_box %} #}
+{# 可复用的表单片段。用法：{% from "_macros.html" import text_field, pin_fields, error_box, member_picker, back_to_login %} #}
 
 {# 错误提示框 #}
 {% macro error_box(error) %}
@@ -17,9 +17,10 @@
 {% endmacro %}
 
 {# PIN 输入框（可选"再输入一次"），附带"显示 PIN"开关 #}
-{% macro pin_fields(confirm=True, autocomplete="new-password") %}
+{# label：第一个输入框的标题，默认"PIN（4–6 位数字）"；修改 PIN 时写成"新的 PIN" #}
+{% macro pin_fields(confirm=True, autocomplete="new-password", label=None) %}
   <label class="field">
-    <span class="field-label">{{ t('form.pin') }}</span>
+    <span class="field-label">{{ label or t('form.pin') }}</span>
     <input type="password" name="pin" class="pin-input" inputmode="numeric" pattern="[0-9]{4,6}"
            minlength="4" maxlength="6" autocomplete="{{ autocomplete }}" required>
     {% if confirm %}<span class="field-hint">{{ t('form.pin_hint') }}</span>{% endif %}
@@ -35,4 +36,40 @@
     <input type="checkbox" class="show-pin-toggle">
     <span>{{ t('form.show_pin') }}</span>
   </label>
+{% endmacro %}
+
+{# 一个 PIN 输入框（没有"再输入一次"），例如修改 PIN 时的"现在的 PIN" #}
+{% macro single_pin(name, label, autocomplete="current-password") %}
+  <label class="field">
+    <span class="field-label">{{ label }}</span>
+    <input type="password" name="{{ name }}" class="pin-input" inputmode="numeric" pattern="[0-9]{4,6}"
+           minlength="4" maxlength="6" autocomplete="{{ autocomplete }}" required>
+  </label>
+{% endmacro %}
+
+{# "你是谁？"：每位成员一张头像卡片；只有一位成员时默认选中。
+   登录、修改 PIN、忘记 PIN、创建新角色共用 #}
+{% macro member_picker(members, people, selected_id, legend) %}
+  {% from "_avatar.html" import avatar %}
+  <fieldset class="field">
+    <legend class="field-label">{{ legend }}</legend>
+    <div class="member-choices">
+      {% for m in members %}
+      <label class="member-choice">
+        <input type="radio" name="member_id" value="{{ m.id }}"
+               {{ 'checked' if selected_id == m.id or (selected_id is none and members|length == 1) }}>
+        <span class="member-card">
+          {{ avatar(people[loop.index0]) }}
+          <span class="member-name">{{ m.nickname }}</span>
+        </span>
+      </label>
+      {% endfor %}
+    </div>
+  </fieldset>
+{% endmacro %}
+
+{# 表单卡片左上角的返回按钮（和功能页的"回到小岛"同一个样式） #}
+{% macro back_link(href, label) %}
+  {% from "_icons.html" import icon %}
+  <a class="back-link form-back" href="{{ href }}">{{ icon('back', 20) }}<span>{{ label }}</span></a>
 {% endmacro %}

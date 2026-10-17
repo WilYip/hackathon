@@ -11,7 +11,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, sessi
 from db import get_db
 from services import auth, mood, quest, scene, whisper
 from services.auth import login_required
-from services.i18n import LANG_COOKIE, SUPPORTED_LANGS, t
+from services.i18n import LANG_COOKIE, PICKED_LANG, SUPPORTED_LANGS, t
 
 bp = Blueprint("island", __name__)
 
@@ -89,4 +89,8 @@ def set_lang():
             db = get_db()
             db.execute("UPDATE members SET lang = ? WHERE id = ?", (lang, g.user["id"]))
             db.commit()
+        else:
+            # 还没登录（例如在登录页）：登录后用的是数据库里的语言，
+            # 所以先记下来，登录成功时再存进数据库；否则刚切换的语言登录后又会变回去
+            session[PICKED_LANG] = lang
     return resp

@@ -192,7 +192,7 @@ def test_english_result(client, partner, app):
 # ---------- 动物头像应用到全站 ----------
 
 
-PLACEHOLDER = "/static/usland/assets/ui/placeholders/avatar_placeholder.svg"
+PLACEHOLDER = "/static/usland/assets/ui/placeholders/avatar_placeholder.png"
 RESULT_INFP = "/static/usland/assets/animals/result/infp.png"
 
 
@@ -220,8 +220,8 @@ def test_animal_images_everywhere(client, partner, app, raw_client):
 
     # 首页：小雨站在野餐垫左边，阿木还没测，右边是占位剪影
     home = client.get("/").get_data(as_text=True)
-    assert "player_slot_right.svg" in home
-    assert "player_slot_left.svg" not in home
+    assert "player_slot_right.png" in home
+    assert "player_slot_left.png" not in home
     # 约会选选选：等待页上的小动物
     client.post("/quest/start")
     client.post("/quest/choose", data={"time": "1h", "budget": "free", "mood": "tired", "want": "memory"})
@@ -241,4 +241,4 @@ def test_no_personality_animal_before_quiz(client, partner, app):
         assert "animals/result/" not in html, url
         assert PLACEHOLDER in html, url
     home = client.get("/").get_data(as_text=True)
-    assert "player_slot_left.svg" in home and "player_slot_right.svg" in home
+    assert "player_slot_left.png" in home and "player_slot_right.png" in home

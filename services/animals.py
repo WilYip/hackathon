@@ -3,7 +3,7 @@
 图片是第三版美术素材（static/usland/assets/，路径规则见 content/character_assets.json）：
     animals/result/<代码小写>.png      16 种动物的结果立绘（1024×1024 透明画布）
     animals/reconcile/<代码小写>.png   和好姿态（等待队友交付，到位后温柔传话的拥抱动画自动使用）
-    ui/placeholders/avatar_placeholder.svg   还没做测试时的中性占位头像
+    ui/placeholders/avatar_placeholder.png   还没做测试时的默认形象头像（白色黏土小人的头部特写）
     animals/spirit.webp                （可选）初见森林里引导测试的森林小精灵
 
 规则（交付必读第 4 条）：
@@ -18,7 +18,7 @@ from services import assets, content, mood
 from services.i18n import tr
 
 IMAGE_EXTS = (".webp", ".png")
-PLACEHOLDER = "ui/placeholders/avatar_placeholder.svg"
+PLACEHOLDER = "ui/placeholders/avatar_placeholder.png"
 
 
 def find_image(name):

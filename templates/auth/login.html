@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% from "_macros.html" import pin_fields, error_box %}
-{% from "_avatar.html" import avatar %}
+{% from "_macros.html" import pin_fields, error_box, member_picker %}
 
 {% block title %}{{ t('login.submit') }} · {{ t('app.name') }}{% endblock %}
 
@@ -10,26 +9,17 @@
   {{ error_box(error) }}
 
   <form method="post" class="form" novalidate>
-    <fieldset class="field">
-      <legend class="field-label">{{ t('login.who') }}</legend>
-      {# 选择昵称：每位成员一张卡片；只有一位成员时默认选中 #}
-      <div class="member-choices">
-        {% for m in members %}
-        <label class="member-choice">
-          <input type="radio" name="member_id" value="{{ m.id }}"
-                 {{ 'checked' if selected_id == m.id or (selected_id is none and members|length == 1) }}>
-          <span class="member-card">
-            {{ avatar(people[loop.index0]) }}
-            <span class="member-name">{{ m.nickname }}</span>
-          </span>
-        </label>
-        {% endfor %}
-      </div>
-    </fieldset>
-
+    {{ member_picker(members, people, selected_id, t('login.who')) }}
     {{ pin_fields(confirm=False, autocomplete="current-password") }}
     <button type="submit" class="btn btn-primary btn-block">{{ t('login.submit') }}</button>
   </form>
+
+  {# 登录页下方的小入口：忘记 PIN、修改 PIN、创建新角色（重建自己的角色） #}
+  <nav class="form-links" aria-label="{{ t('login.more') }}">
+    <a href="{{ url_for('auth.forgot_pin') }}">{{ t('login.forgot') }}</a>
+    <a href="{{ url_for('auth.change_pin') }}">{{ t('login.change_pin') }}</a>
+    <a href="{{ url_for('auth.new_character') }}">{{ t('login.new_character') }}</a>
+  </nav>
 
   {% if can_join %}
   <p class="form-footer"><a href="{{ url_for('auth.join') }}">{{ t('login.join_link') }}</a></p>

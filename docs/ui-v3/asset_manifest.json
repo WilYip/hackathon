@@ -384,15 +384,15 @@
     "frames": 1
   },
   {
-    "path": "assets/scenes/island/shared/player_slot_left.svg",
-    "bytes": 556,
-    "sha256": "605df51d1c243be8cff4d2bd5f4d665d2ea0a8300979ad0ff16f2e7a2e690134",
+    "path": "assets/scenes/island/shared/player_slot_left.png",
+    "bytes": 394628,
+    "sha256": "d122f1c01bf33362de0ec3893546e21db8b55d78e15b07fe3832d18cc99091db",
     "status": "included"
   },
   {
-    "path": "assets/scenes/island/shared/player_slot_right.svg",
-    "bytes": 556,
-    "sha256": "39695fbd64cc5d3d32860dfb7eaba2d58fd397a5d443e30bce7faf8579c5b9b7",
+    "path": "assets/scenes/island/shared/player_slot_right.png",
+    "bytes": 390435,
+    "sha256": "77198ee3d30c8144b80692f015ad6c7fb10d6df275fe36e018c5a6ec78ff5de7",
     "status": "included"
   },
   {
@@ -662,9 +662,9 @@
     "status": "included"
   },
   {
-    "path": "assets/ui/placeholders/avatar_placeholder.svg",
-    "bytes": 457,
-    "sha256": "5b10e093b76713fd8117e12298be9a7d7f10c91ea77f4f3d3efc33f9a739e8f2",
+    "path": "assets/ui/placeholders/avatar_placeholder.png",
+    "bytes": 194096,
+    "sha256": "46aed7a15a370a7c7d775788e9ee76e578ad763e3ba80a06e3470c7ff9307f6d",
     "status": "included"
   },
   {

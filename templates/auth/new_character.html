@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, single_pin, error_box, member_picker, back_link %}
+
+{% block title %}{{ t('character.title') }} · {{ t('app.name') }}{% endblock %}
+
+{% block content %}
+{# 创建新角色：选人 → 现在的 PIN → 新昵称 → 勾选确认。
+   成功后直接登录回小岛：动物和心情已清空，显示默认形象，可以再去初见森林测试 #}
+<section class="form-card card">
+  {{ back_link(url_for('auth.login'), t('login.back')) }}
+  <h1>{{ t('character.title') }}</h1>
+  <p class="form-intro">{{ t('character.intro') }}</p>
+  {{ error_box(error) }}
+
+  <form method="post" class="form" novalidate>
+    {{ member_picker(members, people, selected_id, t('character.who')) }}
+    {{ single_pin('pin', t('pin.current')) }}
+    {{ text_field('nickname', t('character.nickname'), nickname, t('form.nickname_placeholder'), 20, 'nickname') }}
+    <label class="check">
+      <input type="checkbox" name="confirm" value="1" required>
+      <span>{{ t('character.confirm') }}</span>
+    </label>
+    <button type="submit" class="btn btn-primary btn-block">{{ t('character.submit') }}</button>
+  </form>
+</section>
+{% endblock %}

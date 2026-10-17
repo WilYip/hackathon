@@ -38,7 +38,7 @@
 
 ## Animal and statue replacement
 
-Load the island background first. Place each player animal using the corresponding `players.left` or `players.right` anchor in `integration/scene_anchors.json`. Before a result exists, display `player_slot_left.svg` or `player_slot_right.svg` instead.
+Load the island background first. Place each player animal using the corresponding `players.left` or `players.right` anchor in `integration/scene_anchors.json`. Before a result exists, display `player_slot_left.png` or `player_slot_right.png` (default clay figure: open eyes on the left, big smile on the right) instead.
 
 For the island forest, render the contact shadow below the statue, then place each teammate-provided statue at its matching `statues.left` or `statues.right` foot anchor. The stone pedestal is already in the base. These anchors apply to the island, not the separate forest quiz background. A single completed result can replace one side while the other remains empty.
 

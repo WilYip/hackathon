@@ -145,8 +145,8 @@ def test_slots_before_quiz(client, partner, app):
     setup_pair(client, partner, app)
     html = client.get("/").get_data(as_text=True)
     # 没做测试：两边都是中性占位剪影，不显示任何人格动物
-    assert html.count("player_slot_left.svg") == 2  # 横版、竖版各一次
-    assert html.count("player_slot_right.svg") == 2
+    assert html.count("player_slot_left.png") == 2  # 横版、竖版各一次
+    assert html.count("player_slot_right.png") == 2
     assert "animals/result/" not in html
 
 
@@ -163,8 +163,8 @@ def test_result_animal_on_blanket(client, partner, app):
     left = style_of(html, r'<button type="button" class="animal animal-left')
     assert f"left: {expected['left']}%; top: {expected['top']}%" in left
     # 两人状态独立：阿木还没测，右边仍是占位剪影
-    assert "player_slot_right.svg" in html
-    assert "player_slot_left.svg" not in html
+    assert "player_slot_right.png" in html
+    assert "player_slot_left.png" not in html
 
 
 def test_island_pose_preferred_over_result(client, partner, app):

@@ -14,10 +14,24 @@
 - 人类追加修改（2026-10-17，M8 之前）：情绪状态修复 + 初见森林互动改造：**已完成待验证**
 - 人类追加修改（2026-10-17，M8 之前）：全站声音系统：**已完成待验证**（压缩脚本已写好，但本机没有 ffmpeg，还没真正压缩）
 - 人类追加修改（2026-10-17，M8 之前）：**第三版美术素材接入**：**已完成待验证**
+- 人类追加修改（2026-10-17，接手后第一批）：登录页修改 PIN / 忘记 PIN / 创建新角色、登录前切换语言 bug、加入小岛返回按钮、默认形象换成白色黏土小人：**已完成待验证**（分支 `feat/login-pin-reset-default-avatar`，未提交）
 - 下一个：M8 打磨与部署准备（等人类确认后开始）
 - 美术方向：**明亮午后黏土风**（第三版，配色以 `static/usland/tokens.css` = `docs/ui-v3/integration/tokens.css` 为准）；素材在 `static/usland/assets/`，说明在 `docs/ui-v3/`；代码里不绘制任何动物插画
 
 ## 已完成
+- **接手后第一批修改（2026-10-17）**
+  - **默认形象**：没做初见森林测试时不再显示半透明占位剪影，而是人类提供的白色黏土小人（去掉了图上的"AI生成 / 即梦AI"水印，背景抠成透明）。第一位成员（左）睁眼，第二位（右）眯眼笑；头像统一用睁眼小人的头部特写
+    - 素材：`static/usland/assets/scenes/island/shared/player_slot_{left,right}.png`（1024×1024，摆法和动物结果立绘一样：脚底 y=963，所以 `content/scene.json` 的 `player_slot_pivot` 改成 0.94043）、`ui/placeholders/avatar_placeholder.png`（512×512）；删除了旧的三个 SVG
+    - `content/character_assets.json` 和 `docs/ui-v3/integration/character_asset_contract.json` 同步改成 .png（测试要求两份一致）；`docs/ui-v3/asset_manifest.json` 的三条记录更新了路径、大小和哈希
+    - CSS：默认形象和动物一样呼吸、有贴地阴影（删掉了 `.animal.is-slot` 的特殊处理）；`.avatar-placeholder` 改用和动物头像一样的薄荷色圆底（白色小人放在米色底上看不清）
+  - **修改 PIN** `/pin/change`：选人 → 现在的 PIN → 新 PIN 两次；新 PIN 格式不对不算错误次数，现在的 PIN 错了和登录共用锁定计数
+  - **忘记 PIN** `/pin/forgot`：另一半登录 → 小信箱"帮 TA 重置 PIN"→ 生成 8 位重置码（30 分钟有效、只能用一次、数据库只存哈希、只在页面上显示一次）→ 忘记的人在这里填重置码和新 PIN。重置码输错也计入锁定。小岛上只有一个人时，页面提示运行 `scripts/reset_pin.py`（新脚本，服务器上直接重置，PIN 用 getpass 输入）
+  - **创建新角色** `/character/new`（人类的意思是"重建自己的角色"）：选人 → 现在的 PIN → 新昵称（可以和原来一样，不能和对方一样）→ 勾选确认 → 清空 `animal_code`、心情、自己的 `forest_results` 和自己还没揭晓的猜猜看；回忆、消息、约会、已揭晓的猜猜看都保留；成功后直接登录回小岛（显示默认形象和新手引导）
+  - **登录前切换语言 bug**：原因是登录页右上角切换语言只写进 Cookie，登录后 `g.user_lang`（数据库里的语言）优先，又变回原来的语言。修复：没登录时 `/lang` 同时把语言记在 session（`PICKED_LANG`），登录 / 创建新角色成功时写进这位成员的数据库语言（`routes/auth._log_in_keeping_lang`）；没在登录页切换过时仍用自己保存的语言
+  - **返回按钮**：加入小岛、修改 PIN、忘记 PIN、创建新角色页左上角"返回登录"，创建小岛页"返回"（宏 `back_link`，样式同功能页 `.back-link`）
+  - 代码：`services/auth.py`（`set_pin`、`create_reset_code`、`check_reset_code`、`rebuild_character`，PIN 和重置码共用 `_check_secret` 锁定计数）、`db.py` 新列 `members.reset_code_hash` / `reset_code_expires`（启动时自动补列）、`routes/auth.py`、`routes/settings.py`（`POST /settings/reset-code`）、`routes/island.py`、`templates/_macros.html`（新宏 `member_picker`、`single_pin`、`back_link`，`pin_fields` 加 `label` 参数）、`templates/auth/{login,join,create,change_pin,forgot_pin,new_character}.html`、`templates/settings.html`、`i18n/*.json`（新分组 `pin`、`character`）、`static/css/style.css`
+  - 测试：新增 `tests/test_pin_reset.py`（15 个）；`test_scene.py`、`test_forest.py` 改成新的 .png 路径。**261 个测试全部通过**；语言 bug 的测试在旧代码上确认会失败
+  - 浏览器实测（8091，`data/check`）：登录页三个入口、EN 登录后首页仍是英文、野餐垫上两个默认形象、小信箱生成重置码、375 宽度下忘记 PIN / 创建新角色 / 加入小岛页
 - **第三版美术素材接入（2026-10-17）**（业务功能、权限、隐私、API 全部没改）
   - 配置：`content/scene_anchors.json`、`content/character_assets.json` 是 `docs/ui-v3/integration/` 的原样副本（有测试保证一致）；`content/scene.json` 重写为第三版接入配置（入口 ↔ 热区 ↔ 柔光层、名称标签位置、回忆小屋互动区域、功能页背景、待交付素材路径）；`static/usland/tokens.css` = 交付的 tokens.css
   - 新 `services/assets.py`：素材路径 / 网址、**服务器端判断文件是否存在**、按 `character_assets.json` 找动物图片（result / island / statues / reconcile）、内联第三版 SVG 图标
@@ -160,9 +174,13 @@
 - 根目录的 `test_ai.py` 会真实调用 DeepSeek，已通过 `pytest.ini` 的 `testpaths = tests` 排除
 - gunicorn 在 Windows 上无法运行（只在 Docker/Linux 中使用），本地请用 `python app.py`
 - 来源校验用的是 `request.host`；部署到 Zenith 时如果前面有反向代理，可能需要加 `ProxyFix`，M8 确认
-- 忘记 PIN 目前没有找回方式（规格未要求）
+- 忘记 PIN：需要另一半帮忙生成重置码；小岛上只有一人时只能在服务器上运行 `scripts/reset_pin.py`
+- 默认形象是从人类给的效果图里抠出来的（背景和小人颜色很接近，轮廓是半手动校准的），边缘放大看可能有 1–2 像素不完美；以后有队友交付的透明原图时直接覆盖那三个 PNG 即可
+- `requirements.txt` 是 UTF-16 编码（pip 能读，但有的编辑器 / 工具会显示乱码），以后可以转成 UTF-8
 
 ## 重要决定
+- （2026-10-17 接手）忘记 PIN 用"另一半生成一次性重置码"（人类选择），不用邮箱、不用邀请码；"创建新角色"= 验证 PIN 后重建自己的角色（不新增成员、不删小岛）；默认形象左睁眼、右眯眼笑，头像统一用睁眼头部（人类选择）
+- （2026-10-17 接手）登录前切换语言 = 明确选择，登录后写进数据库；同一台设备上别人留下的语言 Cookie 不会覆盖自己保存的语言
 - （第三版）第三版素材的路径、坐标、配色取代之前所有视觉约定；`content/scene_anchors.json`、`content/character_assets.json`、`static/usland/tokens.css` 都是交付文件的**原样副本**，队友更新后直接覆盖，测试会检查前两个和 `docs/ui-v3/integration/` 是否一致
 - （第三版）横竖切换点是**宽度 ≤700px**（交付必读），不再看横竖屏方向；768 竖屏平板用横版底图，上下用海面渐变填充
 - （第三版）测试前占位剪影 `player_slot_*.svg` 的脚底比例设为 0.8（SVG 里地面椭圆在约 79% 高度，交付没写），在 `content/scene.json` 的 `player_slot_pivot`
@@ -204,7 +222,14 @@ pip install -r requirements.txt -r requirements-dev.txt
 pytest
 python app.py
 ```
-- `pytest` 应显示 246 passed
+- `pytest` 应显示 261 passed
+- **登录页新功能（2026-10-17 接手后）**：
+  1. 退出登录 → 登录页右上角点 EN → 登录：首页仍是英文（之前会变回中文）
+  2. 登录页下方有"忘记 PIN？· 修改 PIN · 创建新角色"；加入小岛、这三页左上角都有"返回登录"
+  3. 修改 PIN：选人、填现在的 PIN 和新 PIN → 回到登录页提示已修改，旧 PIN 不能用了
+  4. 忘记 PIN：B 登录 → 小信箱最下面"帮 A 重置 PIN"→ 生成重置码 → A 在登录页"忘记 PIN？"里填码和新 PIN；同一个码第二次用会提示没有可用的重置码
+  5. 创建新角色：选人、现在的 PIN、新昵称、勾选确认 → 直接回到小岛，名牌是新昵称，野餐垫上是默认小人
+  6. 没做测试的人：野餐垫左边睁眼小人、右边眯眼笑小人；顶部栏和登录页头像是小人的头部
 - **第三版美术素材（2026-10-17）**：浏览器 F12 → 设备工具栏，依次设成 375、768、1280、1920 宽度（高度 812 / 1024 / 800 / 1080），每个宽度都刷新首页：
   1. **375**：竖版小岛（森林和小屋在上、野餐垫在中间、码头在下），整座岛完整显示没有被裁；五个名称标签互不重叠；底部导航不挡住码头标签
   2. **768**：横版小岛，宽度铺满，上下是天空 → 海面渐变；**1280 / 1920**：横版小岛在顶部栏下方一屏放下，没有滚动条，1920 两侧是海面色
@@ -263,6 +288,7 @@ python app.py
   6. 切换 EN：Happy / Hurt / Need space / Calm
 
 ## 更新日志
+- 2026-10-17 接手后第一批：默认形象换成白色黏土小人（去水印抠图）、登录页修改 PIN / 忘记 PIN（另一半生成重置码 + 服务器脚本）/ 创建新角色、修复登录前切换语言登录后变回去、加入小岛等页面加返回按钮，261 个测试通过，浏览器实测
 - 2026-10-17 第三版美术素材接入：横竖主岛按交付坐标定位（不裁切）、HTML 热区 + 透明柔光、野餐垫动物（测试前占位剪影）、石像与接触阴影（服务器端判断文件）、新用户森林引导、五个功能页背景与不透明面板、回忆小屋相框 / 相册 / 明信片互动、第三版图标 / Logo / favicon / 占位图、配色改用 tokens；删除带水印参考图和整图模式，246 个测试通过，浏览器 375 / 768 / 1280 / 1920 实测
 - 2026-10-17 全站声音系统：全局声音管理器（默认关闭、多页面接续与交叉淡化、后台暂停、事件去重、失败静默）、首页开关与小信箱声音设置、按事件对照表接入各页面、音乐致谢与 README 授权说明、bgm 压缩脚本（未实际压缩：本机无 ffmpeg），228 个测试通过，浏览器实测
 - 2026-10-17 情绪状态修复（名牌防重叠、清除 / 再点取消心情）+ 初见森林互动改造（森林散步小路、小精灵回应、选项小动画、森林发现、灌木丛揭晓、猜猜 TA 是哪只动物并记回忆、减少动态效果开关），215 个测试通过，浏览器 375 / 768 / 1280 / 1920 实测

@@ -1,10 +1,11 @@
 {% extends "base.html" %}
-{% from "_macros.html" import text_field, pin_fields, error_box %}
+{% from "_macros.html" import text_field, pin_fields, error_box, back_link %}
 
 {% block title %}{{ t('create.title') }} · {{ t('app.name') }}{% endblock %}
 
 {% block content %}
 <section class="form-card card">
+  {{ back_link(url_for('island.index'), t('create.back')) }}
   <h1>{{ t('create.title') }}</h1>
   <p class="form-intro">{{ t('create.intro') }}</p>
   {{ error_box(error) }}

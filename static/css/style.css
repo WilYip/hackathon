@@ -699,11 +699,7 @@ body.logged-in.page-map .main {
   animation: breathe 3.6s ease-in-out infinite;
 }
 
-/* 没做测试的占位剪影：安静地等着，不呼吸 */
-.animal.is-slot .animal-img {
-  animation: none;
-  filter: none;
-}
+/* 没做测试的默认形象（白色黏土小人）：和动物立绘一样呼吸、贴地，不再单独处理 */
 
 .animal:focus-visible {
   outline: none;
@@ -1114,6 +1110,78 @@ body.logged-in.page-map .main {
   padding: 10px 0;
   color: var(--pink-deep);
   font-weight: 700;
+}
+
+/* 表单卡片左上角的返回按钮（加入小岛、修改 PIN 等页面），样式同功能页的 .back-link */
+.form-card > .form-back {
+  margin: -12px 0 6px -8px;
+}
+
+/* 登录页下方的小入口：忘记 PIN · 修改 PIN · 创建新角色（手机上自动换行） */
+.form-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 6px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
+.form-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 14px;
+  color: var(--text-soft);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .form-links a:hover {
+    background: rgb(127 146 121 / 0.35);
+    color: var(--text);
+  }
+}
+
+/* 忘记 PIN（小岛上只有一人时）：给运行小岛的人看的命令 */
+.command-box {
+  margin: 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  border: 2px dashed var(--line);
+  font-size: 0.9rem;
+}
+
+/* 小信箱：刚生成的重置码，只显示这一次 */
+.reset-code-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 4px 0 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--mint-soft);
+  border: 2px solid var(--mint-deep);
+}
+
+.reset-code-label {
+  font-weight: 700;
+}
+
+.reset-code {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  user-select: all;
 }
 
 /* 中文 / English 两个并排的选项、登录时选择成员：选中时抬起并显示勾，不只靠颜色区分 */
@@ -5186,9 +5254,9 @@ body.has-scene-bg .footer p {
   border-radius: var(--radius-sm);
 }
 
-/* 测试前的中性占位头像：不加白边和渐变 */
+/* 测试前的默认形象头像：白色小人放在米色底上看不清，用和动物头像一样的薄荷色圆底 */
 .avatar-placeholder {
-  background: var(--cream);
+  object-fit: cover;
 }
 
 /* 新手引导窗口：两个按钮上下排，主要按钮在上 */

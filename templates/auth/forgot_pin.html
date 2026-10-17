@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import text_field, pin_fields, error_box, member_picker, back_link %}
+
+{% block title %}{{ t('pin.forgot_title') }} · {{ t('app.name') }}{% endblock %}
+
+{% block content %}
+{# 忘记 PIN：另一半在小信箱里生成 8 位重置码 → 这里选人、填重置码和新 PIN。
+   小岛上只有一个人时没人能生成重置码，只能由运行小岛的人在服务器上执行脚本 #}
+<section class="form-card card">
+  {{ back_link(url_for('auth.login'), t('login.back')) }}
+  <h1>{{ t('pin.forgot_title') }}</h1>
+
+  {% if solo %}
+    <p class="form-intro">{{ t('pin.forgot_solo') }}</p>
+    <pre class="command-box"><code>.venv\Scripts\python.exe scripts\reset_pin.py</code></pre>
+  {% else %}
+    <p class="form-intro">{{ t('pin.forgot_intro') }}</p>
+    {{ error_box(error) }}
+
+    <form method="post" class="form" novalidate>
+      {{ member_picker(members, people, selected_id, t('login.who')) }}
+      {{ text_field('reset_code', t('pin.reset_code'), '', t('pin.reset_code_placeholder'), 12, 'one-time-code',
+                    'class="code-input" autocapitalize="characters" spellcheck="false"') }}
+      {{ pin_fields(confirm=True, label=t('pin.new')) }}
+      <button type="submit" class="btn btn-primary btn-block">{{ t('pin.forgot_submit') }}</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

@@ -33,7 +33,8 @@
     "title": "Create your island",
     "intro": "Give your island a name, then send the invite code to your partner.",
     "submit": "Create island",
-    "have_code": "Have an invite code? Join an island"
+    "have_code": "Have an invite code? Join an island",
+    "back": "Back"
   },
   "invite": {
     "title": "Your island is ready!",
@@ -56,7 +57,12 @@
     "title": "Back to {island}",
     "who": "Who are you?",
     "submit": "Log in",
-    "join_link": "Not a resident yet? Join with an invite code"
+    "join_link": "Not a resident yet? Join with an invite code",
+    "forgot": "Forgot PIN?",
+    "change_pin": "Change PIN",
+    "new_character": "New character",
+    "back": "Back to login",
+    "more": "More options"
   },
   "waiting": {
     "title": "You can play together once your partner joins",
@@ -78,7 +84,10 @@
     "nickname_taken": "Your partner already uses this nickname. Please pick another",
     "choose_member": "Please choose who you are first",
     "pin_wrong": "Wrong PIN. {left} tries left",
-    "locked": "Too many tries. Please try again in {minutes} min"
+    "locked": "Too many tries. Please try again in {minutes} min",
+    "reset_none": "There's no valid reset code right now (it may have been used, or it's older than 30 minutes). Ask your partner to create a new one.",
+    "reset_wrong": "That reset code isn't right. {left} tries left.",
+    "confirm_rebuild": "Please tick the box to confirm first."
   },
   "map": {
     "alt": "{island}",
@@ -374,7 +383,13 @@
     "motion_title": "Motion",
     "motion_label": "Reduce motion",
     "motion_hint": "When on, walking, reveal and confetti animations stop playing; everything still works. Applies to this device only, and turns on automatically if your system asks for reduced motion.",
-    "motion_saved": "Motion setting saved."
+    "motion_saved": "Motion setting saved.",
+    "reset_title": "Reset {name}'s PIN",
+    "reset_intro": "If {name} forgets their PIN, create a reset code here and tell them. It works for {minutes} minutes, only once; creating a new one cancels the old one.",
+    "reset_button": "Create reset code",
+    "reset_code_for": "Reset code for {name}",
+    "reset_code_hint": "Shown only this once. Tell them in person or by message, then they can use it under “Forgot PIN?” on the login page.",
+    "reset_needs_partner": "You can reset your partner's PIN once they've joined."
   },
   "mood": {
     "title": "How are you feeling?",
@@ -420,5 +435,29 @@
     "text": "Why not start with a stroll through First Meet Forest? Answer 12 little questions to meet your animal, and it will sit on the picnic blanket with you. No rush, go whenever you like.",
     "go": "Go to the forest",
     "later": "Look around first"
+  },
+  "pin": {
+    "change_title": "Change your PIN",
+    "change_intro": "Enter your current PIN, then choose a new one.",
+    "current": "Current PIN",
+    "new": "New PIN (4–6 digits)",
+    "change_submit": "Save new PIN",
+    "changed": "Your PIN has been changed. Log in with the new one.",
+    "forgot_title": "Forgot your PIN",
+    "forgot_intro": "Ask your partner to log in and open Mailbox → Reset your partner's PIN. They'll get an 8-character reset code (valid for 30 minutes). Enter it below and choose a new PIN.",
+    "forgot_solo": "You're the only islander right now, so nobody can create a reset code for you. Ask whoever runs this island to run this in the project folder on the server:",
+    "reset_code": "Reset code",
+    "reset_code_placeholder": "8 letters and numbers",
+    "forgot_submit": "Set new PIN",
+    "reset_done": "Your new PIN is set. You can log in now."
+  },
+  "character": {
+    "title": "Start a new character",
+    "intro": "Pick a nickname and start your character over: the animal you found in the First-Meet Forest and your mood will be cleared, and you'll be back to the default look. You can take the forest quiz again afterwards. Your memories, messages and dates are all kept.",
+    "who": "Which character is yours?",
+    "nickname": "New nickname",
+    "confirm": "I understand my animal and mood will be cleared",
+    "submit": "Create new character",
+    "done": "Your new character is ready! Visit the First-Meet Forest to find your animal."
   }
 }

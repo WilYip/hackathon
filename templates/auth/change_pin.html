@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import pin_fields, single_pin, error_box, member_picker, back_link %}
+
+{% block title %}{{ t('pin.change_title') }} · {{ t('app.name') }}{% endblock %}
+
+{% block content %}
+{# 修改 PIN：选人 → 现在的 PIN → 新 PIN 两次。成功后回到登录页 #}
+<section class="form-card card">
+  {{ back_link(url_for('auth.login'), t('login.back')) }}
+  <h1>{{ t('pin.change_title') }}</h1>
+  <p class="form-intro">{{ t('pin.change_intro') }}</p>
+  {{ error_box(error) }}
+
+  <form method="post" class="form" novalidate>
+    {{ member_picker(members, people, selected_id, t('login.who')) }}
+    {{ single_pin('current_pin', t('pin.current')) }}
+    {{ pin_fields(confirm=True, label=t('pin.new')) }}
+    <button type="submit" class="btn btn-primary btn-block">{{ t('pin.change_submit') }}</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}
