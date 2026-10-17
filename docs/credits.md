@@ -32,5 +32,10 @@
 - **Music Jingles** — Kenney; https://kenney.nl/assets/music-jingles; CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/). Edited excerpts/composites may be used; see audio_manifest.json.
 
 
+## 图片 / Images
+
+- **Fluent Emoji (3D)** — Microsoft; https://github.com/microsoft/fluentui-emoji; MIT License (copy in `docs/licenses/fluent_emoji_MIT.txt`). Used in `static/usland/assets/ui/fun/` for the Bench Gomoku props and result screen: tomato, egg, hot beverage (`coffee.png`), collision (`splash.png`), trophy, smiling face with tear (`tear_smile.png`), handshake, sparkles. Changes: resized from 256×256 to 128×128 PNG.
+
+
 ## 说明
 6首音乐来自不同已发表曲目，不是同一主题的定制变奏。部分环境音及物件音经剪辑适配；来源和改动逐项记录在 audio_manifest.json / sound_list.csv。

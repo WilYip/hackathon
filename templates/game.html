@@ -15,7 +15,8 @@
    服务器直接画好棋盘：每个空位是一个表单按钮，没有 JavaScript 也能下；
    static/js/game.js 接管点击（不刷新页面）、每 2.5 秒同步对方的落子。 #}
 <section class="gomoku" data-gomoku
-         data-state-url="{{ url_for('game.api_state') }}" data-move-url="{{ url_for('game.move') }}">
+         data-state-url="{{ url_for('game.api_state') }}" data-move-url="{{ url_for('game.move') }}"
+         data-prop-url="{{ url_for('game.prop') }}" data-new-url="{{ url_for('game.new') }}">
 
   <header class="quest-head">
     <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
@@ -51,7 +52,22 @@
     {%- elif state.turn == 'me' -%}{{ t('game.turn_me') }}
     {%- else -%}{{ t('game.turn_partner', name=partner.nickname) }}{%- endif -%}
   </p>
+
+  {# 道具互动（像斗地主那样）：点一下，道具从我的头像飞到 TA 的头像上；TA 那边 2.5 秒内也会看到。
+     需要 JavaScript，所以默认隐藏，game.js 再显示出来 #}
+  <div class="gomoku-props" data-props role="group" aria-label="{{ t('game.props_label') }}" hidden>
+    {% for kind in ('coffee', 'tomato', 'egg') %}
+    <button type="button" class="gomoku-prop" data-prop="{{ kind }}" title="{{ t('game.prop_' ~ kind) }}"
+            aria-label="{{ t('game.prop_' ~ kind) }}">
+      <img src="{{ asset_url('ui/fun/' ~ kind ~ '.png') }}" alt="" width="36" height="36" draggable="false">
+      <span>{{ t('game.prop_' ~ kind ~ '_short') }}</span>
+    </button>
+    {% endfor %}
   </div>
+  </div>
+
+  {# 道具的提示（"阿木 朝你扔了一个番茄！"），浮在页面上方一小会儿 #}
+  <p class="gomoku-toast" data-toast role="status" aria-live="polite"></p>
 
   {# 棋盘：15 × 15 个交叉点。每个点是一个按钮（name=cell, value=行,列） #}
   <form method="post" action="{{ url_for('game.move') }}" class="gomoku-board-wrap" data-board-form>
@@ -88,13 +104,49 @@
   </div>
   <p class="hint gomoku-hint card">{{ t('game.rules') }}</p>
 
+  {# 一局结束时的结算画面（game.js 填内容并打开）：胜利 / 输了 / 平局 + 手数、用时、总战绩 #}
+  <dialog class="panel gomoku-settle" data-settle aria-labelledby="settle-title">
+    <div class="settle-confetti" data-settle-confetti aria-hidden="true"></div>
+    <img class="settle-icon" data-settle-icon src="" alt="" width="96" height="96">
+    <h2 id="settle-title" data-settle-title></h2>
+    <p class="settle-text" data-settle-text></p>
+    <dl class="settle-stats">
+      <div><dt>{{ t('game.settle_moves') }}</dt><dd data-settle-moves></dd></div>
+      <div><dt>{{ t('game.settle_time') }}</dt><dd data-settle-time></dd></div>
+      <div class="settle-record"><dt>{{ t('game.settle_record') }}</dt><dd data-settle-record></dd></div>
+    </dl>
+    <div class="panel-actions settle-actions">
+      <form method="post" action="{{ url_for('game.new') }}" data-settle-new>
+        <button type="submit" class="btn btn-primary btn-block">{{ icon('stones', 18) }}<span>{{ t('game.settle_again') }}</span></button>
+      </form>
+      <button type="button" class="btn btn-secondary btn-block" data-settle-close>{{ t('game.settle_view') }}</button>
+      <a class="btn btn-ghost btn-block" href="{{ url_for('island.index') }}">{{ t('game.settle_home') }}</a>
+    </div>
+  </dialog>
+
   {# 页面脚本用：最新情况和提示文字 #}
   <script type="application/json" id="gomoku-state">{{ state | tojson }}</script>
   <script type="application/json" id="gomoku-text">{{ {
     'turn_me': t('game.turn_me'), 'turn_partner': t('game.turn_partner', name=partner.nickname),
     'result_win': t('game.result_win'), 'result_lose': t('game.result_lose', name=partner.nickname),
     'result_draw': t('game.result_draw'), 'no_game': t('game.no_game'),
-    'black': t('game.black'), 'white': t('game.white'), 'cell': t('game.cell', row='{row}', col='{col}')
+    'black': t('game.black'), 'white': t('game.white'), 'cell': t('game.cell', row='{row}', col='{col}'),
+    'got_coffee': t('game.got_coffee', name=partner.nickname), 'got_tomato': t('game.got_tomato', name=partner.nickname),
+    'got_egg': t('game.got_egg', name=partner.nickname), 'sent_coffee': t('game.sent_coffee', name=partner.nickname),
+    'sent_tomato': t('game.sent_tomato', name=partner.nickname), 'sent_egg': t('game.sent_egg', name=partner.nickname),
+    'settle_win_title': t('game.settle_win_title'), 'settle_lose_title': t('game.settle_lose_title'),
+    'settle_draw_title': t('game.settle_draw_title'), 'settle_win_text': t('game.settle_win_text', name=partner.nickname),
+    'settle_win_resigned': t('game.settle_win_resigned', name=partner.nickname),
+    'settle_lose_text': t('game.settle_lose_text', name=partner.nickname), 'settle_lose_resigned': t('game.settle_lose_resigned'),
+    'settle_draw_text': t('game.settle_draw_text'),
+    'record': t('game.settle_record_value', me='{me}', partner='{partner}', name=partner.nickname),
+    'draws': t('game.settle_draws', n='{n}'), 'time_min_sec': t('game.time_min_sec', m='{m}', s='{s}'),
+    'time_sec': t('game.time_sec', s='{s}')
+  } | tojson }}</script>
+  <script type="application/json" id="gomoku-images">{{ {
+    'coffee': asset_url('ui/fun/coffee.png'), 'tomato': asset_url('ui/fun/tomato.png'), 'egg': asset_url('ui/fun/egg.png'),
+    'splash': asset_url('ui/fun/splash.png'), 'sparkles': asset_url('ui/fun/sparkles.png'),
+    'win': asset_url('ui/fun/trophy.png'), 'lose': asset_url('ui/fun/tear_smile.png'), 'draw': asset_url('ui/fun/handshake.png')
   } | tojson }}</script>
   {% endif %}
 </section>

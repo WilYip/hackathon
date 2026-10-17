@@ -8,6 +8,7 @@
 """
 
 import json
+from datetime import datetime
 
 from db import get_db
 
@@ -19,7 +20,8 @@ PLAYING, WON, RESIGNED, DRAW = "playing", "won", "resigned", "draw"
 
 
 class GomokuError(Exception):
-    """不能这样下：code 是 not_your_turn / occupied / out_of_range / finished / no_game / no_partner / still_playing。"""
+    """不能这样做：code 是 not_your_turn / occupied / out_of_range / finished / no_game / no_partner / still_playing，
+    道具：bad_prop（没有这种道具）/ too_fast（扔得太快）。"""
 
     def __init__(self, code):
         super().__init__(code)
@@ -143,13 +145,72 @@ def resign(member_id):
     return current_game()
 
 
+# ---------- 道具互动 ----------
+
+PROP_KINDS = ("coffee", "tomato", "egg")  # 倒卡布奇诺 / 扔番茄 / 扔鸡蛋
+PROP_COOLDOWN_SECONDS = 1  # 同一个人连续扔的最短间隔（数据库时间只到秒，实际是 1～2 秒；防止连点刷屏）
+RECENT_PROPS = 20  # 轮询时最多带回最近几个
+
+
+def throw_prop(member_id, kind):
+    """扔一个道具给对方，返回新道具的 id。种类不对 → bad_prop；扔得太快 → too_fast。"""
+    if kind not in PROP_KINDS:
+        raise GomokuError("bad_prop")
+    db = get_db()
+    recent = db.execute(
+        "SELECT 1 FROM gomoku_props WHERE sender_id = ? "
+        "AND CAST(strftime('%s', created_at) AS INTEGER) >= CAST(strftime('%s', 'now') AS INTEGER) - ? LIMIT 1",
+        (member_id, PROP_COOLDOWN_SECONDS),
+    ).fetchone()
+    if recent:
+        raise GomokuError("too_fast")
+    cur = db.execute("INSERT INTO gomoku_props (sender_id, kind) VALUES (?, ?)", (member_id, kind))
+    db.commit()
+    return cur.lastrowid
+
+
+def recent_props(viewer_id):
+    """最近的道具（旧的在前）：[{id, kind, from: "me"/"partner"}]。页面只播 id 比上次看到的大的。"""
+    rows = get_db().execute(
+        "SELECT id, sender_id, kind FROM gomoku_props ORDER BY id DESC LIMIT ?", (RECENT_PROPS,)
+    ).fetchall()
+    return [{"id": r["id"], "kind": r["kind"], "from": "me" if r["sender_id"] == viewer_id else "partner"}
+            for r in reversed(rows)]
+
+
+# ---------- 结算 ----------
+
+
+def record(viewer_id):
+    """两个人一共赢了几局（认输也算对方赢）：{"me": n, "partner": m, "draw": k}。"""
+    rows = get_db().execute(
+        "SELECT winner_id, status FROM gomoku_games WHERE status IN (?, ?, ?)", (WON, RESIGNED, DRAW)
+    ).fetchall()
+    result = {"me": 0, "partner": 0, "draw": 0}
+    for r in rows:
+        if r["status"] == DRAW:
+            result["draw"] += 1
+        else:
+            result["me" if r["winner_id"] == viewer_id else "partner"] += 1
+    return result
+
+
+def duration_seconds(game):
+    """这一局从开局到最后一次变化用了多少秒（数据库里是 UTC 的 'YYYY-MM-DD HH:MM:SS'）。"""
+    fmt = "%Y-%m-%d %H:%M:%S"
+    start = datetime.strptime(game["created_at"], fmt)
+    end = datetime.strptime(game["updated_at"], fmt)
+    return max(0, int((end - start).total_seconds()))
+
+
 def view(game, viewer_id):
     """页面和轮询接口用的数据（都从看的人的角度）：
     {id, size, moves, my_color, turn: "me"/"partner"/None, status, result: "win"/"lose"/"draw"/None,
-     win_line, version}"""
+     win_line, version, resigned_by: "me"/"partner"/None,
+     settle: 结算画面的数据（这一局结束后才有）{moves, seconds, record}}"""
     if game is None:
         return {"id": None, "size": SIZE, "moves": [], "my_color": None, "turn": None, "status": None,
-                "result": None, "win_line": [], "version": "none"}
+                "result": None, "win_line": [], "version": "none", "resigned_by": None, "settle": None}
     moves = moves_of(game)
     mine = color_of(game, viewer_id)
     turn = None
@@ -171,4 +232,12 @@ def view(game, viewer_id):
         "win_line": json.loads(game["win_line"]) if game["win_line"] else [],
         # 轮询用：局号、步数、状态任何一个变了就说明有新情况
         "version": f"{game['id']}:{len(moves)}:{game['status']}",
+        # 认输的是谁（结算画面写"TA 认输了"还是"你认输了"）
+        "resigned_by": (None if game["status"] != RESIGNED
+                        else ("partner" if game["winner_id"] == viewer_id else "me")),
+        "settle": None if game["status"] == PLAYING else {
+            "moves": len(moves),
+            "seconds": duration_seconds(game),
+            "record": record(viewer_id),
+        },
     }

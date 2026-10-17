@@ -5,6 +5,7 @@
 - POST /game/move         落子（表单字段 cell="行,列"，或 JSON {"row", "col"}）
 - POST /game/new          开新的一局（开局的人执黑先下）
 - POST /game/resign       认输
+- POST /game/prop         道具互动：倒卡布奇诺 / 扔番茄 / 扔鸡蛋（JSON {"kind"}），对方轮询时看到并播放动画
 POST 请求带 JSON（页面脚本）时返回 JSON；普通表单提交时跳回 /game，出错用一次性提示。
 """
 
@@ -19,7 +20,10 @@ bp = Blueprint("game", __name__)
 
 
 def _state():
-    return gomoku.view(gomoku.current_game(), g.user["id"])
+    """这一局的情况 + 最近的道具（页面只播放 id 比上次看到的大的）。"""
+    state = gomoku.view(gomoku.current_game(), g.user["id"])
+    state["props"] = gomoku.recent_props(g.user["id"])
+    return state
 
 
 def _done(sound_name=None):
@@ -91,3 +95,18 @@ def resign():
     except GomokuError as error:
         return _failed(error)
     return _done()
+
+
+@bp.post("/game/prop")
+@login_required
+def prop():
+    """道具互动（只有页面脚本会调用，返回 JSON）。"""
+    if auth.get_partner(g.user["id"]) is None:
+        return jsonify({"ok": False, "code": "no_partner", "message": t("game.errors.no_partner")}), 409
+    kind = (request.get_json(silent=True) or {}).get("kind", "")
+    try:
+        prop_id = gomoku.throw_prop(g.user["id"], kind)
+    except GomokuError as error:
+        status = 429 if error.code == "too_fast" else 400
+        return jsonify({"ok": False, "code": error.code, "message": t(f"game.errors.{error.code}")}), status
+    return jsonify({"ok": True, "id": prop_id})

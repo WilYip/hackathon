@@ -5518,3 +5518,335 @@ body.has-scene-bg .footer p {
   margin: 0;
   padding: 10px 14px;
 }
+
+/* ---------- 长凳五子棋：道具互动 ---------- */
+.gomoku-props {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+}
+
+.gomoku-props[hidden] {
+  display: none;
+}
+
+.gomoku-prop {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 72px;
+  min-height: 44px;
+  padding: 6px 10px 4px;
+  border: 2px solid var(--line);
+  border-radius: var(--usland-radius-button);
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--fast) ease, border-color var(--fast) ease, opacity var(--fast) ease;
+}
+
+.gomoku-prop img {
+  width: 36px;
+  height: 36px;
+}
+
+.gomoku-prop:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  .gomoku-prop:not(:disabled):hover {
+    transform: translateY(-2px);
+    border-color: var(--usland-amber);
+  }
+}
+
+.gomoku-prop:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.gomoku-prop:focus-visible {
+  outline: none;
+  box-shadow: var(--usland-focus);
+}
+
+/* "阿木 朝你扔了一个番茄！"：浮在页面顶部一小会儿 */
+.gomoku-toast {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  top: 84px;
+  margin: 0;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--usland-deep-sea);
+  color: var(--usland-warm-white);
+  font-weight: 700;
+  box-shadow: var(--usland-shadow-panel);
+  transform: translate(-50%, -12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--fast) ease, transform var(--fast) ease;
+  max-width: calc(100% - 32px);
+  text-align: center;
+}
+
+.gomoku-toast.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* 飞行中的道具和砸中后的效果（game.js 临时加到 body 上，位置是屏幕坐标） */
+.fx {
+  position: fixed;
+  z-index: 70;
+  pointer-events: none;
+}
+
+.fx-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fx-fly {
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 4px 4px rgb(38 63 70 / 0.3));
+}
+
+/* 番茄：爆开 + 汁水往外溅、往下流 */
+.fx-splash {
+  width: 64px;
+  height: 64px;
+  transform: translate(-50%, -50%);
+  animation: fx-pop 700ms ease-out forwards;
+}
+
+.fx-drop {
+  width: 10px;
+  height: 12px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 35% 30%, #f28b82, #c0392b 70%);
+  transform: translate(-50%, -50%);
+  animation: fx-drop 1300ms ease-in forwards;
+}
+
+/* 鸡蛋：砸开变成一个煎蛋，贴在头像上慢慢滑下来 */
+.fx-egg {
+  width: 54px;
+  height: 46px;
+  border-radius: 46% 54% 50% 48% / 52% 46% 54% 48%;
+  background: radial-gradient(circle at 40% 35%, #fff, var(--usland-warm-white) 75%);
+  box-shadow: 0 2px 4px rgb(38 63 70 / 0.25);
+  transform: translate(-50%, -50%);
+  animation: fx-egg 1900ms ease-in forwards;
+}
+
+.fx-egg i {
+  position: absolute;
+  left: 32%;
+  top: 28%;
+  width: 40%;
+  height: 44%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe08a, #f2a516 70%);
+}
+
+/* 卡布奇诺：杯子稳稳放下，冒三缕热气 */
+.fx-cup {
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  animation: fx-cup 2400ms ease forwards;
+}
+
+.fx-cup b {
+  position: absolute;
+  bottom: 70%;
+  width: 4px;
+  height: 14px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.8);
+  animation: fx-steam 1600ms ease-out infinite;
+}
+
+.fx-cup b:nth-child(2) {
+  left: 30%;
+}
+
+.fx-cup b:nth-child(3) {
+  left: 48%;
+  animation-delay: 300ms;
+}
+
+.fx-cup b:nth-child(4) {
+  left: 66%;
+  animation-delay: 600ms;
+}
+
+.fx-sparkles {
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  animation: fx-pop 1200ms ease-out forwards;
+}
+
+/* 被砸中的头像晃一下 */
+.fx-hit {
+  animation: fx-hit 420ms ease;
+}
+
+@keyframes fx-pop {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+  30% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+@keyframes fx-drop {
+  0% { transform: translate(-50%, -50%); opacity: 1; }
+  40% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) * 0.4)); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 30px)) scale(0.6); opacity: 0; }
+}
+
+@keyframes fx-egg {
+  0% { transform: translate(-50%, -50%) scale(0.4, 0.2); opacity: 0; }
+  12% { transform: translate(-50%, -50%) scale(1.15, 0.9); opacity: 1; }
+  25% { transform: translate(-50%, -50%) scale(1); }
+  80% { transform: translate(-50%, -20%) scale(1, 1.08); opacity: 1; }
+  100% { transform: translate(-50%, 0%) scale(1, 1.12); opacity: 0; }
+}
+
+@keyframes fx-cup {
+  0% { transform: translate(-50%, -80%) scale(0.6); opacity: 0; }
+  20% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+  85% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
+}
+
+@keyframes fx-steam {
+  0% { transform: translateY(0) scaleY(0.6); opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { transform: translateY(-16px) scaleY(1.2); opacity: 0; }
+}
+
+@keyframes fx-hit {
+  20% { transform: translateX(-4px) rotate(-6deg); }
+  45% { transform: translateX(4px) rotate(5deg); }
+  70% { transform: translateX(-2px) rotate(-2deg); }
+}
+
+/* ---------- 长凳五子棋：结算画面 ---------- */
+.gomoku-settle {
+  position: relative;
+  max-width: 380px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.settle-icon {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 4px auto 6px;
+  filter: drop-shadow(0 6px 8px rgb(38 63 70 / 0.25));
+}
+
+.settle-win .settle-icon {
+  animation: settle-bounce 1.6s ease-in-out infinite;
+}
+
+.settle-lose .settle-icon,
+.settle-draw .settle-icon {
+  animation: settle-sway 2.4s ease-in-out infinite;
+}
+
+.gomoku-settle h2 {
+  font-size: 1.7rem;
+}
+
+.settle-win h2 {
+  color: color-mix(in srgb, var(--usland-amber) 45%, var(--usland-deep-sea));
+}
+
+.settle-lose h2 {
+  color: var(--usland-bay);
+}
+
+.gomoku-settle .settle-text {
+  margin: 0 0 14px;
+}
+
+.settle-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.settle-stats div {
+  padding: 8px 10px;
+  border-radius: var(--usland-radius-button);
+  background: color-mix(in srgb, var(--usland-sand) 35%, #fff);
+}
+
+.settle-stats .settle-record {
+  grid-column: 1 / -1;
+}
+
+.settle-stats dt {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+.settle-stats dd {
+  margin: 2px 0 0;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.settle-actions {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settle-actions form {
+  margin: 0;
+}
+
+/* 胜利时的彩带：从顶部飘落 */
+.settle-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.settle-confetti i {
+  position: absolute;
+  top: -12px;
+  width: 8px;
+  height: 12px;
+  border-radius: 2px;
+  animation: settle-confetti 2.4s ease-in forwards;
+}
+
+@keyframes settle-confetti {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--drift), 520px) rotate(540deg); opacity: 0; }
+}
+
+@keyframes settle-bounce {
+  50% { transform: translateY(-8px) rotate(-4deg); }
+}
+
+@keyframes settle-sway {
+  50% { transform: rotate(5deg); }
+}

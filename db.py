@@ -152,6 +152,15 @@ CREATE TABLE IF NOT EXISTS gomoku_games (
     created_at      TEXT    NOT NULL DEFAULT (datetime('now')),
     updated_at      TEXT    NOT NULL DEFAULT (datetime('now'))
 );
+
+-- 下棋时的道具互动（像斗地主那样）：倒卡布奇诺 coffee / 扔番茄 tomato / 扔鸡蛋 egg。
+-- 只用来让对方的页面播一次动画，轮询时按 id 取新的；不进回忆
+CREATE TABLE IF NOT EXISTS gomoku_props (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    sender_id       INTEGER NOT NULL REFERENCES members(id),
+    kind            TEXT    NOT NULL,
+    created_at      TEXT    NOT NULL DEFAULT (datetime('now'))
+);
 """
 
 # 给已经存在的旧数据库补上新增的列（CREATE TABLE IF NOT EXISTS 不会修改已有的表）

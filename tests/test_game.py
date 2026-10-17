@@ -162,3 +162,82 @@ def test_forest_peek_animal_removed(client):
     create_island(client)
     html = client.get("/").get_data(as_text=True)
     assert 'class="peek"' not in html
+
+
+# ---------- 道具互动 ----------
+
+
+def test_props_reach_partner(client, partner, app):
+    pair(client, partner, app)
+    resp = client.post("/game/prop", json={"kind": "tomato"})
+    assert resp.status_code == 200 and resp.get_json()["ok"] is True
+    # 对方轮询时看到"partner 扔的番茄"；自己看到的是"me"
+    theirs = partner.get("/api/game/state").get_json()["props"]
+    assert theirs[-1]["kind"] == "tomato" and theirs[-1]["from"] == "partner"
+    assert client.get("/api/game/state").get_json()["props"][-1]["from"] == "me"
+    # 没开局也能扔（道具和棋局无关），三种都可以
+    assert partner.post("/game/prop", json={"kind": "coffee"}).status_code == 200
+
+
+def test_props_validation_and_cooldown(client, partner, app):
+    pair(client, partner, app)
+    assert client.post("/game/prop", json={"kind": "brick"}).get_json()["code"] == "bad_prop"
+    assert client.post("/game/prop", json={"kind": "egg"}).status_code == 200
+    too_fast = client.post("/game/prop", json={"kind": "egg"})
+    assert too_fast.status_code == 429 and too_fast.get_json()["code"] == "too_fast"
+
+
+def test_props_need_partner(client):
+    create_island(client)
+    assert client.post("/game/prop", json={"kind": "coffee"}).get_json()["code"] == "no_partner"
+
+
+def test_prop_buttons_and_images_on_page(client, partner, app):
+    pair(client, partner, app)
+    html = client.get("/game").get_data(as_text=True)
+    assert "给阿姨倒一杯卡布奇诺" in html and "扔番茄" in html and "扔鸡蛋" in html
+    assert 'data-props role="group"' in html and "hidden>" in html  # 没有 JS 时隐藏
+    for name in ("coffee", "tomato", "egg", "splash", "trophy", "tear_smile", "handshake", "sparkles"):
+        assert f"/static/usland/assets/ui/fun/{name}.png" in html
+
+
+def test_fun_images_exist_and_are_credited():
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    for name in ("coffee", "tomato", "egg", "splash", "trophy", "tear_smile", "handshake", "sparkles"):
+        assert (root / "static/usland/assets/ui/fun" / f"{name}.png").is_file()
+    assert "Fluent Emoji" in (root / "docs/credits.md").read_text(encoding="utf-8")
+    assert (root / "docs/licenses/fluent_emoji_MIT.txt").is_file()
+
+
+# ---------- 结算画面的数据 ----------
+
+
+def test_settle_data_and_record(client, partner, app):
+    pair(client, partner, app)
+    client.post("/game/new", json={})
+    assert client.get("/api/game/state").get_json()["settle"] is None  # 进行中没有结算
+    # 小雨连成五子赢第一局
+    move(client, 7, 7)
+    for c in range(1, 5):
+        move(partner, 0, c)
+        move(client, 7, 7 + c)
+    mine = client.get("/api/game/state").get_json()
+    assert mine["settle"]["moves"] == 9
+    assert mine["settle"]["seconds"] >= 0
+    assert mine["settle"]["record"] == {"me": 1, "partner": 0, "draw": 0}
+    assert mine["resigned_by"] is None
+    # 第二局小雨认输：阿木 1 胜
+    partner.post("/game/new", json={})
+    client.post("/game/resign", json={})
+    theirs = partner.get("/api/game/state").get_json()
+    assert theirs["resigned_by"] == "partner" and theirs["result"] == "win"
+    assert theirs["settle"]["record"] == {"me": 1, "partner": 1, "draw": 0}
+    assert client.get("/api/game/state").get_json()["resigned_by"] == "me"
+
+
+def test_settle_dialog_on_page(client, partner, app):
+    pair(client, partner, app)
+    html = client.get("/game").get_data(as_text=True)
+    assert 'class="panel gomoku-settle" data-settle' in html
+    assert "再来一局" in html and "看看棋盘" in html and "回到小岛" in html
