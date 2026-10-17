@@ -51,3 +51,19 @@ def test_strips_prefixes_and_tags():
     assert parse_soften_output("<原话>我有点想你</原话>").text == "我有点想你"
     # 句子中间的冒号不受影响
     assert parse_soften_output("我想说：今天辛苦了").text == "我想说：今天辛苦了"
+
+
+def test_json_answer():
+    # 模型按要求输出 JSON：只把 rewrite 给用户，speaker_feeling 不显示
+    r = parse_soften_output('{"speaker_feeling": "在生伴侣的气", "rewrite": "我现在有点生你的气。"}')
+    assert r.status == OK
+    assert r.text == "我现在有点生你的气。"
+    assert parse_soften_output('{"rewrite": "  “我有点想你。”  "}').text == "我有点想你。"
+
+
+def test_json_unsafe_and_broken_json():
+    assert parse_soften_output('{"unsafe": true}').status == UNSAFE
+    assert parse_soften_output('{"speaker_feeling": "x"}').status == ERROR  # 没有 rewrite
+    assert parse_soften_output('{"rewrite": 123}').status == ERROR
+    # 不是 JSON：整段当成改写（兼容）
+    assert parse_soften_output("我现在有点生气").text == "我现在有点生气"

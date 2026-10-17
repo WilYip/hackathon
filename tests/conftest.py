@@ -19,9 +19,9 @@ class FakeDeepSeek:
         self.reply = "（模拟的温柔版本）"
         self.error = None
 
-    def __call__(self, api_key, messages, max_tokens, temperature):
+    def __call__(self, api_key, messages, max_tokens, temperature, json_mode=False):
         self.calls.append({"api_key": api_key, "messages": messages, "max_tokens": max_tokens,
-                           "temperature": temperature})
+                           "temperature": temperature, "json_mode": json_mode})
         if self.error is not None:
             raise self.error
         if isinstance(self.reply, list):

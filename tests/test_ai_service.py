@@ -2,6 +2,7 @@
 .env 中的 key 不会被读取。
 所有 DeepSeek 调用都被 conftest.py 的 fake_ai 替换，不会联网。"""
 
+import json
 import logging
 import os
 
@@ -51,15 +52,19 @@ def test_soften_call_parameters(app, fake_ai):
     assert result.text == "我有点不安，希望你能多回我一下。"
     assert len(fake_ai.calls) == 1  # 结果没问题：不重试
     call = fake_ai.calls[-1]
-    assert call["max_tokens"] == 300
+    assert call["max_tokens"] == 400
     assert call["temperature"] == 0.3
+    assert call["json_mode"] is True  # 要求模型只输出 JSON（先写说话人的情绪，再写改写）
     messages = call["messages"]
     assert messages[0] == {"role": "system", "content": SOFTEN_SYSTEM_PROMPT}
     # 系统提示词之后是示例对话（用户 / 助手交替），最后才是这次的原话
     assert len(messages) == 1 + 2 * len(SOFTEN_EXAMPLES) + 1
     assert [m["role"] for m in messages[1:-1]] == ["user", "assistant"] * len(SOFTEN_EXAMPLES)
+    # 示例里助手的回答也是 JSON：先写说话的人的情绪，再写改写
+    first_answer = json.loads(messages[2]["content"])
+    assert set(first_answer) == {"speaker_feeling", "rewrite"}
     # 原话用标签包起来（不然模型会以为是对它说的），并写明输出语言
-    assert messages[-1] == {"role": "user", "content": "<原话>你又不回我消息！</原话>\n输出语言：中文"}
+    assert messages[-1] == {"role": "user", "content": "<原话>你又不回我消息！</原话>\nrewrite 的语言：中文"}
 
 
 def test_language_is_detected_from_original():
@@ -67,8 +72,8 @@ def test_language_is_detected_from_original():
     assert ai.detect_lang("You never listen") == "en"
     assert ai.detect_lang("ok啦") == "zh"  # 有汉字就算中文
     assert ai.detect_lang("1234 😊") is None  # 只有数字和表情：不限制
-    assert ai.soften_messages("You never listen")[-1]["content"].endswith("Output language: English")
-    assert "输出语言" not in ai.soften_messages("😊")[-1]["content"]
+    assert ai.soften_messages("You never listen")[-1]["content"].endswith("rewrite language: English")
+    assert "语言" not in ai.soften_messages("😊")[-1]["content"]
 
 
 def test_problems_found_in_output():
@@ -83,6 +88,29 @@ def test_problems_found_in_output():
     assert ai.problem_with("晚安", "“晚安”呀", "zh") is None  # 太短的原话不做复述检查
 
 
+def test_reply_perspective_is_detected():
+    """人称反了、在回应对方说过的话（人类实际遇到的两个例子）。"""
+    assert ai.problem_with("你好丑", "你这样说让我有点难受，我希望你能多夸夸我。", "zh") == "reply"
+    assert ai.problem_with("你真丑", "你说这话的时候我有点难过，我希望我们之间能多一些温柔的表达。", "zh") == "reply"
+    assert ai.problem_with("You are ugly", "When you say that, I feel hurt.", "en") == "reply"
+    # 正确的人称：说话的人表达自己的情绪
+    assert ai.problem_with("你好丑", "我现在有点生你的气，嘴上忍不住想损你。", "zh") is None
+    # 原话本身提到"说"：改写里出现"你说"是正常的，不算
+    assert ai.problem_with("你说过会早点回来", "你说过会早点回来的，我等了好久有点失落。", "zh") is None
+
+
+def test_retry_when_rewrite_takes_partners_side(app, fake_ai):
+    fake_ai.reply = [
+        json.dumps({"speaker_feeling": "被说丑很难过", "rewrite": "你这样说让我有点难受，我希望你能多夸夸我。"}, ensure_ascii=False),
+        json.dumps({"speaker_feeling": "在生伴侣的气", "rewrite": "我现在有点生你的气，嘴上忍不住想损你。"}, ensure_ascii=False),
+    ]
+    with app.app_context():
+        result = ai.soften("sk-test-1234567890", "你好丑")
+    assert result.status == ai.OK
+    assert result.text == "我现在有点生你的气，嘴上忍不住想损你。"
+    assert len(fake_ai.calls) == 2
+
+
 def test_retry_once_when_perspective_is_wrong(app, fake_ai):
     fake_ai.reply = ["你说“你是头猪”的时候，我有点受伤。", "我现在真的很生气，我们能好好聊聊吗？"]
     with app.app_context():
@@ -90,7 +118,7 @@ def test_retry_once_when_perspective_is_wrong(app, fake_ai):
     assert result.status == ai.OK
     assert result.text == "我现在真的很生气，我们能好好聊聊吗？"
     assert len(fake_ai.calls) == 2
-    assert fake_ai.calls[0]["messages"][-1]["content"] == "<原话>你是头猪</原话>\n输出语言：中文"
+    assert fake_ai.calls[0]["messages"][-1]["content"] == "<原话>你是头猪</原话>\nrewrite 的语言：中文"
     assert fake_ai.calls[1]["messages"][-1]["content"].endswith(SOFTEN_RETRY_REMINDER)
 
 

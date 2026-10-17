@@ -5,6 +5,7 @@
 - 日志只记录"做了什么、结果类型、耗时"，不记录任何聊天内容
 """
 
+import json
 import re
 import time
 from dataclasses import dataclass
@@ -18,6 +19,7 @@ from services.prompts import (
     SOFTEN_EXAMPLES,
     SOFTEN_RETRY_REMINDER,
     SOFTEN_SYSTEM_PROMPT,
+    example_answer,
     soften_user_message,
 )
 
@@ -42,8 +44,9 @@ class SoftenResult:
     text: str = ""
 
 
-def _chat(api_key, messages, max_tokens, temperature):
-    """调用 DeepSeek 的唯一入口，返回模型回复的文字。出错时抛出 openai 的异常。"""
+def _chat(api_key, messages, max_tokens, temperature, json_mode=False):
+    """调用 DeepSeek 的唯一入口，返回模型回复的文字。出错时抛出 openai 的异常。
+    json_mode=True 时要求模型只输出一个 JSON 对象（温柔传话用）。"""
     client = OpenAI(
         api_key=api_key,
         base_url=BASE_URL,
@@ -55,6 +58,7 @@ def _chat(api_key, messages, max_tokens, temperature):
         messages=messages,
         max_tokens=max_tokens,
         temperature=temperature,
+        **({"response_format": {"type": "json_object"}} if json_mode else {}),
     )
     return response.choices[0].message.content or ""
 
@@ -98,6 +102,10 @@ _OPEN_QUOTES = "\"“「『'‘"
 # 模型偶尔会加的前缀，例如"改写后：""温柔版：""Rewritten:"
 _PREFIX = re.compile(r"^(改写后?|优化后?|温柔版本?|传话)\s*[:：]\s*|^(rewritten|softened)( version)?\s*:\s*", re.I)
 _CJK = re.compile(r"[\u3400-\u9fff]")
+# 站在被说的人的角度、在回应对方说过的话，例如"你这样说让我有点难受""听到你这么说"
+_REPLY_ZH = re.compile(r"你(这样|这么|那样|那么)?说|你说(的|了|过)?(这|那)?(话|句)|听(到|见)?你(这样|这么|那样)?说|你的话|这(句)?话让我|被你(说|骂|嫌)")
+_REPLY_EN = re.compile(r"\b(when|that) you (say|said)\b|\byou said\b|\bhearing you\b|\byour words\b", re.I)
+_MENTIONS_SPEECH = re.compile(r"说|话|讲|骂|\b(say|said|tell|told|words?)\b", re.I)
 _LATIN = re.compile(r"[A-Za-z]")
 
 
@@ -113,7 +121,9 @@ def detect_lang(text):
 def problem_with(original, softened, lang):
     """检查改写结果有没有已知的毛病，返回原因（日志用，不含内容），没有问题返回 None：
     - wrong_lang：中文原话改成了英文，或英文原话改成了中文
-    - echo：在改写里引用了原话（通常是站在被说的人的角度回应，例如"你说'你是头猪'的时候……"）"""
+    - echo：在改写里引用了原话（通常是站在被说的人的角度回应，例如"你说'你是头猪'的时候……"）
+    - reply：人称反了，在回应对方说过的话（例如原话"你好丑"被改成"你这样说让我有点难受"）。
+      原话本身提到"说 / 话"时不检查（例如"你说过会早点回来"），避免误判"""
     if lang == "zh" and not _CJK.search(softened):
         return "wrong_lang"
     if lang == "en" and _CJK.search(softened):
@@ -121,17 +131,41 @@ def problem_with(original, softened, lang):
     core = original.strip().rstrip("。！？!?.~～ ")
     if len(core) >= 3 and any(q + core in softened for q in _OPEN_QUOTES):
         return "echo"
+    if not _MENTIONS_SPEECH.search(original) and (_REPLY_ZH.search(softened) or _REPLY_EN.search(softened)):
+        return "reply"
     return None
+
+
+def _from_json(text):
+    """模型按要求输出 JSON：{"speaker_feeling": ..., "rewrite": ...} 或 {"unsafe": true}。
+    返回 ("unsafe", None) / ("rewrite", 文字) / (None, None)（不是 JSON，按普通文字处理）。"""
+    try:
+        data = json.loads(text)
+    except ValueError:
+        return None, None
+    if not isinstance(data, dict):
+        return None, None
+    if data.get("unsafe") is True:
+        return "unsafe", None
+    rewrite = data.get("rewrite")
+    return "rewrite", rewrite if isinstance(rewrite, str) else ""
 
 
 def parse_soften_output(raw):
     """解析模型的回复：
-    - 含有 [UNSAFE] → UNSAFE（不发送）
-    - 去掉首尾空白和成对引号；结果为空 → ERROR
+    - JSON {"unsafe": true}，或任何位置含有 [UNSAFE] → UNSAFE（不发送）
+    - JSON 里的 rewrite 字段就是改写（speaker_feeling 只是让模型先想清楚，不给用户看）；
+      不是 JSON 时把整段当成改写（兼容）
+    - 去掉首尾空白、前缀、标签和成对引号；结果为空 → ERROR
     - 否则 → OK + 改写后的文字"""
     text = (raw or "").strip()
     if "[UNSAFE]" in text.upper():
         return SoftenResult(UNSAFE)
+    kind, rewrite = _from_json(text)
+    if kind == "unsafe":
+        return SoftenResult(UNSAFE)
+    if kind == "rewrite":
+        text = rewrite.strip()
     text = text.replace("<原话>", "").replace("</原话>", "").strip()  # 偶尔把标签也抄出来
     text = _PREFIX.sub("", text).strip()
     for left, right in _QUOTE_PAIRS:
@@ -144,11 +178,12 @@ def parse_soften_output(raw):
 
 
 def soften_messages(original, retry=False):
-    """发给模型的完整消息：系统提示词 + 示例对话 + 用标签包好的原话（写明输出语言）。"""
+    """发给模型的完整消息：系统提示词 + 示例对话 + 用标签包好的原话（写明输出语言）。
+    示例里助手的回答是 JSON：先写说话的人的情绪，再写改写。"""
     messages = [{"role": "system", "content": SOFTEN_SYSTEM_PROMPT}]
-    for example, rewritten in SOFTEN_EXAMPLES:
+    for example, feeling, rewritten in SOFTEN_EXAMPLES:
         messages.append({"role": "user", "content": soften_user_message(example, detect_lang(example))})
-        messages.append({"role": "assistant", "content": rewritten})
+        messages.append({"role": "assistant", "content": example_answer(feeling, rewritten)})
     content = soften_user_message(original, detect_lang(original))
     if retry:
         content += SOFTEN_RETRY_REMINDER
@@ -158,7 +193,8 @@ def soften_messages(original, retry=False):
 
 def soften(api_key, original):
     """把原话改写成更温柔的说法，返回 SoftenResult。
-    结果语言不对、或者引用了原话（站错了角度）时自动重试一次（加一句提醒）；
+    模型先写说话的人的情绪、再写改写（JSON），人称不容易反；
+    结果语言不对、人称反了、或者引用了原话时自动重试一次（加一句提醒）；
     第二次还是这样就返回 ERROR，让用户再试或直接发送，不把错误的改写给用户。"""
     started = time.monotonic()
     lang = detect_lang(original)
@@ -166,7 +202,7 @@ def soften(api_key, original):
     for attempt in range(2):
         try:
             raw = _chat(api_key, soften_messages(original, retry=attempt > 0),
-                        max_tokens=300, temperature=SOFTEN_TEMPERATURE)
+                        max_tokens=400, temperature=SOFTEN_TEMPERATURE, json_mode=True)
         except Exception as exc:  # noqa: BLE001
             result = SoftenResult(classify_error(exc))
             break
