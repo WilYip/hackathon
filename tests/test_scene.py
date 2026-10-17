@@ -55,7 +55,10 @@ def test_scene_config_covers_all_regions():
     for mode in ("desktop", "mobile"):
         assert set(cfg["island"]["labels"][mode]) == region_ids
         # 每个入口都对应 scene_anchors.json 里的一个热区
-        assert {r["anchor"] for r in cfg["island"]["regions"].values()} == set(anchors[mode]["hotspots"])
+        assert {r["anchor"] for r in cfg["island"]["regions"].values() if "anchor" in r} == set(anchors[mode]["hotspots"])
+        # 没有矩形热区的入口（长凳）一定要有轮廓配置
+        for region_id, r in cfg["island"]["regions"].items():
+            assert "anchor" in r or region_id in cfg["island"]["shapes"][mode]
         assert set(cfg["memory_room"]["spots"][mode]) == {"frames", "album", "postcards"}
 
 
@@ -118,9 +121,9 @@ def test_halo_for_every_region(client):
     """悬停时元素四周和脚下亮起光圈；不再显示抠出来的元素图，也没有柔光层。"""
     html = home(client)
     for mode in ("desktop", "mobile"):
-        for name in ("first_meet_forest", "quest_board", "memory_cottage", "mailbox", "whisper_pier"):
+        for name in ("first_meet_forest", "quest_board", "memory_cottage", "mailbox", "whisper_pier", "game_bench"):
             assert f"scenes/island/{mode}/halo/{name}_{mode}.png" in html
-    assert html.count('<img class="scene-halo"') == 10
+    assert html.count('<img class="scene-halo"') == 12
     assert "scene-element" not in html and "scene-pop" not in html and "/hotspots/" not in html
     # 光圈按配置里的位置摆放（横版小信箱）
     box = scene.rect_box(content.load("scene")["island"]["shapes"]["desktop"]["mailbox"]["halo"], (2560, 1440))

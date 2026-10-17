@@ -1,7 +1,7 @@
 // 小岛首页的交互（第三版素材）：
 // - 5 秒循环视频：两段视频交叉淡入淡出循环（藏住首尾接缝），上面盖高清小岛；只加载正在显示的那套构图
 // - 悬停 / 键盘聚焦某个入口时，对应的场景元素（小船、信箱、小屋、告示牌、两个石台）四周亮起光圈，标签抬起
-// - 点击时短暂的按压反馈（光圈变亮、标签下压、森林探头），然后进入功能或打开面板
+// - 点击时短暂的按压反馈（光圈变亮、标签下压），然后进入功能或打开面板
 // - 动物点一下随机做动作；点自己的动物选择心情
 // - 图片加载中 / 加载失败的状态
 // - 新用户第一次进入：自动打开"先去初见森林"的引导窗口
@@ -188,18 +188,11 @@
           return;
         }
         setRegionClass(stage, regionId, "is-pressed", true);
-        var wait = 220;
-        if (regionId === "first_meet_forest") {
-          // 森林：小动物从树后探头
-          stage.classList.add("is-peeking");
-          wait = 480;
-        }
         setTimeout(function () {
           activate(link);
           // 打开面板的情况下，回到正常状态
           setRegionClass(stage, regionId, "is-pressed", false);
-          stage.classList.remove("is-peeking");
-        }, wait);
+        }, 220);
       });
     });
 
@@ -242,9 +235,6 @@
   window.addEventListener("pageshow", function () {
     document.querySelectorAll(".is-pressed").forEach(function (el) {
       el.classList.remove("is-pressed");
-    });
-    document.querySelectorAll(".is-peeking").forEach(function (el) {
-      el.classList.remove("is-peeking");
     });
   });
 

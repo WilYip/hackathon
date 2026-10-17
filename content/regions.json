@@ -1,5 +1,5 @@
 {
-  "_说明": "小岛上的五个功能入口：名字、顶部导航短名、图标、点击后去的 Flask 路由（endpoint），以及点击方式（action：go 直接进入；panel 先弹出面板）。它们在地图上的位置写在 content/scene.json。",
+  "_说明": "小岛上的功能入口：名字、顶部导航短名、图标、点击后去的 Flask 路由（endpoint），以及点击方式（action：go 直接进入；panel 先弹出面板）。nav 为 false 的入口只在地图上，不放进顶部 / 底部导航（长凳五子棋）。它们在地图上的位置写在 content/scene.json。",
   "regions": [
     {
       "id": "memory_cottage",
@@ -40,6 +40,15 @@
       "icon": "mail",
       "endpoint": "settings.index",
       "action": "panel"
+    },
+    {
+      "id": "game_bench",
+      "name": {"zh": "长凳五子棋", "en": "Bench Gomoku"},
+      "short": {"zh": "五子棋", "en": "Gomoku"},
+      "icon": "stones",
+      "endpoint": "game.index",
+      "action": "go",
+      "nav": false
     }
   ]
 }

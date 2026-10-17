@@ -179,7 +179,8 @@ def _regions(mode, canvas, regions):
         shape = _shape(mode, canvas, region_id, r)
         items.append({
             **info,
-            # 点击范围只在元素本身：温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台
+            # 点击范围只在元素本身：温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台、
+            # 长凳五子棋-长凳（长凳没有 scene_anchors.json 里的矩形，一定要有轮廓配置）
             "box": shape["hit_box"] if shape else rect_box(hotspots[r["anchor"]], canvas),
             "clip": shape["clip"] if shape else None,
             "label": {"x": _pct(lx, canvas[0]), "y": _pct(ly, canvas[1])},
@@ -202,6 +203,9 @@ def _layout(mode, regions, members, current_user_id):
         "video_scale": island.get("loop_video_scale", 1),
         # 叠在视频上的高清小岛（只盖不动的陆地）
         "video_detail": assets.url_if_exists(assets.fill(island.get("loop_detail"), mode=mode)),
+        # 底图里没有、额外叠上去的小物件（竖版的长凳）
+        "props": [{"src": assets.url(p["src"]), "box": rect_box(p["rect"], canvas)}
+                  for p in island.get("props", {}).get(mode, []) if assets.url_if_exists(p["src"])],
         "regions": _regions(mode, canvas, regions),
         "animals": _players(mode, canvas, members, current_user_id),
         "statues": _statues(mode, canvas, members),

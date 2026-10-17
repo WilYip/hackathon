@@ -459,5 +459,32 @@
     "confirm": "I understand my animal and mood will be cleared",
     "submit": "Create new character",
     "done": "Your new character is ready! Visit the First-Meet Forest to find your animal."
+  },
+  "game": {
+    "title": "Bench Gomoku",
+    "intro": "Sit on the island bench and play gomoku together: the first to get five in a row — across, down or diagonally — wins.",
+    "rules": "Whoever starts a new game plays black and goes first; five in a row in any direction wins. You each play on your own phone or computer — the board updates when your partner moves.",
+    "no_game": "No game yet — tap “New game” below.",
+    "turn_me": "Your turn — tap a point to place a stone",
+    "turn_partner": "Waiting for {name}…",
+    "result_win": "You win! Another round?",
+    "result_lose": "{name} won this round. Another?",
+    "result_draw": "The board is full — it's a draw!",
+    "new_game": "New game",
+    "resign": "Resign",
+    "resign_confirm": "Resign this game? Your partner will win it.",
+    "board_label": "Gomoku board",
+    "cell": "Row {row}, column {col}",
+    "black": "black stone",
+    "white": "white stone",
+    "errors": {
+      "not_your_turn": "It's not your turn yet",
+      "occupied": "There's already a stone there",
+      "out_of_range": "That point isn't on the board",
+      "finished": "This game is over — start a new one",
+      "no_game": "No game yet — start a new one",
+      "no_partner": "You can play once your partner joins the island",
+      "still_playing": "This game isn't finished — resign first to start a new one"
+    }
   }
 }

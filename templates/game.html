@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% set scene_bg = 'quest' %}{# 功能页背景，见 base.html #}
+{% from "_icons.html" import icon %}
+{% from "_avatar.html" import avatar %}
+
+{% block title %}{{ t('game.title') }} · {{ island.name }}{% endblock %}
+{% block body_class %}page-game{% endblock %}
+{# 声音场景，见 base.html 和 static/js/sound.js #}
+{% block bgm %}bgm_island{% endblock %}
+{% block amb %}amb_ocean{% endblock %}
+{% block sound_region %}game{% endblock %}
+
+{% block content %}
+{# 长凳五子棋（数据见 routes/game.py、services/gomoku.py）。
+   服务器直接画好棋盘：每个空位是一个表单按钮，没有 JavaScript 也能下；
+   static/js/game.js 接管点击（不刷新页面）、每 2.5 秒同步对方的落子。 #}
+<section class="gomoku" data-gomoku
+         data-state-url="{{ url_for('game.api_state') }}" data-move-url="{{ url_for('game.move') }}">
+
+  <header class="quest-head">
+    <a class="back-link" href="{{ url_for('island.index') }}">{{ icon('back', 20) }}<span>{{ t('feature.back') }}</span></a>
+    <h1>{{ t('game.title') }}</h1>
+  </header>
+
+  {% if not partner %}
+    <div class="board-card card"><p>{{ t('game.intro') }}</p></div>
+    {% include "_waiting_partner.html" %}
+  {% else %}
+
+  {# 两个人：头像 + 执子颜色 + 轮到谁；下面一行是现在的状态（功能页的文字都放在不透明面板上） #}
+  <div class="gomoku-panel card">
+  <div class="gomoku-players">
+    {% for who in ('me', 'partner') %}
+      {% set p = people[who] %}
+      {% set color = state.my_color if who == 'me' else ({'black': 'white', 'white': 'black'}.get(state.my_color)) %}
+      <div class="gomoku-player{% if state.turn == who %} is-turn{% endif %}" data-player="{{ who }}">
+        {{ avatar(p, 'avatar-sm') }}
+        <span class="gomoku-player-name">{{ p.nickname }}</span>
+        <span class="gomoku-chip stone-{{ color or 'none' }}" data-player-color aria-hidden="true"></span>
+        <span class="visually-hidden" data-player-color-text>{{ t('game.' ~ color) if color else '' }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  {# 现在的状态：轮到谁 / 谁赢了（屏幕阅读器会读出变化） #}
+  <p class="gomoku-status" data-status role="status" aria-live="polite">
+    {%- if state.status is none -%}{{ t('game.no_game') }}
+    {%- elif state.result == 'win' -%}{{ t('game.result_win') }}
+    {%- elif state.result == 'lose' -%}{{ t('game.result_lose', name=partner.nickname) }}
+    {%- elif state.result == 'draw' -%}{{ t('game.result_draw') }}
+    {%- elif state.turn == 'me' -%}{{ t('game.turn_me') }}
+    {%- else -%}{{ t('game.turn_partner', name=partner.nickname) }}{%- endif -%}
+  </p>
+  </div>
+
+  {# 棋盘：15 × 15 个交叉点。每个点是一个按钮（name=cell, value=行,列） #}
+  <form method="post" action="{{ url_for('game.move') }}" class="gomoku-board-wrap" data-board-form>
+    <div class="gomoku-board" role="grid" aria-label="{{ t('game.board_label') }}" style="--n: {{ size }};" data-board>
+      {% set stones = {} %}
+      {% for m in state.moves %}{% set _ = stones.update({(m[0] ~ ',' ~ m[1]): ('black' if loop.index0 % 2 == 0 else 'white')}) %}{% endfor %}
+      {% set last = (state.moves[-1][0] ~ ',' ~ state.moves[-1][1]) if state.moves else '' %}
+      {% set wins = [] %}{% for w in state.win_line %}{% set _ = wins.append(w[0] ~ ',' ~ w[1]) %}{% endfor %}
+      {% for r in range(size) %}
+        <div class="gomoku-row" role="row">
+        {% for c in range(size) %}
+          {% set key = r ~ ',' ~ c %}
+          {% set stone = stones.get(key) %}
+          <button type="submit" name="cell" value="{{ key }}" role="gridcell"
+                  class="gomoku-cell{% if stone %} stone-{{ stone }}{% endif %}{% if key == last %} is-last{% endif %}{% if key in wins %} is-win{% endif %}"
+                  data-cell="{{ key }}"
+                  aria-label="{{ t('game.cell', row=r + 1, col=c + 1) }}{% if stone %}，{{ t('game.' ~ stone) }}{% endif %}"
+                  {% if stone or state.turn != 'me' %}disabled{% endif %}></button>
+        {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </form>
+
+  {# 认输（进行中）/ 新的一局（还没开始或已经结束） #}
+  <div class="gomoku-actions">
+    <form method="post" action="{{ url_for('game.resign') }}" data-confirm="{{ t('game.resign_confirm') }}"
+          data-resign {% if state.status != 'playing' %}hidden{% endif %}>
+      <button type="submit" class="btn btn-ghost">{{ t('game.resign') }}</button>
+    </form>
+    <form method="post" action="{{ url_for('game.new') }}" data-new {% if state.status == 'playing' %}hidden{% endif %}>
+      <button type="submit" class="btn btn-primary">{{ icon('stones', 18) }}<span>{{ t('game.new_game') }}</span></button>
+    </form>
+  </div>
+  <p class="hint gomoku-hint card">{{ t('game.rules') }}</p>
+
+  {# 页面脚本用：最新情况和提示文字 #}
+  <script type="application/json" id="gomoku-state">{{ state | tojson }}</script>
+  <script type="application/json" id="gomoku-text">{{ {
+    'turn_me': t('game.turn_me'), 'turn_partner': t('game.turn_partner', name=partner.nickname),
+    'result_win': t('game.result_win'), 'result_lose': t('game.result_lose', name=partner.nickname),
+    'result_draw': t('game.result_draw'), 'no_game': t('game.no_game'),
+    'black': t('game.black'), 'white': t('game.white'), 'cell': t('game.cell', row='{row}', col='{col}')
+  } | tojson }}</script>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if not partner %}<script src="{{ url_for('static', filename='js/auth.js') }}"></script>{% endif %}
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

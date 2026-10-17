@@ -557,6 +557,14 @@ body.logged-in.page-map .main {
   }
 }
 
+/* 底图里没有、额外叠上去的小物件（竖版的长凳）：在视频和高清小岛上面、光圈下面 */
+.scene-prop {
+  position: absolute;
+  z-index: 4;
+  max-width: none;
+  pointer-events: none;
+}
+
 /* 悬停 / 聚焦时的光圈：元素四周和脚下的一圈暖光（滤色叠加，像被灯照亮），平时透明；
    亮起后轻轻呼吸。按下时更亮一点 */
 .scene-halo {
@@ -787,27 +795,6 @@ body.logged-in.page-map .main {
   background: no-repeat center / contain
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z' fill='%23b97870'/%3E%3C/svg%3E");
   animation: float-up 1.2s ease-out forwards;
-}
-
-/* 进入森林时探头的小动物 */
-.peek {
-  position: absolute;
-  z-index: 12;
-  width: 7cqw;
-  aspect-ratio: 1;
-  transform: translate(-50%, 20%) scale(0.4);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.peek img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.is-peeking .peek {
-  animation: peek 480ms ease forwards;
 }
 
 /* ---------- 失败、调试 ---------- */
@@ -1579,21 +1566,6 @@ body.logged-in.page-map .main {
   to {
     opacity: 0;
     transform: translate(-50%, -180%) scale(1.1);
-  }
-}
-
-@keyframes peek {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, 20%) scale(0.4);
-  }
-  50% {
-    opacity: 1;
-    transform: translate(-50%, -40%) scale(1);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -30%) scale(1);
   }
 }
 
@@ -5324,4 +5296,225 @@ body.has-scene-bg .footer p {
 .forest-intro .panel-actions form,
 .forest-intro .panel-actions .btn {
   width: 100%;
+}
+
+/* =========================================================
+   长凳五子棋（templates/game.html）：木纹棋盘 + 黏土质感的黑白棋子
+   ========================================================= */
+.gomoku {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.gomoku-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+}
+
+.gomoku-players {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.gomoku-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 10px;
+  border: 2px solid transparent;
+  border-radius: var(--usland-radius-button);
+  transition: border-color var(--fast) ease, background var(--fast) ease;
+}
+
+.gomoku-player[data-player="partner"] {
+  flex-direction: row-reverse;
+}
+
+/* 轮到谁：琥珀色边框 */
+.gomoku-player.is-turn {
+  border-color: var(--usland-amber);
+  background: color-mix(in srgb, var(--usland-amber) 18%, transparent);
+}
+
+.gomoku-player-name {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gomoku-chip {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.gomoku-chip.stone-none {
+  display: none;
+}
+
+.gomoku-status {
+  margin: 0;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--usland-deep-sea);
+}
+
+/* 棋盘：正方形，四周留半格，线画在背景层上，棋子是每个交叉点上的按钮 */
+.gomoku-board-wrap {
+  margin: 0;
+}
+
+.gomoku-board {
+  --pad: 3%;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), 1fr);
+  width: 100%;
+  aspect-ratio: 1;
+  padding: var(--pad);
+  border-radius: var(--usland-radius-panel);
+  background:
+    radial-gradient(circle at 30% 20%, rgb(255 255 255 / 0.25), transparent 60%),
+    color-mix(in srgb, var(--usland-honey-wood) 55%, var(--usland-amber));
+  box-shadow: inset 0 -4px 0 rgb(38 63 70 / 0.18), var(--usland-shadow-panel);
+}
+
+/* 网格线：从第一个交叉点到最后一个交叉点 */
+.gomoku-board::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--pad) + (100% - 2 * var(--pad)) / var(--n) / 2);
+  background-image:
+    linear-gradient(to right, rgb(38 63 70 / 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(38 63 70 / 0.45) 1px, transparent 1px);
+  background-size: calc(100% / (var(--n) - 1)) calc(100% / (var(--n) - 1));
+  border-right: 1px solid rgb(38 63 70 / 0.45);
+  border-bottom: 1px solid rgb(38 63 70 / 0.45);
+  pointer-events: none;
+}
+
+.gomoku-row {
+  display: contents;
+}
+
+.gomoku-cell {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gomoku-cell:disabled {
+  cursor: default;
+}
+
+/* 棋子：黏土感的径向渐变 + 一点落地阴影；新放的棋子轻轻弹一下 */
+.gomoku-cell::after,
+.gomoku-chip.stone-black,
+.gomoku-chip.stone-white {
+  box-shadow: 0 2px 3px rgb(38 63 70 / 0.35);
+}
+
+.gomoku-cell::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--fast) ease, transform var(--fast) ease;
+}
+
+.gomoku-cell.stone-black::after,
+.gomoku-chip.stone-black {
+  background: radial-gradient(circle at 35% 30%, #6d7a7e, var(--usland-deep-sea) 55%, #14232a);
+}
+
+.gomoku-cell.stone-white::after,
+.gomoku-chip.stone-white {
+  background: radial-gradient(circle at 35% 30%, #fff, var(--usland-warm-white) 60%, var(--usland-sand));
+}
+
+.gomoku-cell.stone-black::after,
+.gomoku-cell.stone-white::after {
+  opacity: 1;
+  transform: none;
+}
+
+/* 可以下的空位：鼠标移上去出现一个淡淡的落点 */
+@media (hover: hover) {
+  .gomoku-cell:not(:disabled):hover::after {
+    opacity: 0.45;
+    transform: scale(0.85);
+    background: var(--usland-warm-white);
+  }
+}
+
+.gomoku-cell:focus-visible {
+  outline: none;
+}
+
+.gomoku-cell:focus-visible::after {
+  opacity: 1;
+  transform: scale(0.85);
+  background: transparent;
+  box-shadow: var(--usland-focus);
+}
+
+/* 上一步：棋子中间一个琥珀色小点 */
+.gomoku-cell.is-last::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 22%;
+  height: 22%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--usland-amber);
+}
+
+/* 连成五子：发光 */
+.gomoku-cell.is-win::after {
+  box-shadow: 0 0 0 2px var(--usland-amber), 0 0 12px 3px color-mix(in srgb, var(--usland-amber) 80%, transparent);
+  animation: gomoku-win 1.4s ease-in-out infinite;
+}
+
+@keyframes gomoku-win {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.gomoku-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.gomoku-actions form[hidden] {
+  display: none;
+}
+
+.gomoku-hint {
+  text-align: center;
+  margin: 0;
+  padding: 10px 14px;
 }

@@ -137,6 +137,21 @@ CREATE TABLE IF NOT EXISTS forest_guesses (
     created_at      TEXT    NOT NULL DEFAULT (datetime('now')),
     revealed_at     TEXT
 );
+
+-- ===== 长凳五子棋 =====
+-- 一局棋。谁开的新局谁执黑先下；moves 是落子顺序 [[行, 列], ...]，第 0、2、4… 手是黑棋。
+-- status：playing 进行中 / won 五子连珠 / resigned 有人认输 / draw 下满了平局
+CREATE TABLE IF NOT EXISTS gomoku_games (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    black_id        INTEGER NOT NULL REFERENCES members(id),
+    white_id        INTEGER NOT NULL REFERENCES members(id),
+    moves           TEXT    NOT NULL DEFAULT '[]',
+    status          TEXT    NOT NULL DEFAULT 'playing',
+    winner_id       INTEGER REFERENCES members(id),
+    win_line        TEXT,                        -- 连成五子的那几颗 [[行, 列], ...]，用来高亮
+    created_at      TEXT    NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT    NOT NULL DEFAULT (datetime('now'))
+);
 """
 
 # 给已经存在的旧数据库补上新增的列（CREATE TABLE IF NOT EXISTS 不会修改已有的表）

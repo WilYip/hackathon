@@ -12,7 +12,7 @@ from flask import Flask, abort, flash, g, redirect, request
 import db
 from config import Config
 from routes import auth as auth_routes
-from routes import forest, island, memories, quest, settings, whisper
+from routes import forest, game, island, memories, quest, settings, whisper
 from routes.settings import MOTION_COOKIE
 from services import animals, assets, auth, content, i18n, scene, sound
 
@@ -41,7 +41,7 @@ def create_app(test_config=None):
     # 注册各功能的路由（后续里程碑在这里追加）
     app.register_blueprint(island.bp)
     app.register_blueprint(auth_routes.bp)
-    for feature in (whisper, quest, forest, memories, settings):
+    for feature in (whisper, quest, forest, memories, settings, game):
         app.register_blueprint(feature.bp)
 
     @app.before_request
@@ -84,7 +84,8 @@ def create_app(test_config=None):
             "island": g.get("island"),
             "members": members,
             "member_avatars": animals.everyone(members, user["id"]) if user else [],
-            "regions": content.regions(),
+            # 导航只放五个主要功能；长凳五子棋只在地图上（"nav": false）
+            "regions": [r for r in content.regions() if r.get("nav", True)],
             # 小信箱里打开了"减少动态效果"（只存在这台设备的 Cookie 里）
             "reduce_motion": request.cookies.get(MOTION_COOKIE) == "reduce",
         }
@@ -94,8 +95,11 @@ def create_app(test_config=None):
 
 if __name__ == "__main__":
     app = create_app()
-    # 修改模板后刷新页面即可看到变化
+    # 修改模板后刷新页面即可看到变化。
+    # 注意：create_app() 里已经用到了模板引擎（注册全局函数），引擎那时就建好了，
+    # 只改配置不会生效，所以要直接打开引擎的 auto_reload
     app.config["TEMPLATES_AUTO_RELOAD"] = True
+    app.jinja_env.auto_reload = True
     # 监听 0.0.0.0，同一 Wi-Fi 下的手机也能访问。
     # 注意：不开启 debug 调试器，因为局域网里的人也能访问到它（有安全风险）；
     # use_reloader=True 让修改 .py 文件后自动重启。

@@ -38,8 +38,13 @@ left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.heig
         </div>
       {% endif %}
 
+      {# 底图里没有、额外叠上去的小物件（竖版的长凳） #}
+      {% for p in layout.props %}
+        <img class="scene-prop" src="{{ p.src }}" alt="" style="{{ pos(p.box) }}" loading="lazy" draggable="false">
+      {% endfor %}
+
       {# ② 悬停 / 键盘聚焦时亮起的光圈：元素四周 + 脚下一片暖光（温柔传话-小船、小信箱-信箱、
-         回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台）。平时透明 #}
+         回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台、长凳五子棋-长凳）。平时透明 #}
       {% for region in layout.regions %}
         {% if region.halo %}
         <img class="scene-halo" src="{{ region.halo.src }}" alt="" data-region="{{ region.id }}" style="{{ pos(region.halo.box) }}"
@@ -111,15 +116,6 @@ left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.heig
           {% endif %}
         </a>
       {% endfor %}
-
-      {# ⑥ 进入初见森林时，从树后探头的小动物（只有自己做过测试时才有） #}
-      {% set forest = layout.regions | selectattr('id', 'equalto', 'first_meet_forest') | first %}
-      {% set peeker = layout.animals | selectattr('is_me') | rejectattr('is_slot') | first %}
-      {% if peeker %}
-      <span class="peek" style="left: {{ forest.box.left + forest.box.width * 0.5 }}%; top: {{ forest.box.top + forest.box.height * 0.6 }}%;" aria-hidden="true">
-        <img src="{{ peeker.img }}" alt="" loading="lazy">
-      </span>
-      {% endif %}
 
       {# 图片加载失败时的提示（名称标签仍然可以点击进入） #}
       <div class="scene-error glass" role="status">
