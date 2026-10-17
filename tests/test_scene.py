@@ -1,4 +1,4 @@
-"""小岛场景（第三版素材）：横竖底图、热区与柔光层、野餐垫上的动物、森林石像、新用户引导、
+"""小岛场景（第三版素材）：横竖底图、循环视频、热区与悬停放大的元素、野餐垫上的动物、森林石像、新用户引导、
 功能页背景、回忆小屋互动区域、图标与配色。"""
 
 import json
@@ -65,20 +65,23 @@ def test_all_configured_assets_exist(app):
     with app.test_request_context():
         for mode in ("desktop", "mobile"):
             paths = [cfg["island"]["base"], cfg["island"]["statue_shadow"], cfg["memory_room"]["background"]]
-            paths += [r["glow"] for r in cfg["island"]["regions"].values()]
-            paths += [r["state"] for r in cfg["island"]["regions"].values() if "state" in r]
+            paths += [r["element"] for r in cfg["island"]["regions"].values()]
+            paths += [cfg["island"]["loop_video"]]
             paths += [v for k, v in cfg["page_backgrounds"].items() if not k.startswith("_")]
             for p in paths:
                 assert (ASSETS / p.format(mode=mode)).is_file(), p
         for side in ("left", "right"):
             assert (ASSETS / cfg["island"]["player_slot"].format(side=side)).is_file()
+    # 16 种动物的石像都已交付
+    for code in content.load("character_assets")["codes"]:
+        assert (ASSETS / "animals" / "statues" / f"{code}.png").is_file(), code
 
 
 def test_watermarked_reference_image_removed():
     assert not (ROOT / "static" / "img" / "island").exists()
 
 
-# ---------- 主岛：底图、热区、柔光层 ----------
+# ---------- 主岛：底图、循环视频、热区、悬停放大的元素 ----------
 
 
 def test_home_uses_both_layouts(client):
@@ -102,32 +105,29 @@ def test_hotspots_follow_anchors(client):
     assert "left: 1.5625%; top: 4.1667%; width: 31.6406%; height: 34.7222%" in forest
 
 
-def test_glow_layers_for_every_region(client):
+def test_hover_elements_for_every_region(client):
+    """悬停时放大的是场景元素本身（小船、信箱、小屋、告示牌、两个石台），不再是柔光层。"""
     html = home(client)
     for mode in ("desktop", "mobile"):
         for name in ("first_meet_forest", "quest_board", "memory_cottage", "mailbox", "whisper_pier"):
-            assert f"scenes/island/{mode}/hotspots/{name}_{mode}.png" in html
-        # 回忆小屋另外有亮灯状态
-        assert f"scenes/island/{mode}/states/memory_cottage_glow_{mode}.png" in html
-    assert html.count('class="scene-glow"') == 10
-    assert html.count('class="scene-glow scene-state"') == 2
+            assert f"scenes/island/{mode}/elements/{name}_{mode}.png" in html
+    assert html.count('class="scene-element"') == 10
+    assert html.count('<div class="scene-pop" data-region=') == 10
+    assert "scene-glow" not in html and "/hotspots/" not in html
+    # 横版小船 [117, 1075, 501, 1317]：以底边中点为原点放大
+    boat = html[html.index('<div class="scene-pop" data-region="whisper_pier"'):]
+    assert "--ox: 12.0703%; --oy: 91.4583%;" in boat[:200]
+    assert "left: 4.5703%; top: 74.6528%; width: 15.0%; height: 16.8056%" in boat[:600]
 
 
-def test_animated_webp_prototype_not_used(client):
+def test_loop_video_only_through_js(client):
+    """循环视频：两套构图各一个（data-src，由 map.js 只给显示中的那套加载），带对齐用的放大倍数。"""
     html = home(client)
-    assert "island_loop" not in html
-    assert "<video" not in html  # 海浪视频还没交付
-
-
-def test_waves_video_used_when_delivered(client, app, tmp_path):
-    asset_dir = tmp_path / "assets"
     for mode in ("desktop", "mobile"):
-        path = asset_dir / "scenes" / "island" / mode / f"island_waves_{mode}.mp4"
-        path.parent.mkdir(parents=True)
-        path.write_bytes(b"fake")
-    app.config["USLAND_ASSET_DIR"] = asset_dir
-    html = home(client)
-    assert "island_waves_desktop.mp4" in html and "island_waves_mobile.mp4" in html
+        assert f'data-src="/static/usland/assets/scenes/island/{mode}/island_loop_{mode}.mp4"' in html
+    assert html.count("--video-scale: 1.021;") == 2
+    assert "<video" not in html  # 视频元素由 JS 创建：没有 JS 时只显示静态底图
+    assert "island_waves" not in html
 
 
 def test_debug_mode(client):
@@ -192,6 +192,18 @@ def test_mood_and_click_still_on_animal(client, partner, app):
 
 
 # ---------- 森林石像 ----------
+
+
+def test_default_slot_is_smaller_than_animal(client, partner, app):
+    """默认形象比动物立绘小 30%（player_slot_scale = 0.7），脚底位置不变。"""
+    put_animal(app, "result", "infp")
+    setup_pair(client, partner, app)
+    take_quiz(client, INFP)  # 小雨（左）做完测试，阿木（右）还是默认形象
+    html = client.get("/").get_data(as_text=True)
+    animal = style_of(html, r'<button type="button" class="animal animal-left')
+    slot = style_of(html, r'<button type="button" class="animal animal-right')
+    width = lambda style: float(re.search(r"width: ([\d.]+)%", style).group(1))
+    assert abs(width(slot) / width(animal) - 0.7) < 0.001
 
 
 def test_no_statue_until_file_delivered(client, partner, app):

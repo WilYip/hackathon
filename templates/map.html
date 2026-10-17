@@ -27,22 +27,33 @@ left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.heig
       {# ① 底图（不含动物和石像）。两套构图的图片都是 lazy：隐藏的那一套浏览器不会下载 #}
       <img class="scene-base" src="{{ layout.base }}" alt="{{ t('map.alt', island=island.name) }}" data-scene-img
            loading="lazy" decoding="async" draggable="false">
-      {% if layout.waves %}
-        {# 海浪循环视频（等待队友交付，文件到位后自动出现；减少动态效果时隐藏） #}
-        <video class="scene-waves" src="{{ layout.waves }}" poster="{{ layout.base }}" autoplay muted loop playsinline
-               preload="none" aria-hidden="true"></video>
+      {% if layout.video %}
+        {# 5 秒循环视频（和底图同构图）：map.js 用两段视频交叉淡入淡出来循环，藏住首尾接缝。
+           只有正在显示的那套构图才加载视频（data-src）；没有 JavaScript 或"减少动态效果"时只显示静态底图 #}
+        <div class="scene-video" style="--video-scale: {{ layout.video_scale }};" data-scene-video
+             data-src="{{ layout.video }}" aria-hidden="true"></div>
       {% endif %}
 
-      {# ② 五个入口的透明柔光层：平时看不见，悬停 / 键盘聚焦时淡入（回忆小屋同时亮灯） #}
+      {# ② 悬停 / 键盘聚焦时放大的场景元素（从底图抠出来的透明图，平时看不见，看到的是视频里的样子）：
+         温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台。
+         整组以元素底边中点为原点放大；初见森林这一组里还有石像，悬停时和石台一起放大 #}
       {% for region in layout.regions %}
-        {% if region.glow %}<img class="scene-glow" src="{{ region.glow }}" alt="" data-region="{{ region.id }}" loading="lazy" draggable="false">{% endif %}
-        {% if region.state %}<img class="scene-glow scene-state" src="{{ region.state }}" alt="" data-region="{{ region.id }}" loading="lazy" draggable="false">{% endif %}
-      {% endfor %}
-
-      {# ③ 森林底座上的石像：做过测试并且石像图片已交付时才有（服务器端判断），先垫接触阴影 #}
-      {% for s in layout.statues %}
-        {% if s.shadow %}<img class="statue-shadow" src="{{ s.shadow }}" alt="" style="clip-path: {{ s.clip }};" loading="lazy" draggable="false">{% endif %}
-        <img class="statue" src="{{ s.src }}" alt="{{ t('map.statue_alt', name=s.name) }}" style="{{ pos(s.box) }}" loading="lazy" draggable="false">
+        {% set forest_group = region.id == 'first_meet_forest' %}
+        {% if region.element or (forest_group and layout.statues) %}
+        <div class="scene-pop" data-region="{{ region.id }}"
+             {% if region.element %}style="--ox: {{ region.element.origin_x }}%; --oy: {{ region.element.origin_y }}%;"{% endif %}>
+          {% if region.element %}
+            <img class="scene-element" src="{{ region.element.src }}" alt="" style="{{ pos(region.element.box) }}" loading="lazy" draggable="false">
+          {% endif %}
+          {% if forest_group %}
+            {# ③ 石台上的石像：谁做完测试谁的石像才出现（服务器端判断），先垫接触阴影 #}
+            {% for s in layout.statues %}
+              {% if s.shadow %}<img class="statue-shadow" src="{{ s.shadow }}" alt="" style="clip-path: {{ s.clip }};" loading="lazy" draggable="false">{% endif %}
+              <img class="statue" src="{{ s.src }}" alt="{{ t('map.statue_alt', name=s.name) }}" style="{{ pos(s.box) }}" loading="lazy" draggable="false">
+            {% endfor %}
+          {% endif %}
+        </div>
+        {% endif %}
       {% endfor %}
 
       {# ④ 野餐垫上的两只动物（第一位成员在左、第二位在右）

@@ -500,10 +500,10 @@ body.logged-in.page-map .main {
   pointer-events: none;
 }
 
-/* 和底图一样大的图层：底图、海浪视频、柔光层、石像阴影 */
+/* 和底图一样大的图层：底图、循环视频、可放大的元素组、石像阴影 */
 .scene-base,
-.scene-waves,
-.scene-glow,
+.scene-video,
+.scene-pop,
 .statue-shadow {
   position: absolute;
   inset: 0;
@@ -513,24 +513,84 @@ body.logged-in.page-map .main {
   pointer-events: none;
 }
 
-.scene-waves {
-  object-fit: cover; /* 视频和底图同比例，cover 不会裁到东西 */
+/* 5 秒循环视频：两段 <video> 叠在一起交叉淡入（map.js）。
+   视频画面比底图多拍了一圈边，放大 --video-scale 倍后和底图逐像素对齐（见 content/scene.json） */
+.scene-video {
+  z-index: 1;
+  overflow: hidden;
 }
 
-/* 五个入口的透明柔光：平时看不见，悬停 / 聚焦时淡入，按下时更亮一点 */
-.scene-glow {
-  z-index: 5;
+.scene-video video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--video-scale, 1));
+  opacity: 0;
+  transition: opacity 0.6s linear;
+}
+
+.scene-video video.is-on {
+  opacity: 1;
+}
+
+/* 减少动态效果：只显示静态底图 */
+.reduce-motion .scene-video {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-video {
+    display: none;
+  }
+}
+
+/* 悬停 / 聚焦时放大的场景元素：整组以元素底边中点（--ox, --oy）为原点放大。
+   平时元素图是透明的（看到的是视频里的样子），放大时才显示，并带一点抬起的阴影 */
+.scene-pop {
+  z-index: 6;
+  --pop: 1.08;
+  transform-origin: var(--ox, 50%) var(--oy, 50%);
+  transition: transform var(--fast) ease;
+}
+
+/* 小的元素放大得多一点，才看得出来 */
+.scene-pop[data-region="mailbox"] {
+  --pop: 1.3;
+}
+
+.scene-pop[data-region="whisper_pier"],
+.scene-pop[data-region="quest_board"],
+.scene-pop[data-region="first_meet_forest"] {
+  --pop: 1.12;
+}
+
+.scene-element {
+  position: absolute;
+  max-width: none;
   opacity: 0;
   transition: opacity var(--fast) ease, filter var(--fast) ease;
 }
 
-.scene-glow.is-hover,
-.scene-glow.is-pressed {
-  opacity: 1;
+.scene-pop.is-hover {
+  transform: scale(var(--pop));
 }
 
-.scene-glow.is-pressed {
-  filter: brightness(1.25) saturate(1.1);
+.scene-pop.is-hover .scene-element,
+.scene-pop.is-pressed .scene-element {
+  opacity: 1;
+  filter: drop-shadow(0 0.35cqw 0.45cqw rgb(38 63 70 / 0.3));
+}
+
+/* 按下：在放大的基础上轻轻压回一点，并亮一点 */
+.scene-pop.is-hover.is-pressed,
+.scene-pop.is-pressed {
+  transform: scale(calc(var(--pop) * 0.97));
+}
+
+.scene-pop.is-pressed .scene-element {
+  filter: drop-shadow(0 0.2cqw 0.3cqw rgb(38 63 70 / 0.3)) brightness(1.08);
 }
 
 /* ---------- 森林石像 ---------- */

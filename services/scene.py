@@ -3,7 +3,8 @@
 - 两套构图：横版 desktop（2560×1440）和竖版 mobile（1440×2560，屏幕宽度 ≤700px 时使用）
 - 坐标全部来自 content/scene_anchors.json（底图像素），这里换算成百分比：
   场景容器保持底图原比例，所有东西用百分比定位，所以任何屏幕大小下都和底图对齐
-- 五个入口：HTML 热区（可以 Tab 聚焦）+ 悬停 / 聚焦时显示的透明柔光层
+- 底图上叠一段 5 秒循环视频（固定机位，map.js 交叉淡入淡出循环，藏住首尾接缝）
+- 五个入口：HTML 热区（可以 Tab 聚焦）+ 悬停 / 聚焦时放大的场景元素（小船、信箱、小屋、告示牌、两个石台）
 - 两只动物站在野餐垫上：做过测试 → 海岛姿态（有的话）或结果立绘；没做测试 → 默认形象（白色黏土小人，左睁眼、右眯眼笑）
 - 森林里的两座石像：做过测试并且石像图片存在时才显示，下面先垫一层接触阴影；否则保持空底座
 
@@ -82,6 +83,7 @@ def _player_sprite(member, side):
         "src": assets.url(assets.fill(island["player_slot"], side=side)),
         "pivot": island["player_slot_pivot"],
         "is_slot": True,
+        "scale": island.get("player_slot_scale", 1),  # 默认形象比动物小一点
     }
 
 
@@ -104,7 +106,7 @@ def _players(mode, canvas, members, current_user_id):
             "animal_name": avatar["animal_name"] if avatar else None,
             # 心情（开心挥爪 / 委屈垂耳 / 需要空间缩小 + 小窝），见 services/mood.py
             "mood": mood.view(mood.of(member), member["nickname"]) if member is not None else None,
-            "box": foot_box(anchor, sprite["pivot"], canvas),
+            "box": foot_box({**anchor, "scale": anchor["scale"] * sprite.get("scale", 1)}, sprite["pivot"], canvas),
             # 名牌：脚底正下方一点点
             "label": {"x": _pct(anchor["x"], canvas[0]), "y": _pct(anchor["y"] + canvas[1] * 0.02, canvas[1])},
             "index": i,
@@ -140,6 +142,22 @@ def _statues(mode, canvas, members):
 # ---------- 五个入口 ----------
 
 
+def _element(mode, canvas, region_id, r):
+    """悬停时放大的场景元素：图片网址、位置（百分比），以及放大的原点（元素底边中点，百分比）。
+    图片不存在时返回 None（那就只有标签抬起，没有放大效果）。"""
+    src = assets.url_if_exists(assets.fill(r.get("element"), mode=mode))
+    rect = _cfg()["island"].get("elements", {}).get(mode, {}).get(region_id)
+    if not src or not rect:
+        return None
+    x1, y1, x2, y2 = rect
+    return {
+        "src": src,
+        "box": rect_box(rect, canvas),
+        "origin_x": _pct((x1 + x2) / 2, canvas[0]),
+        "origin_y": _pct(y2, canvas[1]),
+    }
+
+
 def _regions(mode, canvas, regions):
     island = _cfg()["island"]
     hotspots = _anchors(mode)["hotspots"]
@@ -152,10 +170,8 @@ def _regions(mode, canvas, regions):
             **info,
             "box": rect_box(hotspots[r["anchor"]], canvas),
             "label": {"x": _pct(lx, canvas[0]), "y": _pct(ly, canvas[1])},
-            # 悬停 / 聚焦时显示的透明柔光层（和底图一样大，直接盖在上面）
-            "glow": assets.url_if_exists(assets.fill(r.get("glow"), mode=mode)),
-            # 回忆小屋另外有一张"亮灯"状态图
-            "state": assets.url_if_exists(assets.fill(r.get("state"), mode=mode)),
+            # 悬停 / 聚焦时放大的场景元素：温柔传话-小船、小信箱-信箱、回忆小屋-小屋、约会选选选-告示牌、初见森林-两个石台
+            "element": _element(mode, canvas, region_id, r),
         })
     return items
 
@@ -168,8 +184,9 @@ def _layout(mode, regions, members, current_user_id):
         "ratio_w": canvas[0],
         "ratio_h": canvas[1],
         "base": assets.url(assets.fill(island["base"], mode=mode)),
-        # 海浪循环视频还没交付：文件放到对应路径后自动使用
-        "waves": assets.url_if_exists(assets.fill(_cfg()["pending"]["island_waves_video"], mode=mode)),
+        # 5 秒循环视频（和底图同构图）；scale 让视频画面和底图对齐
+        "video": assets.url_if_exists(assets.fill(island.get("loop_video"), mode=mode)),
+        "video_scale": island.get("loop_video_scale", 1),
         "regions": _regions(mode, canvas, regions),
         "animals": _players(mode, canvas, members, current_user_id),
         "statues": _statues(mode, canvas, members),

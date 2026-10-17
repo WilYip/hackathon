@@ -1,29 +1,71 @@
 {
-  "codes": ["intj", "intp", "entj", "entp", "infj", "infp", "enfj", "enfp", "istj", "isfj", "estj", "esfj", "istp", "isfp", "estp", "esfp"],
+  "codes": [
+    "intj",
+    "intp",
+    "entj",
+    "entp",
+    "infj",
+    "infp",
+    "enfj",
+    "enfp",
+    "istj",
+    "isfj",
+    "estj",
+    "esfj",
+    "istp",
+    "isfp",
+    "estp",
+    "esfp"
+  ],
   "result": {
     "pathPattern": "assets/animals/result/{code}.png",
-    "canvas": [1024, 1024],
+    "canvas": [
+      1024,
+      1024
+    ],
     "footBaselineY": 963,
-    "pivotNormalized": [0.5, 0.94043],
+    "pivotNormalized": [
+      0.5,
+      0.94043
+    ],
     "status": "included"
   },
   "island": {
     "pathPattern": "assets/animals/island/{code}.png",
-    "recommendedCanvas": [1536, 1536],
-    "pivotNormalized": [0.5, 0.92],
+    "recommendedCanvas": [
+      1536,
+      1536
+    ],
+    "pivotNormalized": [
+      0.5,
+      0.92
+    ],
     "status": "awaiting_teammate"
   },
   "statues": {
     "pathPattern": "assets/animals/statues/{code}.png",
-    "recommendedCanvas": [1536, 1536],
-    "pivotNormalized": [0.5, 0.92],
+    "pivotNormalized": [
+      0.5,
+      0.9395
+    ],
     "material": "matte warm-light-gray stone; no colored clothing",
-    "status": "awaiting_teammate"
+    "status": "included",
+    "canvas": [
+      512,
+      512
+    ],
+    "note": "tone-matched to the island pedestals from usland_animals2/*_stone.png"
   },
   "reconcile": {
     "pathPattern": "assets/animals/reconcile/{code}.png",
-    "recommendedCanvas": [1536, 1536],
-    "pivotNormalized": [0.5, 0.92],
+    "recommendedCanvas": [
+      1536,
+      1536
+    ],
+    "pivotNormalized": [
+      0.5,
+      0.92
+    ],
     "orientation": "one side-facing pose; runtime may mirror horizontally",
     "status": "awaiting_teammate"
   },

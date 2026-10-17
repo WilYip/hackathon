@@ -2,11 +2,13 @@
   "_说明": [
     "第三版美术素材（docs/ui-v3/）的接入配置。素材在 static/usland/assets/，下面所有路径都相对这个目录。",
     "坐标来自 content/scene_anchors.json（= docs/ui-v3/integration/scene_anchors.json 原样复制，队友更新后直接覆盖这个文件）。",
-    "这里只写 scene_anchors.json 里没有的东西：五个入口对应哪个热区和柔光层、名称标签放在哪、回忆小屋里的三个互动区域。",
+    "这里只写 scene_anchors.json 里没有的东西：五个入口对应哪个热区、悬停时放大哪个元素、名称标签放在哪、回忆小屋里的三个互动区域。",
     "{mode} 会被替换成 desktop（横版 2560×1440）或 mobile（竖版 1440×2560，宽度 ≤700px 时使用）。",
     "labels：五个入口常驻名称标签的中心点，单位是底图像素（和 scene_anchors.json 一样）。",
     "player_slot_pivot：测试前默认形象（1024×1024 PNG，左边睁眼、右边眯眼笑，摆放方式和动物结果立绘一样，脚底在 y=963）脚底在画布中的高度比例。",
-    "pending：还没交付的素材。文件放到对应路径后刷新页面就会自动使用，不用改代码。",
+    "loop_video：主岛 5 秒循环视频（固定机位，和底图同构图）；视频画面比底图多拍了一圈边，loop_video_scale 是让它和底图对齐的放大倍数（特征点匹配测得 1 / 0.9794）。",
+    "player_slot_scale：默认形象相对动物立绘的缩放（0.7 = 缩小 30%）。",
+    "elements：悬停 / 聚焦时会放大的场景元素（从底图抠出来的透明图），[左, 上, 右, 下] 是它在底图上的位置；放大以元素底边中点为原点。",
     "打开 http://localhost:8080/?hotspots=1 会显示热区（红框）和动物站位（虚线），方便对齐。"
   ],
   "island": {
@@ -14,13 +16,31 @@
     "statue_shadow": "scenes/island/{mode}/statue_pedestals_{mode}.png",
     "player_slot": "scenes/island/shared/player_slot_{side}.png",
     "player_slot_pivot": 0.94043,
+    "player_slot_scale": 0.7,
+    "loop_video": "scenes/island/{mode}/island_loop_{mode}.mp4",
+    "loop_video_scale": 1.021,
     "regions": {
-      "memory_cottage": {"anchor": "cottage", "glow": "scenes/island/{mode}/hotspots/memory_cottage_{mode}.png",
-                         "state": "scenes/island/{mode}/states/memory_cottage_glow_{mode}.png"},
-      "whisper_pier": {"anchor": "pier", "glow": "scenes/island/{mode}/hotspots/whisper_pier_{mode}.png"},
-      "quest_board": {"anchor": "quest", "glow": "scenes/island/{mode}/hotspots/quest_board_{mode}.png"},
-      "first_meet_forest": {"anchor": "forest", "glow": "scenes/island/{mode}/hotspots/first_meet_forest_{mode}.png"},
-      "mailbox": {"anchor": "mailbox", "glow": "scenes/island/{mode}/hotspots/mailbox_{mode}.png"}
+      "memory_cottage": {"anchor": "cottage", "element": "scenes/island/{mode}/elements/memory_cottage_{mode}.png"},
+      "whisper_pier": {"anchor": "pier", "element": "scenes/island/{mode}/elements/whisper_pier_{mode}.png"},
+      "quest_board": {"anchor": "quest", "element": "scenes/island/{mode}/elements/quest_board_{mode}.png"},
+      "first_meet_forest": {"anchor": "forest", "element": "scenes/island/{mode}/elements/first_meet_forest_{mode}.png"},
+      "mailbox": {"anchor": "mailbox", "element": "scenes/island/{mode}/elements/mailbox_{mode}.png"}
+    },
+    "elements": {
+      "desktop": {
+        "whisper_pier": [117, 1075, 501, 1317],
+        "mailbox": [2137, 664, 2230, 743],
+        "memory_cottage": [1738, 252, 2305, 572],
+        "quest_board": [1096, 386, 1345, 602],
+        "first_meet_forest": [465, 389, 808, 491]
+      },
+      "mobile": {
+        "whisper_pier": [104, 1747, 448, 1982],
+        "mailbox": [1173, 1086, 1265, 1170],
+        "memory_cottage": [923, 580, 1395, 942],
+        "quest_board": [578, 900, 823, 1123],
+        "first_meet_forest": [208, 657, 522, 806]
+      }
     },
     "labels": {
       "desktop": {
@@ -62,8 +82,5 @@
     "forest": "scenes/forest/forest_quiz_{mode}.webp",
     "memory": "scenes/memory/memory_room_{mode}.webp",
     "mailbox": "scenes/mailbox/mailbox_settings_{mode}.webp"
-  },
-  "pending": {
-    "island_waves_video": "scenes/island/{mode}/island_waves_{mode}.mp4"
   }
 }
