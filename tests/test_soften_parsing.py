@@ -41,3 +41,13 @@ def test_empty_reply_is_error():
     assert parse_soften_output("   ").status == ERROR
     assert parse_soften_output(None).status == ERROR
     assert parse_soften_output('""').status == ERROR
+
+
+def test_strips_prefixes_and_tags():
+    # 模型偶尔会加"改写后："之类的前缀，或者把 <原话> 标签也抄出来
+    assert parse_soften_output("改写后：我现在有点生气。").text == "我现在有点生气。"
+    assert parse_soften_output("温柔版: 我有点累了").text == "我有点累了"
+    assert parse_soften_output("Rewritten: I feel a bit lonely.").text == "I feel a bit lonely."
+    assert parse_soften_output("<原话>我有点想你</原话>").text == "我有点想你"
+    # 句子中间的冒号不受影响
+    assert parse_soften_output("我想说：今天辛苦了").text == "我想说：今天辛苦了"

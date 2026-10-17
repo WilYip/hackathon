@@ -11,7 +11,8 @@ ORIGIN = "http://localhost"
 
 class FakeDeepSeek:
     """测试用的假 DeepSeek：记录每次请求，按设置返回文字或抛出异常。
-    用法：fake_ai.reply = "改写后的话"；fake_ai.error = FakeAPIError(401)"""
+    用法：fake_ai.reply = "改写后的话"；fake_ai.error = FakeAPIError(401)
+    reply 也可以是列表：按顺序每次返回一个（用来测"第一次不合格、重试一次"）"""
 
     def __init__(self):
         self.calls = []
@@ -23,6 +24,8 @@ class FakeDeepSeek:
                            "temperature": temperature})
         if self.error is not None:
             raise self.error
+        if isinstance(self.reply, list):
+            return self.reply.pop(0)
         return self.reply
 
 

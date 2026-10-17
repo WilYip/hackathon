@@ -5,6 +5,7 @@
 - 日志只记录"做了什么、结果类型、耗时"，不记录任何聊天内容
 """
 
+import re
 import time
 from dataclasses import dataclass
 
@@ -12,11 +13,18 @@ import openai
 from flask import current_app
 from openai import OpenAI
 
-from services.prompts import KEY_TEST_MESSAGE, SOFTEN_SYSTEM_PROMPT
+from services.prompts import (
+    KEY_TEST_MESSAGE,
+    SOFTEN_EXAMPLES,
+    SOFTEN_RETRY_REMINDER,
+    SOFTEN_SYSTEM_PROMPT,
+    soften_user_message,
+)
 
 BASE_URL = "https://api.deepseek.com"
 
 MAX_ORIGINAL_LENGTH = 500  # 原话最长 500 字
+SOFTEN_TEMPERATURE = 0.3  # 改写要稳定：同一句话每次改出来差不多（0.7 时差别太大）
 
 # 结果类型（前端按它显示不同的提示）
 OK = "ok"
@@ -86,6 +94,34 @@ def check_key(api_key):
 
 # 模型偶尔会给整句话加上引号，去掉成对的引号
 _QUOTE_PAIRS = [('"', '"'), ("“", "”"), ("「", "」"), ("『", "』"), ("'", "'"), ("‘", "’")]
+_OPEN_QUOTES = "\"“「『'‘"
+# 模型偶尔会加的前缀，例如"改写后：""温柔版：""Rewritten:"
+_PREFIX = re.compile(r"^(改写后?|优化后?|温柔版本?|传话)\s*[:：]\s*|^(rewritten|softened)( version)?\s*:\s*", re.I)
+_CJK = re.compile(r"[\u3400-\u9fff]")
+_LATIN = re.compile(r"[A-Za-z]")
+
+
+def detect_lang(text):
+    """原话的语言：有汉字 → "zh"；没有汉字但有英文字母 → "en"；只有数字、符号、表情 → None（不限制）。"""
+    if _CJK.search(text or ""):
+        return "zh"
+    if _LATIN.search(text or ""):
+        return "en"
+    return None
+
+
+def problem_with(original, softened, lang):
+    """检查改写结果有没有已知的毛病，返回原因（日志用，不含内容），没有问题返回 None：
+    - wrong_lang：中文原话改成了英文，或英文原话改成了中文
+    - echo：在改写里引用了原话（通常是站在被说的人的角度回应，例如"你说'你是头猪'的时候……"）"""
+    if lang == "zh" and not _CJK.search(softened):
+        return "wrong_lang"
+    if lang == "en" and _CJK.search(softened):
+        return "wrong_lang"
+    core = original.strip().rstrip("。！？!?.~～ ")
+    if len(core) >= 3 and any(q + core in softened for q in _OPEN_QUOTES):
+        return "echo"
+    return None
 
 
 def parse_soften_output(raw):
@@ -96,6 +132,8 @@ def parse_soften_output(raw):
     text = (raw or "").strip()
     if "[UNSAFE]" in text.upper():
         return SoftenResult(UNSAFE)
+    text = text.replace("<原话>", "").replace("</原话>", "").strip()  # 偶尔把标签也抄出来
+    text = _PREFIX.sub("", text).strip()
     for left, right in _QUOTE_PAIRS:
         if len(text) >= 2 and text.startswith(left) and text.endswith(right):
             text = text[1:-1].strip()
@@ -105,21 +143,41 @@ def parse_soften_output(raw):
     return SoftenResult(OK, text)
 
 
+def soften_messages(original, retry=False):
+    """发给模型的完整消息：系统提示词 + 示例对话 + 用标签包好的原话（写明输出语言）。"""
+    messages = [{"role": "system", "content": SOFTEN_SYSTEM_PROMPT}]
+    for example, rewritten in SOFTEN_EXAMPLES:
+        messages.append({"role": "user", "content": soften_user_message(example, detect_lang(example))})
+        messages.append({"role": "assistant", "content": rewritten})
+    content = soften_user_message(original, detect_lang(original))
+    if retry:
+        content += SOFTEN_RETRY_REMINDER
+    messages.append({"role": "user", "content": content})
+    return messages
+
+
 def soften(api_key, original):
-    """把原话改写成更温柔的说法，返回 SoftenResult。"""
+    """把原话改写成更温柔的说法，返回 SoftenResult。
+    结果语言不对、或者引用了原话（站错了角度）时自动重试一次（加一句提醒）；
+    第二次还是这样就返回 ERROR，让用户再试或直接发送，不把错误的改写给用户。"""
     started = time.monotonic()
-    try:
-        raw = _chat(
-            api_key,
-            [
-                {"role": "system", "content": SOFTEN_SYSTEM_PROMPT},
-                {"role": "user", "content": original},
-            ],
-            max_tokens=300,
-            temperature=0.7,
-        )
+    lang = detect_lang(original)
+    result = SoftenResult(ERROR)
+    for attempt in range(2):
+        try:
+            raw = _chat(api_key, soften_messages(original, retry=attempt > 0),
+                        max_tokens=300, temperature=SOFTEN_TEMPERATURE)
+        except Exception as exc:  # noqa: BLE001
+            result = SoftenResult(classify_error(exc))
+            break
         result = parse_soften_output(raw)
-    except Exception as exc:  # noqa: BLE001
-        result = SoftenResult(classify_error(exc))
+        if result.status != OK:
+            break
+        problem = problem_with(original, result.text, lang)
+        if problem is None:
+            break
+        # 只记录原因，不记录内容
+        current_app.logger.info("deepseek soften retry reason=%s attempt=%d", problem, attempt + 1)
+        result = SoftenResult(ERROR)
     _log("soften", result.status, started)
     return result
