@@ -33,7 +33,7 @@ zenith down                # 测完关掉
 
 正式上架（提交审核）用 `zenith publish`：它从 **GitHub 上的公开仓库**里指定的提交构建，需要你对仓库有
 所有者或管理员权限、在 https://app.zenith.hosting/publish 连接 GitHub、同意开发者协议，并准备至少一张截图。
-上架前请给仓库加一个 `LICENSE` 文件，并把 `zenith-compose.yml` 里的 `license` 改成同一个许可证。
+代码以 MIT 许可证发布（根目录 `LICENSE`，`zenith-compose.yml` 里的 `license` 也是 MIT）；第三方音频和图片保留各自的许可，见 `LICENSE` 末尾和"音频来源与授权"。
 
 ## 声音
 

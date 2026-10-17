@@ -251,6 +251,7 @@
 - `requirements.txt` 是 UTF-16 编码（pip 能读，但有的编辑器 / 工具会显示乱码），以后可以转成 UTF-8
 
 ## 重要决定
+- （上架）代码用 **MIT** 许可证（根目录 `LICENSE`，`zenith-compose.yml` 的 `license: MIT`）；第三方音频（CC BY 3.0 / CC0）和 Fluent Emoji（MIT）保留各自许可，写在 LICENSE 末尾
 - （2026-10-17 第二批）视频不改坐标，而是放大视频去对齐底图（所有锚点仍以底图为准）；循环用双视频交叉淡入而不是 `loop`，因为视频首尾有跳帧
 - （2026-10-17 第三批）悬停只亮光圈、不放大（人类要求）；点击范围用 clip-path 多边形贴着元素轮廓，不再用 scene_anchors.json 的大矩形
 - （2026-10-17 第三批）提高画质的办法是"高清陆地 + 视频海水"叠层，而不是把视频放大重编码（放大不会增加细节）
@@ -369,6 +370,7 @@ python app.py
   6. 切换 EN：Happy / Hurt / Need space / Calm
 
 ## 更新日志
+- 2026-10-17 上架准备：加 MIT LICENSE、zenith-compose.yml 许可证改为 MIT；main 快进到 feat/gomoku-bench 并推送到 GitHub
 - 2026-10-17 Zenith 部署准备：Dockerfile、.dockerignore、zenith-compose.yml（zenith check 通过，未上传），requirements.txt 转 UTF-8，TRUST_PROXY + ProxyFix，README 部署说明，291 个测试通过
 - 2026-10-17 五子棋道具互动（卡布奇诺 / 番茄 / 鸡蛋，Fluent Emoji 3D 贴图 + 代码动画，对方实时看到）和结算画面（胜 / 负 / 平、手数、用时、总战绩、再来一局），289 个测试通过，浏览器实测
 - 2026-10-17 去掉初见森林探头小动物；长凳五子棋（地图长凳入口、竖版补长凳、两人轮流实时同步、无 JS 可用）；修复模板改动要重启才生效，282 个测试通过，浏览器实测

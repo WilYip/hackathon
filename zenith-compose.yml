@@ -25,8 +25,8 @@ x-zenith:
       - relationships
       - games
     source: https://github.com/WilYip/hackathon
-    # 仓库里还没有 LICENSE 文件：上架前团队要定一个许可证（例如 MIT），并在这里和仓库根目录同时写上
-    license: Proprietary
+    # 和仓库根目录的 LICENSE 一致（代码 MIT；第三方音频 / 图片保留各自的许可，见 LICENSE 末尾）
+    license: MIT
   expose:
     - service: usland
       port: 8080
