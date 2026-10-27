@@ -190,6 +190,7 @@
 （暂无）
 
 ## 下一步
+- 在线试玩（演示模式）已部署到 Render 免费实例：https://usland-demo.onrender.com （分支 `feat/demo-mode`，环境变量 `DEMO_MODE=1`，新加坡；没人访问会休眠，第一次打开约 50 秒）。介绍页首屏和结尾都有"在线试玩"按钮；之后要合并 `feat/demo-mode` 到 `main` 时注意 PROGRESS.md 可能有冲突
 - 跟进 Zenith 审核：`zenith publish status` 或 https://app.zenith.hosting/publish；先 `zenith up` 跑一次临时部署（创建小岛 → 邀请码加入 → 发消息 → 传照片 → 刷新数据还在），测完 `zenith down`。审核有反馈就按反馈改，改完推送到 `main` 再 `zenith publish`
 - **Zenith**：① 团队定许可证（加 LICENSE，改 zenith-compose.yml 的 license）；② 有人安装 CLI、`zenith auth login`，运行 `zenith up` 临时部署，测登录、温柔传话、上传照片、五子棋；③ 确认 WilYip/hackathon 由谁（所有者 / 管理员）来 `zenith publish`，以及用哪个分支的提交
 0. 人类按"如何运行和验证 → 第三版美术素材"在 375 / 768 / 1280 / 1920 检查；队友交付海岛姿态 / 石像 / 和好姿态 / 海浪视频后放进对应路径刷新即可（见"视觉待办"）；石像和海岛姿态到位后按真实脚底再微调一次 `content/scene_anchors.json`（交付 README 也这么要求，改完同步回 `docs/ui-v3/integration/`）
@@ -373,6 +374,7 @@ python app.py
   6. 切换 EN：Happy / Hurt / Need space / Calm
 
 ## 更新日志
+- 2026-10-27 演示版部署到 Render（https://usland-demo.onrender.com），介绍页加"在线试玩"按钮
 - 2026-10-27 新增 GitHub Pages 产品介绍页 docs/index.html；Usland 已在 Zenith 应用市场上线（https://zenith.hosting/apps/usland）
 - 2026-10-17 Zenith 技术审核通过（Approved），进入发布阶段；发布后要在市场里实际部署一个实例从头测一遍
 - 2026-10-17 提交 Zenith 审核（网页填写上架信息 + 上传封面 / 图标 / 5 张截图，`zenith publish` 生成发布构建）；上架素材在 `docs/screenshots/zenith/`（演示数据截图，未提交 git）
