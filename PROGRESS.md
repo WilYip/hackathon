@@ -3,6 +3,7 @@
 > 本文件由 AI 编程助手在开发过程中持续更新。接手的组员：请先阅读 `CLAUDE.md`（或 `AGENTS.md`）、`USLAND_SPEC.md`、`VISUAL_DESIGN.md`（视觉与交互以它为准）和本文件，然后从"下一步"继续。
 
 ## 当前里程碑
+- **Zenith 审核已通过（Approved，2026-10-17）**，正在发布到应用市场（Publication），无需操作；Product ID `wilyip-hackathon-6978839630861097587`，版本 1。提交时：发布回执 `wilyip-hackathon-6978839630861097587/v1`，锁定提交 `7a477825fd02`（GitHub `main`）；分类 Communication、许可证 MIT、维护者 Usland team。CLI 提示"No clean tested commit"：还没在 Zenith 上用 `zenith up` 跑过，建议跑一次临时部署确认能用
 - M1 项目骨架：**已验证**
 - M2 账号与小岛：**已验证**
 - M3 小岛地图：**已验证**
@@ -25,6 +26,7 @@
 - 美术方向：**明亮午后黏土风**（第三版，配色以 `static/usland/tokens.css` = `docs/ui-v3/integration/tokens.css` 为准）；素材在 `static/usland/assets/`，说明在 `docs/ui-v3/`；代码里不绘制任何动物插画
 
 ## 已完成
+- **GitHub Pages 介绍页（2026-10-27）**：`docs/index.html`（纯静态单页，中英切换、手机 / 电脑自适应，不影响应用；`docs/` 不进 Docker 镜像）+ `docs/.nojekyll`；图片用 `docs/screenshots/zenith/` 里的演示数据截图（不用带真实名字的 `island_custom.jpg`）；按钮链接 Zenith 上架页 https://zenith.hosting/apps/usland 和 GitHub。开启方式：仓库 Settings → Pages → Deploy from a branch → `main` → `/docs`；网址 https://wilyip.github.io/hackathon/。本地预览：`.claude/launch.json` 的 `site-preview`（端口 8094）
 - **Zenith 部署准备（2026-10-17）**（人类要求：先不要上传或发布）
   - Zenith 怎么部署自己的应用（读了 zenith.hosting 的指南、开发者页，以及 GitHub `zenith-hosting/skills`、`zenith-hosting/docs`）：仓库根目录放 `Dockerfile` + `zenith-compose.yml`（Compose 格式 + `x-zenith` 区块：catalog 简介 / expose 端口）；`zenith up` 上传本地文件夹做约 20 分钟的临时部署测试；`zenith publish` 从**公开 GitHub 仓库的指定提交**构建并提交审核（需要仓库所有者 / 管理员权限、连接 GitHub、同意开发者协议、至少一张截图），审核通过才进应用目录
   - `requirements.txt` 从 UTF-16 转成 UTF-8（内容不变）
@@ -188,6 +190,7 @@
 （暂无）
 
 ## 下一步
+- 跟进 Zenith 审核：`zenith publish status` 或 https://app.zenith.hosting/publish；先 `zenith up` 跑一次临时部署（创建小岛 → 邀请码加入 → 发消息 → 传照片 → 刷新数据还在），测完 `zenith down`。审核有反馈就按反馈改，改完推送到 `main` 再 `zenith publish`
 - **Zenith**：① 团队定许可证（加 LICENSE，改 zenith-compose.yml 的 license）；② 有人安装 CLI、`zenith auth login`，运行 `zenith up` 临时部署，测登录、温柔传话、上传照片、五子棋；③ 确认 WilYip/hackathon 由谁（所有者 / 管理员）来 `zenith publish`，以及用哪个分支的提交
 0. 人类按"如何运行和验证 → 第三版美术素材"在 375 / 768 / 1280 / 1920 检查；队友交付海岛姿态 / 石像 / 和好姿态 / 海浪视频后放进对应路径刷新即可（见"视觉待办"）；石像和海岛姿态到位后按真实脚底再微调一次 `content/scene_anchors.json`（交付 README 也这么要求，改完同步回 `docs/ui-v3/integration/`）
 1. 安装 ffmpeg（`winget install Gyan.FFmpeg`，重新打开终端）后运行 `.venv\Scripts\python.exe scripts\compress_bgm.py`，再试听一遍首页和回忆小屋的音乐有没有明显变差
@@ -370,6 +373,9 @@ python app.py
   6. 切换 EN：Happy / Hurt / Need space / Calm
 
 ## 更新日志
+- 2026-10-27 新增 GitHub Pages 产品介绍页 docs/index.html；Usland 已在 Zenith 应用市场上线（https://zenith.hosting/apps/usland）
+- 2026-10-17 Zenith 技术审核通过（Approved），进入发布阶段；发布后要在市场里实际部署一个实例从头测一遍
+- 2026-10-17 提交 Zenith 审核（网页填写上架信息 + 上传封面 / 图标 / 5 张截图，`zenith publish` 生成发布构建）；上架素材在 `docs/screenshots/zenith/`（演示数据截图，未提交 git）
 - 2026-10-17 上架准备：加 MIT LICENSE、zenith-compose.yml 许可证改为 MIT；main 快进到 feat/gomoku-bench 并推送到 GitHub
 - 2026-10-17 Zenith 部署准备：Dockerfile、.dockerignore、zenith-compose.yml（zenith check 通过，未上传），requirements.txt 转 UTF-8，TRUST_PROXY + ProxyFix，README 部署说明，291 个测试通过
 - 2026-10-17 五子棋道具互动（卡布奇诺 / 番茄 / 鸡蛋，Fluent Emoji 3D 贴图 + 代码动画，对方实时看到）和结算画面（胜 / 负 / 平、手数、用时、总战绩、再来一局），289 个测试通过，浏览器实测

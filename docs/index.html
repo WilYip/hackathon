@@ -1,0 +1,665 @@
+<!doctype html>
+<!--
+  Usland 的产品介绍页（GitHub Pages：Settings → Pages → main 分支 → /docs）。
+  这是一个纯静态页面，只做介绍；真正的应用要部署到 Zenith（一个实例 = 一座小岛 = 两个人）。
+  中英文切换：右上角按钮，默认跟随浏览器语言，选择会记在这台设备的浏览器里。
+  截图来自演示数据（Rain / Mu），不含任何真实用户信息。
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Usland · 两个人的小岛</title>
+  <meta name="description" content="A cosy island for two: gentle messages, date ideas, shared memories and games.">
+  <meta name="theme-color" content="#263f46">
+  <link rel="icon" href="screenshots/zenith/icon_animals.png" type="image/png">
+  <meta property="og:title" content="Usland · A tiny island for two">
+  <meta property="og:description" content="Gentle whispers, date quests, forest animals, shared memories and gomoku on the bench.">
+  <meta property="og:image" content="https://wilyip.github.io/hackathon/screenshots/zenith/cover_island.jpg">
+  <meta property="og:url" content="https://wilyip.github.io/hackathon/">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    :root {
+      --warm-white: #f2ede3;
+      --paper: #fbf8f2;
+      --sand: #d8c7ad;
+      --wood: #b98b5f;
+      --bay: #6f9394;
+      --deep-sea: #263f46;
+      --sage: #7f9279;
+      --terracotta: #b97870;
+      --amber: #e6b975;
+      --text: #263f46;
+      --text-soft: #55686b;
+      --radius: 18px;
+      --shadow: 0 18px 50px rgb(38 63 70 / 14%);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--warm-white);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1120px, 100% - 32px);
+      margin: 0 auto;
+    }
+
+    /* 中英文：只显示当前语言 */
+    html[lang="zh-CN"] [lang="en"],
+    html[lang="en"] [lang="zh"] { display: none !important; }
+
+    /* ---------- 顶部 ---------- */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgb(242 237 227 / 88%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgb(38 63 70 / 8%);
+    }
+
+    .topbar .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 60px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: rgb(38 63 70 / 8%);
+    }
+
+    .lang-toggle button {
+      border: 0;
+      background: transparent;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      padding: 4px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      min-height: 32px;
+    }
+
+    .lang-toggle button[aria-pressed="true"] {
+      background: #fff;
+      color: var(--deep-sea);
+      box-shadow: 0 2px 6px rgb(38 63 70 / 12%);
+    }
+
+    .gh-link {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1.5px solid rgb(38 63 70 / 18%);
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* ---------- 首屏 ---------- */
+    .hero {
+      padding: 48px 0 32px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin: 0 0 10px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgb(127 146 121 / 18%);
+      color: #4b5f48;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 0 0 24px;
+      font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+      color: var(--text-soft);
+      max-width: 34em;
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 10px 22px;
+      border-radius: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: var(--deep-sea);
+      color: #fff;
+      box-shadow: 0 10px 24px rgb(38 63 70 / 25%);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--deep-sea);
+      border: 1.5px solid rgb(38 63 70 / 18%);
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--bay);
+      outline-offset: 3px;
+    }
+
+    .hero-art {
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: var(--sand);
+    }
+
+    .hero-art img {
+      width: 100%;
+      aspect-ratio: 3 / 1;
+      object-fit: cover;
+    }
+
+    .hero-note {
+      margin: 14px 0 0;
+      font-size: 0.9rem;
+      color: var(--text-soft);
+    }
+
+    /* ---------- 小节 ---------- */
+    section { padding: 40px 0; }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      line-height: 1.25;
+    }
+
+    .section-lead {
+      margin: 0 0 28px;
+      color: var(--text-soft);
+      max-width: 40em;
+    }
+
+    /* 功能：图文交替 */
+    .feature {
+      display: grid;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .feature-shot {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: var(--sand);
+    }
+
+    .feature-shot img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--terracotta);
+      letter-spacing: 0.02em;
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+    }
+
+    .feature p {
+      margin: 0 0 10px;
+      color: var(--text-soft);
+    }
+
+    .feature ul {
+      margin: 0;
+      padding-left: 1.2em;
+      color: var(--text-soft);
+    }
+
+    .feature li { margin: 4px 0; }
+
+    /* 三步上手 */
+    .steps {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 16px;
+      counter-reset: step;
+    }
+
+    .steps li {
+      position: relative;
+      padding: 22px 20px 20px 66px;
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: 0 6px 18px rgb(38 63 70 / 8%);
+    }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--amber);
+      color: var(--deep-sea);
+      font-weight: 800;
+    }
+
+    .steps strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.05rem;
+    }
+
+    .steps span { color: var(--text-soft); }
+
+    /* 隐私 */
+    .privacy {
+      border-radius: 24px;
+      padding: 28px 24px;
+      background: var(--deep-sea);
+      color: #f2ede3;
+    }
+
+    .privacy h2 { color: #fff; }
+
+    .privacy ul {
+      margin: 12px 0 0;
+      padding-left: 1.2em;
+    }
+
+    .privacy li { margin: 6px 0; }
+
+    .privacy .note {
+      margin: 16px 0 0;
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    /* 结尾 */
+    .closing {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+
+    .closing .cta { justify-content: center; }
+
+    footer {
+      padding: 28px 0 40px;
+      border-top: 1px solid rgb(38 63 70 / 10%);
+      font-size: 0.88rem;
+      color: var(--text-soft);
+    }
+
+    footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      justify-content: space-between;
+    }
+
+    footer a { font-weight: 700; }
+
+    /* ---------- 平板 / 电脑 ---------- */
+    @media (min-width: 768px) {
+      .hero { padding: 72px 0 40px; }
+
+      .feature {
+        grid-template-columns: 1.25fr 1fr;
+        gap: 40px;
+        margin-bottom: 64px;
+      }
+
+      .feature:nth-of-type(even) .feature-shot { order: 2; }
+
+      .steps { grid-template-columns: repeat(3, 1fr); }
+
+      .privacy { padding: 40px 44px; }
+    }
+
+    @media (max-width: 420px) {
+      .gh-link { display: none; }
+      .btn { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Usland">
+      <img src="screenshots/zenith/icon_animals.png" alt="" width="34" height="34">
+      <span>Usland</span>
+    </a>
+    <div class="top-actions">
+      <div class="lang-toggle" role="group" aria-label="语言 / Language">
+        <button type="button" data-lang-btn="zh-CN" aria-pressed="true">中</button>
+        <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="gh-link" href="https://github.com/WilYip/hackathon">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- 首屏 -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">
+          <span lang="zh">Zenith Hosting × UNSW Founders Hackathon</span>
+          <span lang="en">Zenith Hosting × UNSW Founders Hackathon</span>
+        </p>
+        <h1>
+          <span lang="zh">两个人的小岛</span>
+          <span lang="en">A tiny island for two</span>
+        </h1>
+        <p class="lead">
+          <span lang="zh">Usland 是一座只属于你们两个人的小岛：把气话变得温柔一点再说出口，一起挑选约会，测一测彼此是哪只森林小动物，把日子收进回忆小屋，再坐在长凳上下一盘五子棋。</span>
+          <span lang="en">Usland is a cosy island that belongs to just the two of you: soften a sharp message before it's sent, pick a date together, discover each other's forest animal, keep your days in a memory cottage, and play gomoku on the bench.</span>
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://zenith.hosting/apps/usland">
+            <span lang="zh">在 Zenith 上部署你们的小岛</span>
+            <span lang="en">Deploy your island on Zenith</span>
+          </a>
+          <a class="btn btn-secondary" href="#features">
+            <span lang="zh">看看都能做什么</span>
+            <span lang="en">See what's inside</span>
+          </a>
+        </div>
+      </div>
+      <figure class="hero-art" style="margin:0">
+        <img src="screenshots/zenith/cover_island.jpg" width="1920" height="640"
+             alt="Usland 小岛全景：小屋、森林、码头、告示牌和野餐垫上的兔子与考拉">
+      </figure>
+    </div>
+  </section>
+
+  <!-- 功能 -->
+  <section id="features">
+    <div class="wrap">
+      <h2>
+        <span lang="zh">小岛上的五个地方</span>
+        <span lang="en">Five places on the island</span>
+      </h2>
+      <p class="section-lead">
+        <span lang="zh">每个地方都是两个人一起用的。没有点赞、没有排行，也不会因为谁没回消息就"惩罚"谁。</span>
+        <span lang="en">Every place is made for two. No likes, no leaderboards, and nobody gets "punished" for replying late.</span>
+      </p>
+
+      <article class="feature">
+        <figure class="feature-shot" style="margin:0">
+          <img src="screenshots/zenith/01_island.jpg" width="1920" height="1200" loading="lazy"
+               alt="小岛首页：两只小动物站在野餐垫上，周围是五个功能入口">
+        </figure>
+        <div>
+          <span class="feature-tag"><span lang="zh">小岛首页</span><span lang="en">The island</span></span>
+          <h3><span lang="zh">点一点，就能去岛上的任何地方</span><span lang="en">Tap anywhere to visit</span></h3>
+          <p>
+            <span lang="zh">两个人的小动物站在野餐垫上。点自己的小动物可以设置心情（开心、委屈、需要空间），对方一眼就能看到，24 小时后自动回到平静。</span>
+            <span lang="en">Your two animals sit on a picnic mat. Tap your own to share a mood (happy, hurt, need space); your partner sees it at a glance, and it fades back to calm after 24 hours.</span>
+          </p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <figure class="feature-shot" style="margin:0">
+          <img src="screenshots/zenith/02_whisper.jpg" width="1920" height="1200" loading="lazy"
+               alt="温柔传话：一句气话被改写成更温和的说法后发给对方">
+        </figure>
+        <div>
+          <span class="feature-tag"><span lang="zh">温柔传话</span><span lang="en">Whisper Pier</span></span>
+          <h3><span lang="zh">气话，先变温柔再说出口</span><span lang="en">Soften it before you send it</span></h3>
+          <p>
+            <span lang="zh">写下想说的话，点"温柔转达"，AI 会帮你把指责换成感受和期待。你可以直接发、自己再改改，或者取消。</span>
+            <span lang="en">Write what you want to say and tap "Deliver gently": AI turns blame into feelings and hopes. Send it, tweak it, or cancel.</span>
+          </p>
+          <ul>
+            <li><span lang="zh">原话只有你自己看得到</span><span lang="en">Only you can ever see the original</span></li>
+            <li><span lang="zh">一起按"和好"，会有一个拥抱，并记进回忆</span><span lang="en">Both press "Make up" for a hug that's saved as a memory</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="feature">
+        <figure class="feature-shot" style="margin:0">
+          <img src="screenshots/zenith/03_forest.jpg" width="1920" height="1200" loading="lazy"
+               alt="初见森林：兔子和考拉两只森林小动物，以及两人的组合描述">
+        </figure>
+        <div>
+          <span class="feature-tag"><span lang="zh">初见森林</span><span lang="en">First Meet Forest</span></span>
+          <h3><span lang="zh">你们是哪两只森林小动物？</span><span lang="en">Which forest animals are you?</span></h3>
+          <p>
+            <span lang="zh">沿着森林小路散步，回答 12 个小问题，从 16 种小动物里找到自己。还能先猜猜对方会是哪一只，等 TA 测完再揭晓。</span>
+            <span lang="en">Walk a forest path, answer 12 little questions and meet your animal among 16. Guess your partner's animal first, then see if you were right.</span>
+          </p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <figure class="feature-shot" style="margin:0">
+          <img src="screenshots/zenith/04_memories.jpg" width="1920" height="1200" loading="lazy"
+               alt="回忆小屋：温暖的小屋客厅，有照片墙、时间线和添加回忆的入口">
+        </figure>
+        <div>
+          <span class="feature-tag"><span lang="zh">回忆小屋</span><span lang="en">Memory Cottage</span></span>
+          <h3><span lang="zh">一起走过的日子，都收在这里</span><span lang="en">Every shared day, kept safe</span></h3>
+          <p>
+            <span lang="zh">完成约会任务、和好、在森林相遇，都会自动变成一张拍立得；平常的小瞬间也可以随手记一句、配一张照片。</span>
+            <span lang="en">Finished dates, make-ups and your forest meeting become polaroids automatically, and you can jot down everyday moments with a photo.</span>
+          </p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <figure class="feature-shot" style="margin:0">
+          <img src="screenshots/zenith/05_game.jpg" width="1920" height="1200" loading="lazy"
+               alt="长凳五子棋：两人轮流下棋，旁边有卡布奇诺、番茄和鸡蛋道具">
+        </figure>
+        <div>
+          <span class="feature-tag"><span lang="zh">约会选选选 · 长凳五子棋</span><span lang="en">Date Quests · Bench Gomoku</span></span>
+          <h3><span lang="zh">一起决定去做什么，再一起玩一会儿</span><span lang="en">Decide together, then play a little</span></h3>
+          <p>
+            <span lang="zh">约会选选选：两个人各自选时间、预算和心情，小岛从 48 个约会任务里推荐三个，一起点头才算定下。长凳上还能下五子棋，顺手扔个番茄、递杯卡布奇诺。</span>
+            <span lang="en">Date Quests: each of you picks time, budget and mood, the island suggests three of 48 date ideas, and it's set once you both agree. Then play gomoku on the bench, throwing tomatoes or passing a cappuccino.</span>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 三步上手 -->
+  <section id="start">
+    <div class="wrap">
+      <h2><span lang="zh">三步拥有你们的小岛</span><span lang="en">Your island in three steps</span></h2>
+      <p class="section-lead">
+        <span lang="zh">每一对在 Zenith 上拥有一个独立的实例：一个实例 = 一座小岛 = 两个人。</span>
+        <span lang="en">Each couple gets their own instance on Zenith: one instance = one island = two people.</span>
+      </p>
+      <ol class="steps">
+        <li>
+          <strong><span lang="zh">在 Zenith 部署</span><span lang="en">Deploy on Zenith</span></strong>
+          <span><span lang="zh">打开 Usland 的 Zenith 页面，一键部署，得到属于你们的网址。</span><span lang="en">Open Usland on Zenith and deploy it to get your own address.</span></span>
+        </li>
+        <li>
+          <strong><span lang="zh">创建小岛</span><span lang="en">Create your island</span></strong>
+          <span><span lang="zh">给小岛起个名字，设置自己的昵称和 PIN。</span><span lang="en">Name your island and pick your nickname and PIN.</span></span>
+        </li>
+        <li>
+          <strong><span lang="zh">邀请另一半</span><span lang="en">Invite your partner</span></strong>
+          <span><span lang="zh">把邀请码发给 TA，TA 加入后小岛就热闹起来啦。</span><span lang="en">Send your partner the invite code; once they join, the island comes alive.</span></span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 隐私 -->
+  <section>
+    <div class="wrap">
+      <div class="privacy">
+        <h2><span lang="zh">你们的小岛，只属于你们</span><span lang="en">Your island stays yours</span></h2>
+        <ul>
+          <li><span lang="zh">所有数据只保存在你们自己的实例里。</span><span lang="en">All data lives only in your own instance.</span></li>
+          <li><span lang="zh">只有你选择"温柔转达"的那一句话，会用你们自己填写的 DeepSeek API key 发送去改写；其他功能都不使用 AI。</span><span lang="en">Only the message you choose to soften is sent to DeepSeek, using your own API key. Nothing else uses AI.</span></li>
+          <li><span lang="zh">原话永远只有发送者自己看得到。</span><span lang="en">The original wording is only ever visible to the sender.</span></li>
+        </ul>
+        <p class="note">
+          <span lang="zh">Usland 不是心理咨询服务。如果你或对方正处在危险中，请拨打 000，或联系 Lifeline 13 11 14。</span>
+          <span lang="en">Usland is not a counselling service. If you or your partner are in danger, call 000 or Lifeline on 13 11 14.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 结尾 -->
+  <section class="closing">
+    <div class="wrap">
+      <h2><span lang="zh">去岛上看看吧</span><span lang="en">Come visit the island</span></h2>
+      <p class="section-lead" style="margin-left:auto;margin-right:auto">
+        <span lang="zh">在 Zenith 上部署，或者在 GitHub 上看看源代码。</span>
+        <span lang="en">Deploy it on Zenith, or browse the source on GitHub.</span>
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://zenith.hosting/apps/usland">
+          <span lang="zh">在 Zenith 上部署</span><span lang="en">Deploy on Zenith</span>
+        </a>
+        <a class="btn btn-secondary" href="https://github.com/WilYip/hackathon">
+          <span lang="zh">GitHub 源代码</span><span lang="en">Source on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><span lang="zh">© 2026 Usland team · 代码以 MIT 许可证发布</span><span lang="en">© 2026 Usland team · Code released under the MIT License</span></span>
+    <span>
+      <a href="https://github.com/WilYip/hackathon/blob/main/THIRD_PARTY_NOTICES.md"><span lang="zh">音乐与素材致谢</span><span lang="en">Music &amp; asset credits</span></a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  // 中英文切换：默认跟随浏览器语言；选过之后记在这台设备的浏览器里（存不了也没关系）
+  (function () {
+    var KEY = "usland_site_lang";
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    var lang = saved || ((navigator.language || "").toLowerCase().indexOf("zh") === 0 ? "zh-CN" : "en");
+    var titles = { "zh-CN": "Usland · 两个人的小岛", "en": "Usland · A tiny island for two" };
+
+    function apply(l) {
+      document.documentElement.lang = l;
+      document.title = titles[l];
+      document.querySelectorAll("[data-lang-btn]").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.dataset.langBtn === l ? "true" : "false");
+      });
+    }
+
+    document.querySelectorAll("[data-lang-btn]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        apply(b.dataset.langBtn);
+        try { localStorage.setItem(KEY, b.dataset.langBtn); } catch (e) {}
+      });
+    });
+
+    apply(lang);
+  })();
+</script>
+</body>
+</html>
