@@ -35,6 +35,24 @@ zenith down                # 测完关掉
 所有者或管理员权限、在 https://app.zenith.hosting/publish 连接 GitHub、同意开发者协议，并准备至少一张截图。
 代码以 MIT 许可证发布（根目录 `LICENSE`，`zenith-compose.yml` 里的 `license` 也是 MIT）；第三方音频和图片保留各自的许可，见 `THIRD_PARTY_NOTICES.md` 和"音频来源与授权"。
 
+## 演示模式（给很多人一起试玩）
+
+设置环境变量 `DEMO_MODE=1` 就是公开演示版（说明在 `services/demo.py`）：
+
+- 自动生成演示小岛：两位岛民 **Wilson**（星图猫头鹰）和 **Yvette**（暖心考拉），PIN 都是 `1234`，预置动物、回忆和几条传话
+- 登录页直接点"以 Wilson / Yvette 进入"，不用输 PIN；想体验双人互动就开两个浏览器窗口
+- 所有访客共用这座小岛，**每 6 小时自动恢复**成初始状态，小信箱里也可以手动恢复
+- 为了保护共用小岛：不能改 PIN、昵称、岛名，不能填 API key，不能上传照片；温柔传话用示范改写，不调用 AI
+- 约会选选选可以"代替对方选择 / 同意"，一个人也能走完流程
+
+本地试一下（用单独的数据目录，不碰真实数据）：
+
+```powershell
+$env:DEMO_MODE = "1"; $env:DATA_DIR = "data/demo_mode"; python app.py
+```
+
+**安全**：演示模式只会重置"演示小岛"。如果数据目录里已经有一座真实小岛，误开 `DEMO_MODE=1` 也不会清空它。部署演示版时请用**单独的实例和数据卷**；正式版不要设置 `DEMO_MODE`。
+
 ## 声音
 
 - 全站声音由 `static/js/sound.js` 统一管理（背景音乐、环境声、音效），**默认关闭**；在首页左上角或小信箱里打开。

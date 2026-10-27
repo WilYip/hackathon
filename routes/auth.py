@@ -13,7 +13,7 @@ import sqlite3
 from flask import Blueprint, flash, g, jsonify, redirect, render_template, request, session, url_for
 
 from db import get_db
-from services import animals, auth, scene, sound
+from services import animals, auth, demo, scene, sound
 from services.i18n import PICKED_LANG, SUPPORTED_LANGS, get_lang, t
 
 bp = Blueprint("auth", __name__)
@@ -83,6 +83,7 @@ def _picked_member():
 
 
 @bp.route("/create", methods=["GET", "POST"])
+@demo.blocked()  # 演示小岛是大家共用的：不能改（见 services/demo.py）
 def create():
     if g.user:
         return redirect(url_for("island.index"))
@@ -146,6 +147,7 @@ def invite():
 
 
 @bp.route("/join", methods=["GET", "POST"])
+@demo.blocked()  # 演示小岛是大家共用的：不能改（见 services/demo.py）
 def join():
     if g.user:
         return redirect(url_for("island.index"))
@@ -238,6 +240,7 @@ def _not_for_now():
 
 
 @bp.route("/pin/change", methods=["GET", "POST"])
+@demo.blocked()  # 演示小岛是大家共用的：不能改（见 services/demo.py）
 def change_pin():
     """记得现在的 PIN，想换一个新的。"""
     away = _not_for_now()
@@ -268,6 +271,7 @@ def change_pin():
 
 
 @bp.route("/pin/forgot", methods=["GET", "POST"])
+@demo.blocked()  # 演示小岛是大家共用的：不能改（见 services/demo.py）
 def forgot_pin():
     """忘记了 PIN：用另一半在小信箱里生成的重置码设置新 PIN。
     小岛上只有一个人时，没人能生成重置码，页面提示运行 scripts/reset_pin.py。"""
@@ -299,6 +303,7 @@ def forgot_pin():
 
 
 @bp.route("/character/new", methods=["GET", "POST"])
+@demo.blocked()  # 演示小岛是大家共用的：不能改（见 services/demo.py）
 def new_character():
     """创建新角色：验证 PIN 后换一个昵称重新开始，森林小动物和心情清空（回到默认形象）。"""
     away = _not_for_now()

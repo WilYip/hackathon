@@ -14,7 +14,7 @@ API key 永远不返回给前端：页面上只显示末尾 4 位，例如 sk-**
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 
 from db import get_db
-from services import ai, auth, sound, whisper
+from services import ai, auth, demo, sound, whisper
 from services.auth import login_required
 from services.i18n import LANG_COOKIE, SUPPORTED_LANGS, t
 
@@ -46,6 +46,7 @@ def index():
 
 
 @bp.post("/settings/reset-code")
+@demo.blocked()
 @login_required
 def reset_code():
     """另一半忘记了 PIN：生成一次性重置码，跳回设置页显示一次。"""
@@ -60,6 +61,7 @@ def reset_code():
 
 
 @bp.post("/settings/profile")
+@demo.blocked()
 @login_required
 def profile():
     island_name = (request.form.get("island_name") or "").strip()
@@ -93,6 +95,7 @@ def profile():
 
 
 @bp.post("/settings/key")
+@demo.blocked()
 @login_required
 def save_key():
     """替换 key：先发一个极小的请求测试，成功才保存。"""
@@ -111,6 +114,7 @@ def save_key():
 
 
 @bp.post("/settings/key/test")
+@demo.blocked()
 @login_required
 def test_key():
     key = whisper.get_api_key()
@@ -127,6 +131,7 @@ def test_key():
 
 
 @bp.post("/settings/key/delete")
+@demo.blocked()
 @login_required
 def delete_key():
     whisper.save_api_key(None)

@@ -520,5 +520,22 @@
     "settle_again": "Play again",
     "settle_view": "See the board",
     "settle_home": "Back to the island"
+  },
+  "demo": {
+    "banner": "This is a public demo island shared by every visitor. It resets to its starting state every {hours} hours, so please don't write real personal details.",
+    "blocked": "The demo island is shared by everyone, so this is turned off in the demo.",
+    "login_intro": "Pick a character to step straight onto the demo island, no PIN needed. Want to try it as a couple? Open two browser windows (or a private window) and enter as Wilson in one and Yvette in the other.",
+    "enter_as": "Enter as {name}",
+    "login_hint": "Every visitor shares these two characters, and the island resets every {hours} hours. Both PINs are {pin}.",
+    "settings_title": "Demo island",
+    "settings_text": "This is a public demo island shared by every visitor. To keep it fair, you can't change the island name, nicknames, PINs or API key here, or upload photos. The island resets to its starting state every {hours} hours.",
+    "next_reset": "Resets in about {minutes} minutes.",
+    "reset_button": "Reset the demo island now",
+    "reset_confirm": "Reset the demo island to its starting state? Everyone's new messages, memories and games will be cleared, and everyone will need to pick a character again.",
+    "reset_done": "The demo island is back to its starting state. Pick a character to step back in.",
+    "whisper_status": "Demo: gentle delivery uses sample rewrites, not real AI",
+    "no_photos": "The demo island is shared, so photo uploads are off. Just write a line.",
+    "partner_choose": "Pick for {name}",
+    "partner_agree": "Agree for {name}"
   }
 }

@@ -9,7 +9,7 @@
 from flask import (Blueprint, abort, current_app, flash, g, redirect, render_template, request,
                    send_from_directory, url_for)
 
-from services import images, memories, scene, sound
+from services import demo, images, memories, scene, sound
 from services.auth import login_required
 from services.i18n import t
 
@@ -48,7 +48,8 @@ def add():
         errors["note"] = t("memories.errors.note_too_long")
 
     photo_name = None
-    upload = request.files.get("photo")
+    # 演示小岛大家共用：不保存照片，只保存文字
+    upload = None if demo.enabled() else request.files.get("photo")
     if not errors and images.has_file(upload):
         try:
             photo_name = images.save_photo(upload, current_app.config["UPLOAD_DIR"])

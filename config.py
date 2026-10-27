@@ -71,6 +71,8 @@ class Config:
         self.PORT = int(os.environ.get("PORT", "8080"))
         self.DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
         self.DEMO_MODE = _env_bool("DEMO_MODE")
+        # 演示模式：所有访客共用一座演示小岛，每隔几小时自动恢复成初始状态（见 services/demo.py）
+        self.DEMO_RESET_HOURS = 6
         # 部署在反向代理（Zenith 的 HTTPS 入口）后面时设为 1：按代理传来的 X-Forwarded-Host / -Proto
         # 判断网址，否则"来源校验"可能把每个表单提交都当成跨站而拒绝。只在真的有代理时打开（Dockerfile 里默认打开）
         self.TRUST_PROXY = _env_bool("TRUST_PROXY")

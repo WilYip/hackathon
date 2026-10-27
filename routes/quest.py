@@ -8,10 +8,12 @@
 操作都是普通表单 POST，完成后跳回 /quest；页面每 4 秒查一次 /api/quest/state，状态变了就刷新。
 """
 
-from flask import (Blueprint, current_app, flash, g, jsonify, redirect, render_template, request,
+import random
+
+from flask import (Blueprint, abort, current_app, flash, g, jsonify, redirect, render_template, request,
                    url_for)
 
-from services import animals, auth, images, quest
+from services import animals, auth, demo, images, quest
 from services.auth import api_login_required, login_required
 from services.i18n import get_lang, t, tr
 from services.quest import QuestError
@@ -227,6 +229,43 @@ def agree():
     return redirect(url_for("quest.index"))
 
 
+# ---------- 演示模式：一个人也能走完整个流程（USLAND_SPEC 第 13 节"代替对方选择"） ----------
+
+
+def _demo_partner_id():
+    if not demo.enabled():
+        abort(404)
+    partner = auth.get_partner(g.user["id"])
+    if partner is None:
+        abort(404)
+    return partner["id"]
+
+
+@bp.post("/quest/demo/partner-choose")
+@login_required
+def demo_partner_choose():
+    """代替另一半随手选一组条件（每个问题随机一个选项）。"""
+    partner_id = _demo_partner_id()
+    choice = {q["key"]: random.choice(q["options"])["value"] for q in quest.questions()}
+    try:
+        quest.submit_choice(_active_round_id(), partner_id, choice, [m["id"] for m in auth.get_members()])
+    except QuestError as error:
+        return _fail(error)
+    return redirect(url_for("quest.index"))
+
+
+@bp.post("/quest/demo/partner-agree")
+@login_required
+def demo_partner_agree():
+    """代替另一半同意我提议的任务。"""
+    partner_id = _demo_partner_id()
+    try:
+        quest.agree(_active_round_id(), partner_id, request.form.get("task_id", ""))
+    except QuestError as error:
+        return _fail(error)
+    return redirect(url_for("quest.index"))
+
+
 @bp.post("/quest/complete")
 @login_required
 def complete():
@@ -239,7 +278,8 @@ def complete():
         errors["note"] = t("quest.errors.note_too_long")
 
     photo_name = None
-    upload = request.files.get("photo")
+    # 演示小岛大家共用：不保存照片，只保存文字
+    upload = None if demo.enabled() else request.files.get("photo")
     if not errors and images.has_file(upload):
         try:
             photo_name = images.save_photo(upload, current_app.config["UPLOAD_DIR"])

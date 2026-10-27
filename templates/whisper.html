@@ -70,9 +70,13 @@
       </ul>
     </div>
 
+    {% if demo.enabled %}
+    <p class="key-status">{{ icon('check', 16) }}<span>{{ t('demo.whisper_status') }}</span></p>
+    {% else %}
     <p class="key-status" data-key-status {% if needs_key %}hidden{% endif %}>
       {{ icon('check', 16) }}<span>{{ t('whisper.key_status') }} · <code data-masked-key>{{ masked_key or '' }}</code></span>
     </p>
+    {% endif %}
   </aside>
 
   {# ===== 中间：聊天区 ===== #}

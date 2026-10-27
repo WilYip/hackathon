@@ -520,5 +520,22 @@
     "settle_again": "再来一局",
     "settle_view": "看看棋盘",
     "settle_home": "回到小岛"
+  },
+  "demo": {
+    "banner": "这是公开的演示小岛：所有访客共用，每 {hours} 小时自动恢复成初始状态。请不要写真实的个人信息。",
+    "blocked": "演示小岛是大家共用的，这个操作在演示版里关掉了。",
+    "login_intro": "选一个角色直接进入演示小岛，不用输 PIN。想体验双人互动？用两个浏览器窗口（或一个无痕窗口）分别进入 Wilson 和 Yvette。",
+    "enter_as": "以 {name} 进入",
+    "login_hint": "所有访客共用这两个角色，小岛每 {hours} 小时自动恢复。两人的 PIN 都是 {pin}。",
+    "settings_title": "演示小岛",
+    "settings_text": "这是公开的演示小岛，所有访客共用。为了保护大家，这里不能修改岛名、昵称、PIN 和 API key，也不能上传照片。小岛每 {hours} 小时会自动恢复成初始状态。",
+    "next_reset": "大约 {minutes} 分钟后自动恢复。",
+    "reset_button": "现在就恢复演示小岛",
+    "reset_confirm": "确定要把演示小岛恢复成初始状态吗？所有人新写的消息、回忆和棋局都会被清空，大家需要重新选角色进入。",
+    "reset_done": "演示小岛已经恢复成初始状态，选一个角色重新进入吧。",
+    "whisper_status": "演示版：温柔转达使用示范改写，不是真正的 AI",
+    "no_photos": "演示小岛是大家共用的，不能上传照片，写一句话就好。",
+    "partner_choose": "帮 {name} 随手选一下",
+    "partner_agree": "代替 {name} 同意"
   }
 }

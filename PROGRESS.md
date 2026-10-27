@@ -3,6 +3,7 @@
 > 本文件由 AI 编程助手在开发过程中持续更新。接手的组员：请先阅读 `CLAUDE.md`（或 `AGENTS.md`）、`USLAND_SPEC.md`、`VISUAL_DESIGN.md`（视觉与交互以它为准）和本文件，然后从"下一步"继续。
 
 ## 当前里程碑
+- **演示模式（2026-10-27，分支 `feat/demo-mode`，未合并 main、未提交 Zenith）**：已完成待验证
 - **Zenith 审核已通过（Approved，2026-10-17）**，正在发布到应用市场（Publication），无需操作；Product ID `wilyip-hackathon-6978839630861097587`，版本 1。提交时：发布回执 `wilyip-hackathon-6978839630861097587/v1`，锁定提交 `7a477825fd02`（GitHub `main`）；分类 Communication、许可证 MIT、维护者 Usland team。CLI 提示"No clean tested commit"：还没在 Zenith 上用 `zenith up` 跑过，建议跑一次临时部署确认能用
 - M1 项目骨架：**已验证**
 - M2 账号与小岛：**已验证**
@@ -26,6 +27,15 @@
 - 美术方向：**明亮午后黏土风**（第三版，配色以 `static/usland/tokens.css` = `docs/ui-v3/integration/tokens.css` 为准）；素材在 `static/usland/assets/`，说明在 `docs/ui-v3/`；代码里不绘制任何动物插画
 
 ## 已完成
+- **演示模式（2026-10-27，分支 `feat/demo-mode`）**：`DEMO_MODE=1` 时（`services/demo.py`、`routes/demo.py`）
+  - 自动生成演示小岛 "Usland Demo Isle"：**Wilson（星图猫头鹰 INTJ）**和 **Yvette（暖心考拉 ISFJ）**，PIN 都是 1234；预置两人的森林结果、三条回忆（森林相遇 + 两条小日常）、四条传话（其中一条软化过，原话只有 Wilson 看得到）、Yvette 心情"开心"；内容是英文
+  - 登录页直接点"以 Wilson / Yvette 进入"（`POST /demo/enter`），不用输 PIN，避免有人故意输错把角色锁住；全站顶部有演示横幅
+  - 所有访客共用，**每 6 小时自动恢复**（`Config.DEMO_RESET_HOURS`，每个请求开始时检查；标记文件 `DATA_DIR/demo_reset_at`）；小信箱里可以"现在就恢复"（`POST /demo/reset`）；恢复时清空所有表和上传的照片、自增编号归零（两人永远是 1 号、2 号）
+  - **安全**：只有有演示标记、或者还没有小岛时才会自动重置；真实小岛误开 `DEMO_MODE=1` 也不会被清空（有测试）
+  - 共用小岛的保护（`demo.blocked` 装饰器）：不能新建 / 加入小岛、改 PIN、忘记 PIN、创建新角色、改岛名 / 昵称、填 / 测 / 删 API key、生成重置码；照片上传关掉（文字照常保存）
+  - 温柔传话：不需要 key，"温柔转达"用预先写好的示范改写（中文 / 英文各 4 句，`demo.soften`），不调用 AI；侧边栏标明"演示版：示范改写"
+  - 约会选选选：等对方时"帮 TA 随手选一下"（每题随机），提议后"代替 TA 同意"，一个人也能走完
+  - 测试 `tests/test_demo.py`（12 个）；本地预览：`.claude/launch.json` 的 `usland-demo-mode`（端口 8095，`DATA_DIR=data/demo_mode`）
 - **GitHub Pages 介绍页（2026-10-27）**：`docs/index.html`（纯静态单页，中英切换、手机 / 电脑自适应，不影响应用；`docs/` 不进 Docker 镜像）+ `docs/.nojekyll`；图片用 `docs/screenshots/zenith/` 里的演示数据截图（不用带真实名字的 `island_custom.jpg`）；按钮链接 Zenith 上架页 https://zenith.hosting/apps/usland 和 GitHub。开启方式：仓库 Settings → Pages → Deploy from a branch → `main` → `/docs`；网址 https://wilyip.github.io/hackathon/。本地预览：`.claude/launch.json` 的 `site-preview`（端口 8094）
 - **Zenith 部署准备（2026-10-17）**（人类要求：先不要上传或发布）
   - Zenith 怎么部署自己的应用（读了 zenith.hosting 的指南、开发者页，以及 GitHub `zenith-hosting/skills`、`zenith-hosting/docs`）：仓库根目录放 `Dockerfile` + `zenith-compose.yml`（Compose 格式 + `x-zenith` 区块：catalog 简介 / expose 端口）；`zenith up` 上传本地文件夹做约 20 分钟的临时部署测试；`zenith publish` 从**公开 GitHub 仓库的指定提交**构建并提交审核（需要仓库所有者 / 管理员权限、连接 GitHub、同意开发者协议、至少一张截图），审核通过才进应用目录
@@ -190,6 +200,7 @@
 （暂无）
 
 ## 下一步
+- 演示模式：人类试玩确认后，合并 `feat/demo-mode` 到 `main`；部署一个**单独的**演示实例（环境变量 `DEMO_MODE=1`，用自己的数据卷），正式上架的版本不设这个变量，行为不变。部署好后在介绍页 `docs/index.html` 加"在线试玩"按钮
 - 跟进 Zenith 审核：`zenith publish status` 或 https://app.zenith.hosting/publish；先 `zenith up` 跑一次临时部署（创建小岛 → 邀请码加入 → 发消息 → 传照片 → 刷新数据还在），测完 `zenith down`。审核有反馈就按反馈改，改完推送到 `main` 再 `zenith publish`
 - **Zenith**：① 团队定许可证（加 LICENSE，改 zenith-compose.yml 的 license）；② 有人安装 CLI、`zenith auth login`，运行 `zenith up` 临时部署，测登录、温柔传话、上传照片、五子棋；③ 确认 WilYip/hackathon 由谁（所有者 / 管理员）来 `zenith publish`，以及用哪个分支的提交
 0. 人类按"如何运行和验证 → 第三版美术素材"在 375 / 768 / 1280 / 1920 检查；队友交付海岛姿态 / 石像 / 和好姿态 / 海浪视频后放进对应路径刷新即可（见"视觉待办"）；石像和海岛姿态到位后按真实脚底再微调一次 `content/scene_anchors.json`（交付 README 也这么要求，改完同步回 `docs/ui-v3/integration/`）
@@ -254,6 +265,7 @@
 - `requirements.txt` 是 UTF-16 编码（pip 能读，但有的编辑器 / 工具会显示乱码），以后可以转成 UTF-8
 
 ## 重要决定
+- （演示模式）每 6 小时自动恢复 + 手动恢复；温柔传话用示范改写（不花钱、不接受 key）；登录不用 PIN；演示版关掉照片上传（陌生人可能上传不合适的图）；演示内容用英文
 - （上架）代码用 **MIT** 许可证（根目录 `LICENSE`，`zenith-compose.yml` 的 `license: MIT`）；第三方音频（CC BY 3.0 / CC0）和 Fluent Emoji（MIT）保留各自许可，写在 `THIRD_PARTY_NOTICES.md`（LICENSE 保持标准 MIT 原文，GitHub 才能识别为 MIT）
 - （2026-10-17 第二批）视频不改坐标，而是放大视频去对齐底图（所有锚点仍以底图为准）；循环用双视频交叉淡入而不是 `loop`，因为视频首尾有跳帧
 - （2026-10-17 第三批）悬停只亮光圈、不放大（人类要求）；点击范围用 clip-path 多边形贴着元素轮廓，不再用 scene_anchors.json 的大矩形
@@ -373,6 +385,7 @@ python app.py
   6. 切换 EN：Happy / Hurt / Need space / Calm
 
 ## 更新日志
+- 2026-10-27 演示模式（分支 feat/demo-mode）：Wilson / Yvette 演示小岛、一键进入、6 小时自动恢复、共用保护、示范改写、代替对方选择 / 同意，303 个测试通过，浏览器电脑 + 手机实测
 - 2026-10-27 新增 GitHub Pages 产品介绍页 docs/index.html；Usland 已在 Zenith 应用市场上线（https://zenith.hosting/apps/usland）
 - 2026-10-17 Zenith 技术审核通过（Approved），进入发布阶段；发布后要在市场里实际部署一个实例从头测一遍
 - 2026-10-17 提交 Zenith 审核（网页填写上架信息 + 上传封面 / 图标 / 5 张截图，`zenith publish` 生成发布构建）；上架素材在 `docs/screenshots/zenith/`（演示数据截图，未提交 git）

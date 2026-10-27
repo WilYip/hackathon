@@ -79,6 +79,10 @@
   </header>
 
   <main class="main">
+    {# 演示模式：提醒这是大家共用的小岛，会自动恢复（services/demo.py） #}
+    {% if demo and demo.enabled %}
+    <p class="demo-banner" role="note">{{ icon('leaf', 16) }}<span>{{ t('demo.banner', hours=demo.hours) }}</span></p>
+    {% endif %}
     {# 一次性提示（例如"状态刚刚变了"、"照片太大"），显示一次就消失 #}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}

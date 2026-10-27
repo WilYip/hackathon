@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_macros.html" import pin_fields, error_box, member_picker %}
+{% from "_avatar.html" import avatar %}
 
 {% block title %}{{ t('login.submit') }} · {{ t('app.name') }}{% endblock %}
 
@@ -8,6 +9,23 @@
   <h1>{{ t('login.title', island=island.name) }}</h1>
   {{ error_box(error) }}
 
+  {% if demo.enabled %}
+  {# 演示模式：点一下就以这个角色进入，不用输 PIN（避免有人故意输错把角色锁住，见 services/demo.py） #}
+  <p class="demo-intro">{{ t('demo.login_intro') }}</p>
+  <div class="demo-enter">
+    {% for p in people %}
+    <form method="post" action="{{ url_for('demo.enter') }}">
+      <input type="hidden" name="member_id" value="{{ p.id }}">
+      <button type="submit" class="demo-enter-btn">
+        {{ avatar(p, 'avatar-lg') }}
+        <span class="demo-enter-name">{{ t('demo.enter_as', name=p.nickname) }}</span>
+        {% if p.animal_name %}<span class="demo-enter-animal">{{ p.animal_name }}</span>{% endif %}
+      </button>
+    </form>
+    {% endfor %}
+  </div>
+  <p class="hint demo-hint">{{ t('demo.login_hint', hours=demo.hours, pin=demo.pin) }}</p>
+  {% else %}
   <form method="post" class="form" novalidate>
     {{ member_picker(members, people, selected_id, t('login.who')) }}
     {{ pin_fields(confirm=False, autocomplete="current-password") }}
@@ -23,6 +41,7 @@
 
   {% if can_join %}
   <p class="form-footer"><a href="{{ url_for('auth.join') }}">{{ t('login.join_link') }}</a></p>
+  {% endif %}
   {% endif %}
 </section>
 {% endblock %}

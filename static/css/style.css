@@ -5850,3 +5850,101 @@ body.has-scene-bg .footer p {
 @keyframes settle-sway {
   50% { transform: rotate(5deg); }
 }
+
+/* =========================================================
+   演示模式（services/demo.py）：顶部横幅、登录页一键进入、小信箱里的演示卡片
+   ========================================================= */
+.demo-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 760px;
+  margin: 0 auto 12px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: #fff6dd;
+  color: #6b4f12;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(57, 74, 67, 0.08);
+}
+
+.demo-banner .icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.demo-intro {
+  margin: 0 0 16px;
+  color: var(--text-soft);
+}
+
+.demo-enter {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.demo-enter form {
+  margin: 0;
+}
+
+.demo-enter-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 160px;
+  padding: 16px 10px;
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: transform var(--fast) ease, border-color var(--fast) ease, box-shadow var(--fast) ease;
+}
+
+.demo-enter-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--mint-deep);
+  box-shadow: 0 8px 18px rgba(57, 74, 67, 0.14);
+}
+
+.demo-enter-btn:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.avatar-lg {
+  width: 84px;
+  height: 84px;
+  font-size: 1.8rem;
+}
+
+img.avatar-lg {
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  object-fit: contain;
+}
+
+.demo-enter-name {
+  font-weight: 800;
+  font-size: 1.02rem;
+}
+
+.demo-enter-animal {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.demo-hint {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.demo-card {
+  border-left: 4px solid #e6b975;
+}

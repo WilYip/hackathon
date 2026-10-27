@@ -13,9 +13,10 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import db
 from config import Config
 from routes import auth as auth_routes
+from routes import demo as demo_routes
 from routes import forest, game, island, memories, quest, settings, whisper
 from routes.settings import MOTION_COOKIE
-from services import animals, assets, auth, content, i18n, scene, sound
+from services import animals, assets, auth, content, demo, i18n, scene, sound
 
 
 def _same_origin(url):
@@ -46,7 +47,7 @@ def create_app(test_config=None):
     # 注册各功能的路由（后续里程碑在这里追加）
     app.register_blueprint(island.bp)
     app.register_blueprint(auth_routes.bp)
-    for feature in (whisper, quest, forest, memories, settings, game):
+    for feature in (whisper, quest, forest, memories, settings, game, demo_routes):
         app.register_blueprint(feature.bp)
 
     @app.before_request
@@ -57,6 +58,12 @@ def create_app(test_config=None):
         source = request.headers.get("Origin") or request.headers.get("Referer")
         if not source or not _same_origin(source):
             abort(403)
+
+    @app.before_request
+    def demo_reset():
+        """演示模式：演示小岛不存在或已经超过 6 小时，就先恢复成初始状态（见 services/demo.py）。"""
+        if app.config.get("DEMO_MODE") and request.endpoint != "static":
+            demo.maybe_reset()
 
     @app.before_request
     def load_user():
@@ -93,6 +100,8 @@ def create_app(test_config=None):
             "regions": [r for r in content.regions() if r.get("nav", True)],
             # 小信箱里打开了"减少动态效果"（只存在这台设备的 Cookie 里）
             "reduce_motion": request.cookies.get(MOTION_COOKIE) == "reduce",
+            # 演示模式的信息（横幅、登录页一键进入、各页面的限制提示）
+            "demo": demo.view(),
         }
 
     return app

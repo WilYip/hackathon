@@ -17,6 +17,17 @@
     <h1>{{ t('settings.title') }}</h1>
   </header>
 
+  {# 演示模式：小岛大家共用，不能改岛名 / 昵称 / PIN / API key；可以马上恢复成初始状态（services/demo.py） #}
+  {% if demo.enabled %}
+  <div class="letter-form card demo-card">
+    <h2>{{ t('demo.settings_title') }}</h2>
+    <p>{{ t('demo.settings_text', hours=demo.hours) }}</p>
+    {% if demo.minutes_left is not none %}<p class="hint">{{ t('demo.next_reset', minutes=demo.minutes_left) }}</p>{% endif %}
+    <form method="post" action="{{ url_for('demo.reset') }}" data-confirm="{{ t('demo.reset_confirm') }}">
+      <button type="submit" class="btn btn-secondary">{{ t('demo.reset_button') }}</button>
+    </form>
+  </div>
+  {% else %}
   {# ① 小岛与我 #}
   <form method="post" action="{{ url_for('settings.profile') }}" class="letter-form card form" novalidate>
     <h2>{{ t('settings.profile_title') }}</h2>
@@ -38,6 +49,7 @@
     </fieldset>
     <button type="submit" class="btn btn-primary">{{ t('settings.save') }}</button>
   </form>
+  {% endif %}
 
   {# ①½ 减少动态效果：只影响这台设备（Cookie）。系统已经开启"减少动态效果"时也会自动生效 #}
   <form method="post" action="{{ url_for('settings.motion') }}" class="letter-form card form">
@@ -84,6 +96,7 @@
   {% endif %}
 
   {# ③ 传话魔法：DeepSeek API key（只显示末尾 4 位） #}
+  {% if not demo.enabled %}
   <div class="letter-form card">
     <h2>{{ t('settings.key_title') }}</h2>
     <p class="key-state {{ 'is-on' if has_key else 'is-off' }}">
@@ -111,6 +124,7 @@
     {% endif %}
     <p class="hint">{{ t('settings.key_hint') }}</p>
   </div>
+  {% endif %}
 
   {# ④ 隐私说明 #}
   <div class="letter-form card">
@@ -123,7 +137,7 @@
   </div>
 
   {# ④½ 帮另一半重置 PIN：TA 忘记 PIN 时生成一次性重置码，TA 在登录页「忘记 PIN？」里使用 #}
-  {% if partner %}
+  {% if partner and not demo.enabled %}
   <div class="letter-form card">
     <h2>{{ t('settings.reset_title', name=partner.nickname) }}</h2>
     <p class="hint">{{ t('settings.reset_intro', name=partner.nickname, minutes=reset_minutes) }}</p>

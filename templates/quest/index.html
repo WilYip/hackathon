@@ -132,6 +132,12 @@
       </div>
       <h2>{{ t('quest.waiting_title', name=people.partner.nickname) }}</h2>
       <p>{{ t('quest.waiting_text', name=people.partner.nickname) }}</p>
+      {% if demo.enabled %}
+      {# 演示模式：一个人也能走完流程 #}
+      <form method="post" action="{{ url_for('quest.demo_partner_choose') }}" class="quest-actions">
+        <button type="submit" class="btn btn-secondary">{{ t('demo.partner_choose', name=people.partner.nickname) }}</button>
+      </form>
+      {% endif %}
     </div>
 
   {# ================= 共同选择 ================= #}
@@ -157,6 +163,12 @@
           {% if card.status == 'proposed_by_me' %}
             {# 已提议：虚线边框 + 沙漏，等对方确认 #}
             <p class="state-badge badge-proposed">{{ icon('hourglass', 18) }}<span><strong>{{ t('quest.badge_proposed') }}</strong><small>{{ t('quest.badge_proposed_sub', name=people.partner.nickname) }}</small></span></p>
+            {% if demo.enabled %}
+            <form method="post" action="{{ url_for('quest.demo_partner_agree') }}">
+              <input type="hidden" name="task_id" value="{{ card.id }}">
+              <button type="submit" class="btn btn-secondary btn-block">{{ t('demo.partner_agree', name=people.partner.nickname) }}</button>
+            </form>
+            {% endif %}
           {% elif card.status == 'proposed_by_partner' %}
             {# 等待确认：对方提议了，我可以同意 #}
             <p class="state-badge badge-waiting">{{ icon('send', 18) }}<span><strong>{{ t('quest.badge_waiting') }}</strong><small>{{ t('quest.badge_waiting_sub', name=people.partner.nickname) }}</small></span></p>
@@ -200,9 +212,10 @@
             <span class="field-hint"><span data-note-count>{{ (form_note or '')|length }}</span>/{{ note_max }}</span>
             {% if form_errors and form_errors.note %}<span class="field-error" role="alert">{{ form_errors.note }}</span>{% endif %}
           </label>
-          <label class="field photo-field">
+          {% if demo.enabled %}<p class="hint">{{ t('demo.no_photos') }}</p>{% endif %}
+          <label class="field photo-field"{% if demo.enabled %} hidden{% endif %}>
             <span class="field-label">{{ icon('camera', 18) }}{{ t('quest.photo_label') }}</span>
-            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-photo>
+            <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-photo{% if demo.enabled %} disabled{% endif %}>
             <img class="photo-preview" alt="" hidden data-photo-preview>
             <span class="field-error" role="alert" data-photo-error>{% if form_errors and form_errors.photo %}{{ form_errors.photo }}{% endif %}</span>
           </label>

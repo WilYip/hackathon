@@ -138,9 +138,10 @@ left: {{ b.left }}%; top: {{ b.top }}%; width: {{ b.width }}%; height: {{ b.heig
       <span class="field-hint"><span data-note-count>{{ (form_note or '')|length }}</span>/{{ note_max }}</span>
       {% if form_errors and form_errors.note %}<span class="field-error" role="alert">{{ form_errors.note }}</span>{% endif %}
     </label>
-    <label class="field photo-field">
+    {% if demo.enabled %}<p class="hint">{{ t('demo.no_photos') }}</p>{% endif %}
+          <label class="field photo-field"{% if demo.enabled %} hidden{% endif %}>
       <span class="field-label">{{ icon('camera', 18) }}{{ t('quest.photo_label') }}</span>
-      <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-photo>
+      <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" data-photo{% if demo.enabled %} disabled{% endif %}>
       <img class="photo-preview" alt="" hidden data-photo-preview>
       <span class="field-error" role="alert" data-photo-error>{% if form_errors and form_errors.photo %}{{ form_errors.photo }}{% endif %}</span>
     </label>

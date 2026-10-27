@@ -14,7 +14,7 @@
 
 from flask import Blueprint, current_app, g, jsonify, render_template, request
 
-from services import ai, animals, auth, whisper
+from services import ai, animals, auth, demo, whisper
 from services.auth import api_login_required, login_required
 from services.i18n import t
 
@@ -66,7 +66,8 @@ def index():
         alone=False,
         me=people["me"],
         partner=people["partner"],
-        needs_key=key is None,
+        # 演示版不需要 key：温柔转达用示范改写（services/demo.soften）
+        needs_key=key is None and not demo.enabled(),
         masked_key=whisper.mask_key(key),  # 只有末尾 4 位
         reconcile=whisper.reconcile_state(g.user["id"]),
         hug_id=whisper.latest_hug_id(),
@@ -78,6 +79,7 @@ def index():
 
 
 @bp.post("/api/whisper/key")
+@demo.blocked(api=True)  # 演示版不接受 API key（大家共用，会被刷光额度）
 @api_login_required
 def save_key():
     """用户在弹窗里填写的 key：先发一个极小的请求测试，成功才保存。"""
@@ -128,6 +130,10 @@ def soften():
         return jsonify({"error": "empty", "message": t("whisper.empty_input")}), 400
     if len(text) > ai.MAX_ORIGINAL_LENGTH:
         return jsonify({"error": "too_long", "message": t("whisper.too_long")}), 400
+
+    if demo.enabled():
+        # 演示版：预先写好的示范改写，不调用 AI、不计入每日次数
+        return jsonify({"status": "ok", "softened": demo.soften(text), "demo": True})
 
     key = whisper.get_api_key()
     if key is None:
